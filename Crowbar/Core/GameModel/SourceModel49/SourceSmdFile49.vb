@@ -265,7 +265,7 @@ Public Class SourceSmdFile49
 				Next
 			End If
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		End Try
 
 		line = "end"
@@ -377,7 +377,7 @@ Public Class SourceSmdFile49
 				Next
 			End If
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		End Try
 
 		line = "end"

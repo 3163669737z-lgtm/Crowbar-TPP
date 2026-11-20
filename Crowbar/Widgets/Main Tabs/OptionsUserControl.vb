@@ -1,4 +1,4 @@
-Public Class OptionsUserControl
+﻿Public Class OptionsUserControl
 
 #Region "Creation and Destruction"
 
@@ -74,6 +74,18 @@ Public Class OptionsUserControl
 		Me.AutoOpenFolderForDecompileRadioButton.Checked = (TheApp.Settings.OptionsAutoOpenFolderOption = ActionType.Decompile)
 		Me.AutoOpenFolderForCompileRadioButton.Checked = (TheApp.Settings.OptionsAutoOpenFolderOption = ActionType.Compile)
 		Me.AutoOpenFolderForPackRadioButton.Checked = (TheApp.Settings.OptionsAutoOpenFolderOption = ActionType.Pack)
+	End Sub
+
+	Private Sub LayoutAutoOpenActions() Handles GroupBox2.Layout
+		If Not Me.IsHandleCreated Then Return
+		Dim left As Integer = LogicalToDeviceUnits(81)
+		For Each caption As Control In {Me.AutoOpenVpkFileCheckBox, Me.AutoOpenGmaFileCheckBox, Me.AutoOpenFpxFileCheckBox, Me.AutoOpenQcFileCheckBox}
+			left = Math.Max(left, Workarounds.FieldLeftAfter(caption, Me.Label14))
+		Next
+		Dim width As Integer = Math.Max(0, LogicalToDeviceUnits(170) - left)
+		For Each action As Control In New Control() {Me.AutoOpenVpkPanel, Me.Panel2, Me.Label14, Me.Label4, Me.AutoOpenFolderPanel}
+			action.SetBounds(left, action.Top, width, action.Height)
+		Next
 	End Sub
 
 	Private Sub InitDragAndDropRadioButtons()
@@ -264,41 +276,41 @@ Public Class OptionsUserControl
 
 	Private Sub ApplyAutoOpenVpkFileOptions()
 		If TheApp.Settings.OptionsAutoOpenVpkFileIsChecked Then
-			Win32Api.CreateFileAssociation("vpk", "vpkFile", "VPK File", Application.ExecutablePath)
+			Win32Api.CreateFileAssociation("vpk", "vpkFile", "VPK 文件", Application.ExecutablePath)
 		Else
-			Win32Api.DeleteFileAssociation("vpk", "vpkFile", "VPK File", Application.ExecutablePath)
+			Win32Api.DeleteFileAssociation("vpk", "vpkFile", "VPK 文件", Application.ExecutablePath)
 		End If
 	End Sub
 
 	Private Sub ApplyAutoOpenGmaFileOptions()
 		If TheApp.Settings.OptionsAutoOpenGmaFileIsChecked Then
-			Win32Api.CreateFileAssociation("gma", "gmaFile", "GMA File", Application.ExecutablePath)
+			Win32Api.CreateFileAssociation("gma", "gmaFile", "GMA 文件", Application.ExecutablePath)
 		Else
-			Win32Api.DeleteFileAssociation("gma", "gmaFile", "GMA File", Application.ExecutablePath)
+			Win32Api.DeleteFileAssociation("gma", "gmaFile", "GMA 文件", Application.ExecutablePath)
 		End If
 	End Sub
 
 	Private Sub ApplyAutoOpenFpxFileOptions()
 		If TheApp.Settings.OptionsAutoOpenFpxFileIsChecked Then
-			Win32Api.CreateFileAssociation("fpx", "fpxFile", "FPX File", Application.ExecutablePath)
+			Win32Api.CreateFileAssociation("fpx", "fpxFile", "FPX 文件", Application.ExecutablePath)
 		Else
-			Win32Api.DeleteFileAssociation("fpx", "fpxFile", "FPX File", Application.ExecutablePath)
+			Win32Api.DeleteFileAssociation("fpx", "fpxFile", "FPX 文件", Application.ExecutablePath)
 		End If
 	End Sub
 
 	Private Sub ApplyAutoOpenMdlFileOptions()
 		If TheApp.Settings.OptionsAutoOpenMdlFileIsChecked Then
-			Win32Api.CreateFileAssociation("mdl", "mdlFile", "MDL File", Application.ExecutablePath)
+			Win32Api.CreateFileAssociation("mdl", "mdlFile", "MDL 文件", Application.ExecutablePath)
 		Else
-			Win32Api.DeleteFileAssociation("mdl", "mdlFile", "MDL File", Application.ExecutablePath)
+			Win32Api.DeleteFileAssociation("mdl", "mdlFile", "MDL 文件", Application.ExecutablePath)
 		End If
 	End Sub
 
 	Private Sub ApplyAutoOpenQcFileOptions()
 		If TheApp.Settings.OptionsAutoOpenQcFileIsChecked Then
-			Win32Api.CreateFileAssociation("qc", "qcFile", "QC File", Application.ExecutablePath)
+			Win32Api.CreateFileAssociation("qc", "qcFile", "QC 文件", Application.ExecutablePath)
 		Else
-			Win32Api.DeleteFileAssociation("qc", "qcFile", "QC File", Application.ExecutablePath)
+			Win32Api.DeleteFileAssociation("qc", "qcFile", "QC 文件", Application.ExecutablePath)
 		End If
 	End Sub
 
@@ -314,19 +326,19 @@ Public Class OptionsUserControl
 
 	Private Sub UpdateApplyPanel()
 		Dim vpkFileAssociationIsAlreadyAssigned As Boolean
-		vpkFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("vpk", "vpkFile", "VPK File", Application.ExecutablePath)
+		vpkFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("vpk", "vpkFile", "VPK 文件", Application.ExecutablePath)
 
 		Dim gmaFileAssociationIsAlreadyAssigned As Boolean
-		gmaFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("gma", "gmaFile", "GMA File", Application.ExecutablePath)
+		gmaFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("gma", "gmaFile", "GMA 文件", Application.ExecutablePath)
 
 		Dim fpxFileAssociationIsAlreadyAssigned As Boolean
-		fpxFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("fpx", "fpxFile", "FPX File", Application.ExecutablePath)
+		fpxFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("fpx", "fpxFile", "FPX 文件", Application.ExecutablePath)
 
 		Dim mdlFileAssociationIsAlreadyAssigned As Boolean
-		mdlFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("mdl", "mdlFile", "MDL File", Application.ExecutablePath)
+		mdlFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("mdl", "mdlFile", "MDL 文件", Application.ExecutablePath)
 
 		Dim qcFileAssociationIsAlreadyAssigned As Boolean
-		qcFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("qc", "qcFile", "QC File", Application.ExecutablePath)
+		qcFileAssociationIsAlreadyAssigned = Win32Api.FileAssociationIsAlreadyAssigned("qc", "qcFile", "QC 文件", Application.ExecutablePath)
 
 		'Me.ApplyPanel.Visible = (Not vpkFileAssociationIsAlreadyAssigned) OrElse (Not mdlFileAssociationIsAlreadyAssigned) OrElse (Not qcFileAssociationIsAlreadyAssigned)
 		Dim applyPanelShouldBeVisible As Boolean

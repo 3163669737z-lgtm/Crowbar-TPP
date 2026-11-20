@@ -2,7 +2,7 @@
 Imports System.Runtime.InteropServices
 
 Public Class SourceModel14
-	Inherits SourceModel06
+	Inherits SourceModel
 
 #Region "Creation and Destruction"
 
@@ -39,18 +39,13 @@ Public Class SourceModel14
 
 	Public Overrides ReadOnly Property HasMeshData As Boolean
 		Get
-			If Me.theMdlFileData.theBones IsNot Nothing _
-					 AndAlso Me.theMdlFileData.theBones.Count > 0 Then
-				Return True
-			Else
-				Return False
-			End If
+			Return Me.theMdlFileData.indexCount > 0 AndAlso Me.theMdlFileData.theBodyParts IsNot Nothing
 		End Get
 	End Property
 
 	Public Overrides ReadOnly Property HasBoneAnimationData As Boolean
 		Get
-			If Me.theMdlFileData.theSequences IsNot Nothing _
+			If Me.theMdlFileData.boneCount > 0 AndAlso Me.theMdlFileData.theSequences IsNot Nothing _
 			 AndAlso Me.theMdlFileData.theSequences.Count > 0 Then
 				Return True
 			Else
@@ -450,12 +445,11 @@ Public Class SourceModel14
 	Public Overrides Function GetTextureFileNames() As List(Of String)
 		Dim textureFileNames As New List(Of String)()
 
-		For i As Integer = 0 To Me.theMdlFileData.theTextures.Count - 1
-			Dim aTexture As SourceMdlTexture14
-			aTexture = Me.theMdlFileData.theTextures(i)
-
-			textureFileNames.Add(aTexture.theFileName)
-		Next
+		If Me.theMdlFileData.theTextures IsNot Nothing Then
+			For Each texture As SourceMdlTexture14 In Me.theMdlFileData.theTextures
+				textureFileNames.Add(texture.theFileName)
+			Next
+		End If
 
 		Return textureFileNames
 	End Function
@@ -485,8 +479,7 @@ Public Class SourceModel14
 
 		mdlFile.ReadMdlHeader()
 
-		''mdlFile.ReadTexturePaths()
-		'mdlFile.ReadTextures()
+		mdlFile.ReadTextures()
 	End Sub
 
 	Protected Overrides Sub ReadMdlFile_Internal()
@@ -510,7 +503,7 @@ Public Class SourceModel14
 		mdlFile.ReadSequenceGroups()
 		'mdlFile.ReadTransitions()
 
-		mdlFile.ReadAnimations(0)
+		mdlFile.ReadAnimations()
 
 		mdlFile.ReadBodyParts()
 		mdlFile.ReadIndexes()
@@ -589,25 +582,27 @@ Public Class SourceModel14
 			qcFile.WriteEyePositionCommand()
 
 			'qcFile.WriteExternalTexturesCommand()
-			'qcFile.WriteTextureGroupCommand()
+			qcFile.WriteTextureGroupCommand()
 			'If TheApp.Settings.DecompileDebugInfoFilesIsChecked Then
 			'	qcFile.WriteTextureFileNameComments()
 			'End If
 			'qcFile.WriteTexRenderMode()
 
-			'qcFile.WriteAttachmentCommand()
+			qcFile.WriteAttachmentCommand()
 
 			qcFile.WriteCBoxCommand()
 			qcFile.WriteBBoxCommand()
-			'qcFile.WriteHBoxCommands()
+			qcFile.WriteHBoxCommands()
 
-			'qcFile.WriteControllerCommand()
+			qcFile.WriteControllerCommand()
 
 			'qcFile.WriteSequenceGroupSizeCommand()
 			'qcFile.WriteSequenceGroupCommands()
-			'qcFile.WriteSequenceCommands()
+			If Me.HasBoneAnimationData Then
+				qcFile.WriteSequenceCommands()
+			End If
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		Finally
 		End Try
 

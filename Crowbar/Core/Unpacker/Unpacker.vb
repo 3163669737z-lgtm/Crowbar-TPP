@@ -37,7 +37,7 @@ Public Class Unpacker
 	Private Sub InitUnpackModes()
 		Me.theUnpackModes.Add("File")
 		Me.theUnpackModes.Add("Folder")
-		Me.theUnpackModes.Add("Folder and subfolders")
+		Me.theUnpackModes.Add("文件夹及子文件夹")
 
 		Me.theUnpackModes.Add("------")
 
@@ -274,10 +274,10 @@ Public Class Unpacker
 
 		If String.IsNullOrEmpty(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "Package file or folder has not been selected.")
+			Me.WriteErrorMessage(1, "尚未选择包文件或文件夹。")
 		ElseIf TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("File") AndAlso Not File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "The package file, """ + TheApp.Settings.UnpackPackagePathFolderOrFileName + """, does not exist.")
+			Me.WriteErrorMessage(1, "包文件 """ + TheApp.Settings.UnpackPackagePathFolderOrFileName + """ 不存在。")
 		End If
 
 		Return inputsAreValid
@@ -324,7 +324,7 @@ Public Class Unpacker
 	End Sub
 
 	Private Sub WriteErrorMessage(ByVal indentLevel As Integer, ByVal line As String)
-		Me.UpdateProgress(indentLevel, "Crowbar ERROR: " + line)
+		Me.UpdateProgress(indentLevel, "Crowbar 错误：" + line)
 	End Sub
 
 	Private Sub UpdateProgress(ByVal indentLevel As Integer, ByVal line As String)
@@ -355,18 +355,18 @@ Public Class Unpacker
 		packageRelativePathFileName = Path.Combine(packageRelativePath, packageFileName)
 
 		Me.UpdateProgress()
-		Me.UpdateProgress(1, "Unpacking from """ + packageRelativePathFileName + """ to """ + Me.theOutputPath + """ ...")
+		Me.UpdateProgress(1, "正在解包：""" + packageRelativePathFileName + """ to """ + Me.theOutputPath + """ ...")
 	End Sub
 
 	Private Sub StopLog(ByVal status As AppEnums.StatusMessage, ByVal packageRelativePathFileName As String)
 		If status <> StatusMessage.Error Then
 			If Me.CancellationPending Then
-				Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ canceled. Check above for any errors.")
+				Me.UpdateProgress(1, "... 正在解包：""" + packageRelativePathFileName + """ 已取消。请查看上方的错误信息。")
 			Else
-				Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ finished. Check above for any errors.")
+				Me.UpdateProgress(1, "... 正在解包：""" + packageRelativePathFileName + """ 已完成。请查看上方的错误信息。")
 			End If
 		Else
-			Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ failed. Check above for any errors.")
+			Me.UpdateProgress(1, "... 正在解包：""" + packageRelativePathFileName + """ 失败。请查看上方的错误信息。")
 		End If
 
 		Me.CloseLogTextFile()
@@ -397,7 +397,7 @@ Public Class Unpacker
 				Me.theLogFileStream.Flush()
 			Catch ex As Exception
 				Me.UpdateProgress()
-				Me.UpdateProgress(2, "ERROR: Crowbar tried to write the unpack log file but the system gave this message: " + ex.Message)
+				Me.UpdateProgress(2, "错误：Crowbar 尝试写入解包日志文件，但系统返回了此消息：" + ex.Message)
 				status = StatusMessage.Error
 			End Try
 		Else
@@ -530,7 +530,7 @@ Public Class Unpacker
 		Try
 			Me.thePackageDirectoryPathFileNamesAlreadyProcessed = New SortedSet(Of String)()
 
-			If TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("Folder and subfolders") Then
+			If TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("文件夹及子文件夹") Then
 				Me.ListPackagesInFolderRecursively(packagePath)
 			ElseIf TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("Folder") OrElse TheApp.Settings.UnpackModeIndex > TheApp.Unpacker.UnpackModes.IndexOf("------") Then
 				Me.ListPackagesInFolder(packagePath)
@@ -605,7 +605,7 @@ Public Class Unpacker
 		Me.theOutputPath = Me.GetOutputPath()
 
 		Dim progressDescriptionText As String
-		progressDescriptionText = "Unpacking with " + TheApp.GetProductNameAndVersion() + ": "
+		progressDescriptionText = "正在使用 ... 解包：" + TheApp.GetProductNameAndVersion() + ": "
 
 		Dim packageRelativePathFileName As String = Nothing
 		Try
@@ -625,9 +625,9 @@ Public Class Unpacker
 		End Try
 
 		If Me.CancellationPending Then
-			Me.UpdateProgressStop("... " + progressDescriptionText + " canceled.")
+			Me.UpdateProgressStop("... " + progressDescriptionText + " 已取消。")
 		Else
-			Me.UpdateProgressStop("... " + progressDescriptionText + " finished.")
+			Me.UpdateProgressStop("... " + progressDescriptionText + " 已完成。")
 		End If
 
 		Return status
@@ -649,7 +649,7 @@ Public Class Unpacker
 
 		Me.theUnpackedPathsAreInTempPath = True
 		If Not FileManager.PathExistsAfterTryToCreate(Me.theOutputPath) Then
-			Me.theRunSynchronousResultMessage = "ERROR: Tried to create """ + Me.theOutputPath + """ needed for unpacking, but Windows did not allow it."
+			Me.theRunSynchronousResultMessage = "错误：尝试创建 """ + Me.theOutputPath + """ 是解包所必需的，但 Windows 不允许。"
 			status = StatusMessage.ErrorUnableToCreateTempFolder
 			Return status
 		End If
@@ -710,12 +710,12 @@ Public Class Unpacker
 				End If
 
 				If entry.DisplayPathFileName.StartsWith("<") Then
-					Me.UpdateProgress(2, "Unpacked: """ + entry.DisplayPathFileName + """ as """ + entry.PathFileName + """")
+					Me.UpdateProgress(2, "已解包：""" + entry.DisplayPathFileName + """ as """ + entry.PathFileName + """")
 				Else
-					Me.UpdateProgress(2, "Unpacked: " + entry.DisplayPathFileName)
+					Me.UpdateProgress(2, "已解包：" + entry.DisplayPathFileName)
 				End If
 			Else
-				Me.UpdateProgress(2, "WARNING: Not unpacked: " + entry.DisplayPathFileName)
+				Me.UpdateProgress(2, "警告：未解包：" + entry.DisplayPathFileName)
 			End If
 		Else
 			Dim progressUnhandled As Integer = 4242

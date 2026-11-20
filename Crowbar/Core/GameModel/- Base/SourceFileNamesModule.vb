@@ -2,7 +2,7 @@
 
 Module SourceFileNamesModule
 
-	Public Function CreateBodyGroupSmdFileName(ByVal givenBodyGroupSmdFileName As String, ByVal bodyPartIndex As Integer, ByVal modelIndex As Integer, ByVal lodIndex As Integer, ByVal modelName As String, ByVal bodyModelName As String, Optional ByVal extraUvChannelIndex As Integer = -1) As String
+	Public Function CreateBodyGroupSmdFileName(ByVal givenBodyGroupSmdFileName As String, ByVal bodyPartIndex As Integer, ByVal modelIndex As Integer, ByVal lodIndex As Integer, ByVal modelName As String, ByVal bodyModelName As String, Optional ByVal extraUvChannelIndex As Integer = -1, Optional ByVal bodyPartName As String = Nothing) As String
 		'Dim bodyModelNameTrimmed As String
 		'Dim bodyModelFileName As String = ""
 		'Dim bodyModelFileNameWithoutExtension As String
@@ -23,7 +23,7 @@ Module SourceFileNamesModule
 		'	Else
 		'		bodyModelFileName = Path.GetFileName(bodyModelName.Trim(Chr(0))).ToLower(TheApp.InternalCultureInfo)
 		'	End If
-		'	bodyModelFileNameWithoutExtension = Path.GetFileNameWithoutExtension(bodyModelFileName)
+		'	bodyModelFileNameWithoutExtension = Path.GetFileNameWithoutExtension(bodyModelFileName).TrimEnd(" "c, "."c)
 
 		'	If Not bodyModelFileName.StartsWith(modelName) Then
 		'		bodyGroupSmdFileName += modelName + "_"
@@ -124,6 +124,18 @@ Module SourceFileNamesModule
 				bodyModelFileName += CStr(modelIndex)
 			End Try
 			bodyModelFileNameWithoutExtension = Path.GetFileNameWithoutExtension(bodyModelFileName)
+			If String.IsNullOrWhiteSpace(bodyModelFileNameWithoutExtension) Then
+				If Not String.IsNullOrEmpty(bodyPartName) Then
+					Dim label As String = Text.RegularExpressions.Regex.Replace(bodyPartName.Split("["c)(0), "[^A-Za-z0-9]+", "_").Trim("_"c)
+					If label.Length > 0 Then
+						bodyModelFileNameWithoutExtension = label.Substring(0, Math.Min(label.Length, 32)).TrimEnd("_"c).ToLowerInvariant()
+					End If
+				End If
+				If String.IsNullOrWhiteSpace(bodyModelFileNameWithoutExtension) Then
+					bodyModelFileNameWithoutExtension = "mesh"
+				End If
+				bodyModelFileName = bodyModelFileNameWithoutExtension
+			End If
 
 			If TheApp.Settings.DecompilePrefixFileNamesWithModelNameIsChecked AndAlso Not bodyModelFileName.ToLower(TheApp.InternalCultureInfo).StartsWith(modelName.ToLower(TheApp.InternalCultureInfo)) Then
 				bodyGroupSmdFileName += modelName + "_"
@@ -221,6 +233,33 @@ Module SourceFileNamesModule
 		End If
 
 		Return animationSmdRelativePathFileName
+	End Function
+
+	Friend Function CreateNamedAnimationSmdRelativePath(modelName As String, name As String) As String
+		name = If(name, "")
+		Dim separator As Integer = name.LastIndexOfAny(New Char() {"/"c, "\"c})
+		Dim characters As Char() = name.Substring(separator + 1).Trim().ToCharArray()
+		Dim invalidCharacters As Char() = Path.GetInvalidFileNameChars()
+		For index As Integer = 0 To characters.Length - 1
+			If Char.IsControl(characters(index)) OrElse Array.IndexOf(invalidCharacters, characters(index)) >= 0 Then
+				characters(index) = "_"c
+			End If
+		Next
+		Dim fileName As String = New String(characters)
+
+		Dim extension As String = ".smd"
+		If fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase) Then
+			extension = fileName.Substring(fileName.Length - extension.Length)
+			fileName = fileName.Substring(0, fileName.Length - extension.Length)
+		End If
+		fileName = fileName.TrimEnd(" "c, "."c)
+		If fileName.Length = 0 Then fileName = "anim"
+		fileName = FileManager.GetCleanFileNameWithoutExtension(fileName)
+		If Not TheApp.Settings.DecompileBoneAnimationPlaceInSubfolderIsChecked Then
+			fileName = modelName + "_anim_" + fileName
+		End If
+
+		Return GetUniqueSmdFileName(Path.Combine(GetAnimationSmdRelativePath(modelName), fileName)) + extension
 	End Function
 
 	Public Function CreateCorrectiveAnimationName(ByVal givenAnimationSmdRelativePathFileName As String) As String

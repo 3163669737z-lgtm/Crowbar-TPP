@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 
 Public Class HelpUserControl
 
@@ -44,7 +44,7 @@ Public Class HelpUserControl
         Dim aLinkLabel As LinkLabel
         aLinkLabel = CType(sender, LinkLabel)
 
-        If e.Button = Windows.Forms.MouseButtons.Left Then
+        If e.Button = System.Windows.Forms.MouseButtons.Left Then
             aLinkLabel.LinkVisited = True
             Dim target As String = CType(e.Link.LinkData, String)
             Try
@@ -52,7 +52,7 @@ Public Class HelpUserControl
             Catch ex As Exception
                 'TODO: Tell user what went wrong.
             End Try
-        ElseIf e.Button = Windows.Forms.MouseButtons.Right Then
+        ElseIf e.Button = System.Windows.Forms.MouseButtons.Right Then
             'TODO: Show context menu with: Copy Link, Copy Text
         End If
     End Sub

@@ -1,4 +1,4 @@
-﻿Imports System.IO
+Imports System.IO
 
 Public Class SourceSmdFile04
 
@@ -50,82 +50,15 @@ Public Class SourceSmdFile04
 	End Sub
 
 	Public Sub WriteSkeletonSection()
-		Dim line As String = ""
-		Dim aBone As SourceMdlBone04
-		Dim position As New SourceVector()
-		Dim rotation As New SourceVector()
-
-		'skeleton
-		line = "skeleton"
-		Me.theOutputFileStreamWriter.WriteLine(line)
-
-		If TheApp.Settings.DecompileStricterFormatIsChecked Then
-			line = "time 0"
-		Else
-			line = "  time 0"
-		End If
-		Me.theOutputFileStreamWriter.WriteLine(line)
-		For boneIndex As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
-			aBone = Me.theMdlFileData.theBones(boneIndex)
-
-			If aBone.parentBoneIndex = -1 Then
-				position.x = aBone.position.y
-				position.y = -aBone.position.x
-				position.z = aBone.position.z
-
-				rotation.x = 0
-				rotation.y = 0
-				rotation.z = MathModule.DegreesToRadians(-90)
-			Else
-				position.x = aBone.position.x
-				position.y = aBone.position.y
-				position.z = aBone.position.z
-
-				rotation.x = 0
-				rotation.y = 0
-				rotation.z = 0
-			End If
-
-			'If aBone.parentBoneIndex = -1 Then
-			'	position.x = aBone.positionY.TheFloatValue
-			'	position.y = -aBone.positionX.TheFloatValue
-			'	position.z = aBone.positionZ.TheFloatValue
-
-			'	rotation.x = aBone.rotationX.TheFloatValue
-			'	rotation.y = aBone.rotationY.TheFloatValue
-			'	rotation.z = aBone.rotationZ.TheFloatValue + MathModule.DegreesToRadians(-90)
-			'Else
-			'	position.x = aBone.positionX.TheFloatValue
-			'	position.y = aBone.positionY.TheFloatValue
-			'	position.z = aBone.positionZ.TheFloatValue
-
-			'	''rotation.x = MathModule.DegreesToRadians(aBone.rotationX / 200)
-			'	''rotation.y = MathModule.DegreesToRadians(aBone.rotationY / 200)
-			'	''rotation.z = MathModule.DegreesToRadians(aBone.rotationZ / 200)
-			'	rotation.x = aBone.rotationX.TheFloatValue
-			'	rotation.y = aBone.rotationY.TheFloatValue
-			'	rotation.z = aBone.rotationZ.TheFloatValue
-			'End If
-
-			line = "    "
-			line += boneIndex.ToString(TheApp.InternalNumberFormat)
-			line += " "
-			line += position.x.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += position.y.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += position.z.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += rotation.x.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += rotation.y.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += rotation.z.ToString("0.000000", TheApp.InternalNumberFormat)
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		Me.theOutputFileStreamWriter.WriteLine("skeleton")
+		Me.theOutputFileStreamWriter.WriteLine(If(TheApp.Settings.DecompileStricterFormatIsChecked, "time 0", "  time 0"))
+		Dim format As IFormatProvider = TheApp.InternalNumberFormat
+		For index As Integer = 0 To Me.theMdlFileData.theReferencePose.Count - 1
+			Dim pose As SourceMdlSequenceValue04 = Me.theMdlFileData.theReferencePose(index)
+			Me.theOutputFileStreamWriter.WriteLine(String.Format(format, "    {0} {1:0.000000} {2:0.000000} {3:0.000000} {4:0.000000} {5:0.000000} {6:0.000000}",
+				index, pose.position.x, pose.position.y, pose.position.z, pose.rotation.x, pose.rotation.y, pose.rotation.z))
 		Next
-
-		line = "end"
-		Me.theOutputFileStreamWriter.WriteLine(line)
+		Me.theOutputFileStreamWriter.WriteLine("end")
 	End Sub
 
 	Public Sub WriteSkeletonSectionForAnimation(ByVal aSequenceDesc As SourceMdlSequenceDesc04)
@@ -270,7 +203,6 @@ Public Class SourceSmdFile04
 	Private Function GetVertexLine(ByVal aBodyModel As SourceMdlModel04, ByVal aMesh As SourceMdlMesh04, ByVal aVertexInfo As SourceMdlFaceVertexInfo04) As String
 		Dim line As String
 		Dim boneIndex As Integer
-		Dim aBone As SourceMdlBone04
 		Dim position As New SourceVector
 		Dim normal As New SourceVector
 		Dim texCoordX As Double
@@ -279,39 +211,16 @@ Public Class SourceSmdFile04
 		line = ""
 		Try
 			boneIndex = aBodyModel.theVertexes(aVertexInfo.vertexIndex).boneIndex
-			aBone = Me.theMdlFileData.theBones(boneIndex)
-
-			'position.x = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.x
-			'position.y = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.y
-			'position.z = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.z
-			position.x = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.y
-			position.y = -aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.x
-			position.z = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.z
-			'position.x = aBone.position.x + aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.x
-			'position.y = aBone.position.y + aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.y
-			'position.z = aBone.position.z + aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.z
-			'position.x = aBone.position.y + aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.y
-			'position.y = -(aBone.position.x + aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.x)
-			'position.z = aBone.position.z + aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.z
-
-			'position.x = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.x
-			'position.y = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.y
-			'position.z = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.z
-			'position.x = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.y
-			'position.y = -(aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.x)
-			'position.z = aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector.z
-
-			normal.x = aBodyModel.theNormals(aVertexInfo.normalIndex).vector.x
-			normal.y = aBodyModel.theNormals(aVertexInfo.normalIndex).vector.y
-			normal.z = aBodyModel.theNormals(aVertexInfo.normalIndex).vector.z
-
-			If aBodyModel.theVertexes(aVertexInfo.vertexIndex).boneIndex <> aBodyModel.theNormals(aVertexInfo.normalIndex).index Then
-				Dim debug As Integer = 4242
-			End If
+			Dim transform As SourceBoneTransform10 = Me.theMdlFileData.theBoneTransforms(boneIndex)
+			position = MathModule.VectorTransform(aBodyModel.theVertexes(aVertexInfo.vertexIndex).vector,
+				transform.matrixColumn0, transform.matrixColumn1, transform.matrixColumn2, transform.matrixColumn3)
+			Dim sourceNormal As SourceMdlNormal04 = aBodyModel.theNormals(aVertexInfo.normalIndex)
+			Dim normalTransform As SourceBoneTransform10 = Me.theMdlFileData.theBoneTransforms(sourceNormal.index)
+			normal = MathModule.VectorRotate(sourceNormal.vector, normalTransform.matrixColumn0, normalTransform.matrixColumn1, normalTransform.matrixColumn2, normalTransform.matrixColumn3)
+			MathModule.VectorNormalize(normal)
 
 			texCoordX = aVertexInfo.s / aMesh.textureWidth
-			texCoordY = aVertexInfo.t / aMesh.textureHeight
-			'texCoordY = 1 - aVertexInfo.t / aMesh.textureHeight
+			texCoordY = 1 - aVertexInfo.t / aMesh.textureHeight
 
 			line = "  "
 			line += boneIndex.ToString(TheApp.InternalNumberFormat)

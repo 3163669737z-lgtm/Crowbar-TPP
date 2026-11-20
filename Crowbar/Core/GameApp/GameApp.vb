@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.IO
 
 Public Class GameApp
@@ -106,7 +106,7 @@ Public Class GameApp
 		info = CType(e.Argument, GameAppInfo)
 		Me.theGameSetupSelectedIndex = info.gameSetupSelectedIndex
 		If GameAppInputsAreOkay() Then
-			Me.UpdateProgress(1, "Game run.")
+			Me.UpdateProgress(1, "游戏已运行。")
 			Me.RunGameApp()
 		End If
 	End Sub
@@ -124,7 +124,7 @@ Public Class GameApp
 
 		If Not File.Exists(gameAppPathFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage("The game's executable, """ + gameAppPathFileName + """, does not exist.")
+			Me.WriteErrorMessage("游戏的可执行文件 """ + gameAppPathFileName + """ 不存在。")
 			Me.UpdateProgress(1, My.Resources.ErrorMessageSDKMissingCause)
 		End If
 
@@ -188,7 +188,7 @@ Public Class GameApp
 	End Sub
 
 	Private Sub WriteErrorMessage(ByVal line As String)
-		Me.UpdateProgressInternal(1, "ERROR: " + line)
+		Me.UpdateProgressInternal(1, "错误：" + line)
 	End Sub
 
 	Private Sub UpdateProgress(ByVal indentLevel As Integer, ByVal line As String)

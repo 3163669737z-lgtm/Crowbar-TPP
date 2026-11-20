@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class EditUserControl
 	Inherits BaseUserControl
 
@@ -51,7 +51,7 @@ Partial Class EditUserControl
 		Me.GotoQcButton.Name = "GotoQcButton"
 		Me.GotoQcButton.Size = New System.Drawing.Size(40, 23)
 		Me.GotoQcButton.TabIndex = 29
-		Me.GotoQcButton.Text = "Goto"
+		Me.GotoQcButton.Text = "转到"
 		Me.GotoQcButton.UseVisualStyleBackColor = True
 		'
 		'Label6
@@ -61,7 +61,7 @@ Partial Class EditUserControl
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(87, 13)
 		Me.Label6.TabIndex = 26
-		Me.Label6.Text = "QC file or folder:"
+		Me.Label6.Text = "QC 文件或文件夹："
 		'
 		'QcPathFileNameTextBox
 		'
@@ -79,7 +79,7 @@ Partial Class EditUserControl
 		Me.BrowseForQcPathFolderOrFileNameButton.Name = "BrowseForQcPathFolderOrFileNameButton"
 		Me.BrowseForQcPathFolderOrFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForQcPathFolderOrFileNameButton.TabIndex = 28
-		Me.BrowseForQcPathFolderOrFileNameButton.Text = "Browse..."
+		Me.BrowseForQcPathFolderOrFileNameButton.Text = "浏览..."
 		Me.BrowseForQcPathFolderOrFileNameButton.UseVisualStyleBackColor = True
 		'
 		'UseInCompileButton
@@ -89,13 +89,11 @@ Partial Class EditUserControl
 		Me.UseInCompileButton.Name = "UseInCompileButton"
 		Me.UseInCompileButton.Size = New System.Drawing.Size(90, 23)
 		Me.UseInCompileButton.TabIndex = 25
-		Me.UseInCompileButton.Text = "Use in Compile"
+		Me.UseInCompileButton.Text = "在编译中使用"
 		Me.UseInCompileButton.UseVisualStyleBackColor = True
 		'
 		'EditUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.Panel1)
 		Me.Name = "EditUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)

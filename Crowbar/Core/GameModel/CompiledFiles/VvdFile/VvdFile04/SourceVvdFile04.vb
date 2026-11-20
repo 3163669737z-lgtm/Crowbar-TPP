@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Text
 
 Public Class SourceVvdFile04
@@ -223,7 +223,7 @@ Public Class SourceVvdFile04
 		End Try
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-		Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "ExtraData (Second UV)")
+		Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "额外数据（第二 UV）")
 	End Sub
 
 	Public Sub ReadUnreadBytes()

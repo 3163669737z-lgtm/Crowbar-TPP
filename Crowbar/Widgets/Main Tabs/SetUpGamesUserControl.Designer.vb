@@ -76,7 +76,7 @@ Partial Class SetUpGamesUserControl
 		Me.AddLibraryPathButton.Name = "AddLibraryPathButton"
 		Me.AddLibraryPathButton.Size = New System.Drawing.Size(75, 23)
 		Me.AddLibraryPathButton.TabIndex = 51
-		Me.AddLibraryPathButton.Text = "Add Macro"
+		Me.AddLibraryPathButton.Text = "添加宏"
 		Me.AddLibraryPathButton.UseVisualStyleBackColor = True
 		'
 		'DeleteLibraryPathButton
@@ -86,7 +86,7 @@ Partial Class SetUpGamesUserControl
 		Me.DeleteLibraryPathButton.Name = "DeleteLibraryPathButton"
 		Me.DeleteLibraryPathButton.Size = New System.Drawing.Size(75, 50)
 		Me.DeleteLibraryPathButton.TabIndex = 50
-		Me.DeleteLibraryPathButton.Text = "Delete Last Macro If Not Used"
+		Me.DeleteLibraryPathButton.Text = "删除未使用的最后一个宏"
 		Me.DeleteLibraryPathButton.UseVisualStyleBackColor = True
 		'
 		'Label11
@@ -97,8 +97,7 @@ Partial Class SetUpGamesUserControl
 		Me.Label11.Name = "Label11"
 		Me.Label11.Size = New System.Drawing.Size(573, 13)
 		Me.Label11.TabIndex = 48
-		Me.Label11.Text = "Steam Library folders (<library#> macros for placing at start of fields above; ri" &
-	"ght-click a macro for commands):"
+		Me.Label11.Text = "Steam 库文件夹（<library#> 宏用于放在上方字段开头；右键单击宏可查看命令）："
 		'
 		'Label10
 		'
@@ -108,7 +107,7 @@ Partial Class SetUpGamesUserControl
 		Me.Label10.Name = "Label10"
 		Me.Label10.Size = New System.Drawing.Size(314, 13)
 		Me.Label10.TabIndex = 45
-		Me.Label10.Text = "Steam executable (steam.exe) [Used for ""Run Game"" button]:"
+		Me.Label10.Text = "Steam 可执行文件（steam.exe）[用于" & ChrW(&H201C) & "运行游戏" & ChrW(&H201D) & "按钮]："
 		'
 		'BrowseForSteamAppPathFileNameButton
 		'
@@ -117,7 +116,7 @@ Partial Class SetUpGamesUserControl
 		Me.BrowseForSteamAppPathFileNameButton.Name = "BrowseForSteamAppPathFileNameButton"
 		Me.BrowseForSteamAppPathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForSteamAppPathFileNameButton.TabIndex = 47
-		Me.BrowseForSteamAppPathFileNameButton.Text = "Browse..."
+		Me.BrowseForSteamAppPathFileNameButton.Text = "浏览..."
 		Me.BrowseForSteamAppPathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'SteamAppPathFileNameTextBox
@@ -136,7 +135,7 @@ Partial Class SetUpGamesUserControl
 		Me.AddGameSetupButton.Name = "AddGameSetupButton"
 		Me.AddGameSetupButton.Size = New System.Drawing.Size(75, 23)
 		Me.AddGameSetupButton.TabIndex = 43
-		Me.AddGameSetupButton.Text = "Add"
+		Me.AddGameSetupButton.Text = "添加"
 		Me.AddGameSetupButton.UseVisualStyleBackColor = True
 		'
 		'GameSetupComboBox
@@ -187,7 +186,7 @@ Partial Class SetUpGamesUserControl
 		Me.GameGroupBox.Size = New System.Drawing.Size(778, 304)
 		Me.GameGroupBox.TabIndex = 44
 		Me.GameGroupBox.TabStop = False
-		Me.GameGroupBox.Text = "Game Setup"
+		Me.GameGroupBox.Text = "游戏设置"
 		'
 		'EngineLabel
 		'
@@ -196,7 +195,7 @@ Partial Class SetUpGamesUserControl
 		Me.EngineLabel.Name = "EngineLabel"
 		Me.EngineLabel.Size = New System.Drawing.Size(46, 13)
 		Me.EngineLabel.TabIndex = 43
-		Me.EngineLabel.Text = "Engine:"
+		Me.EngineLabel.Text = "引擎："
 		'
 		'EngineComboBox
 		'
@@ -215,8 +214,8 @@ Partial Class SetUpGamesUserControl
 		Me.CreateModelsFolderTreeButton.Name = "CreateModelsFolderTreeButton"
 		Me.CreateModelsFolderTreeButton.Size = New System.Drawing.Size(270, 23)
 		Me.CreateModelsFolderTreeButton.TabIndex = 40
-		Me.CreateModelsFolderTreeButton.Text = "Create ""models"" folder tree from this game's VPKs"
-		Me.ToolTip1.SetToolTip(Me.CreateModelsFolderTreeButton, "Use this so HLMV can view models found in VPKs.")
+		Me.CreateModelsFolderTreeButton.Text = "从此游戏的 VPK 创建 ""models"" 文件夹树"
+		Me.ToolTip1.SetToolTip(Me.CreateModelsFolderTreeButton, "使用此选项以便 HLMV 可以查看 VPK 中的模型。")
 		Me.CreateModelsFolderTreeButton.UseVisualStyleBackColor = True
 		'
 		'BrowseForMappingToolPathFileNameButton
@@ -226,7 +225,7 @@ Partial Class SetUpGamesUserControl
 		Me.BrowseForMappingToolPathFileNameButton.Name = "BrowseForMappingToolPathFileNameButton"
 		Me.BrowseForMappingToolPathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForMappingToolPathFileNameButton.TabIndex = 39
-		Me.BrowseForMappingToolPathFileNameButton.Text = "Browse..."
+		Me.BrowseForMappingToolPathFileNameButton.Text = "浏览..."
 		Me.BrowseForMappingToolPathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'MappingToolPathFileNameTextBox
@@ -246,7 +245,7 @@ Partial Class SetUpGamesUserControl
 		Me.MappingToolLabel.Name = "MappingToolLabel"
 		Me.MappingToolLabel.Size = New System.Drawing.Size(81, 13)
 		Me.MappingToolLabel.TabIndex = 37
-		Me.MappingToolLabel.Text = "Mapping tool:"
+		Me.MappingToolLabel.Text = "地图工具："
 		'
 		'GameAppOptionsTextBox
 		'
@@ -264,7 +263,7 @@ Partial Class SetUpGamesUserControl
 		Me.ExecutableOptionsLabel.Name = "ExecutableOptionsLabel"
 		Me.ExecutableOptionsLabel.Size = New System.Drawing.Size(108, 13)
 		Me.ExecutableOptionsLabel.TabIndex = 31
-		Me.ExecutableOptionsLabel.Text = "Executable options:"
+		Me.ExecutableOptionsLabel.Text = "可执行文件选项："
 		'
 		'ClearGameAppOptionsButton
 		'
@@ -273,7 +272,7 @@ Partial Class SetUpGamesUserControl
 		Me.ClearGameAppOptionsButton.Name = "ClearGameAppOptionsButton"
 		Me.ClearGameAppOptionsButton.Size = New System.Drawing.Size(75, 23)
 		Me.ClearGameAppOptionsButton.TabIndex = 33
-		Me.ClearGameAppOptionsButton.Text = "Clear"
+		Me.ClearGameAppOptionsButton.Text = "清除"
 		Me.ClearGameAppOptionsButton.UseVisualStyleBackColor = True
 		'
 		'BrowseForGameAppPathFileNameButton
@@ -283,7 +282,7 @@ Partial Class SetUpGamesUserControl
 		Me.BrowseForGameAppPathFileNameButton.Name = "BrowseForGameAppPathFileNameButton"
 		Me.BrowseForGameAppPathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForGameAppPathFileNameButton.TabIndex = 30
-		Me.BrowseForGameAppPathFileNameButton.Text = "Browse..."
+		Me.BrowseForGameAppPathFileNameButton.Text = "浏览..."
 		Me.BrowseForGameAppPathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'GameAppPathFileNameTextBox
@@ -303,7 +302,7 @@ Partial Class SetUpGamesUserControl
 		Me.ExecutableLabel.Name = "ExecutableLabel"
 		Me.ExecutableLabel.Size = New System.Drawing.Size(99, 13)
 		Me.ExecutableLabel.TabIndex = 28
-		Me.ExecutableLabel.Text = "Executable (*.exe):"
+		Me.ExecutableLabel.Text = "可执行文件 (*.exe)："
 		'
 		'PackerLabel
 		'
@@ -313,7 +312,7 @@ Partial Class SetUpGamesUserControl
 		Me.PackerLabel.Name = "PackerLabel"
 		Me.PackerLabel.Size = New System.Drawing.Size(67, 13)
 		Me.PackerLabel.TabIndex = 16
-		Me.PackerLabel.Text = "Packer tool:"
+		Me.PackerLabel.Text = "打包工具："
 		'
 		'BrowseForUnpackerPathFileNameButton
 		'
@@ -322,7 +321,7 @@ Partial Class SetUpGamesUserControl
 		Me.BrowseForUnpackerPathFileNameButton.Name = "BrowseForUnpackerPathFileNameButton"
 		Me.BrowseForUnpackerPathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForUnpackerPathFileNameButton.TabIndex = 18
-		Me.BrowseForUnpackerPathFileNameButton.Text = "Browse..."
+		Me.BrowseForUnpackerPathFileNameButton.Text = "浏览..."
 		Me.BrowseForUnpackerPathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'PackerPathFileNameTextBox
@@ -342,7 +341,7 @@ Partial Class SetUpGamesUserControl
 		Me.ModelViewerLabel.Name = "ModelViewerLabel"
 		Me.ModelViewerLabel.Size = New System.Drawing.Size(79, 13)
 		Me.ModelViewerLabel.TabIndex = 13
-		Me.ModelViewerLabel.Text = "Model viewer:"
+		Me.ModelViewerLabel.Text = "模型查看器："
 		'
 		'BrowseForViewerPathFileNameButton
 		'
@@ -351,7 +350,7 @@ Partial Class SetUpGamesUserControl
 		Me.BrowseForViewerPathFileNameButton.Name = "BrowseForViewerPathFileNameButton"
 		Me.BrowseForViewerPathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForViewerPathFileNameButton.TabIndex = 15
-		Me.BrowseForViewerPathFileNameButton.Text = "Browse..."
+		Me.BrowseForViewerPathFileNameButton.Text = "浏览..."
 		Me.BrowseForViewerPathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'ViewerPathFileNameTextBox
@@ -369,7 +368,7 @@ Partial Class SetUpGamesUserControl
 		Me.CloneGameSetupButton.Name = "CloneGameSetupButton"
 		Me.CloneGameSetupButton.Size = New System.Drawing.Size(75, 23)
 		Me.CloneGameSetupButton.TabIndex = 12
-		Me.CloneGameSetupButton.Text = "Clone"
+		Me.CloneGameSetupButton.Text = "克隆"
 		Me.CloneGameSetupButton.UseVisualStyleBackColor = True
 		'
 		'GameNameTextBox
@@ -389,7 +388,7 @@ Partial Class SetUpGamesUserControl
 		Me.NameLabel.Name = "NameLabel"
 		Me.NameLabel.Size = New System.Drawing.Size(39, 13)
 		Me.NameLabel.TabIndex = 0
-		Me.NameLabel.Text = "Name:"
+		Me.NameLabel.Text = "名称："
 		'
 		'DeleteGameSetupButton
 		'
@@ -397,7 +396,7 @@ Partial Class SetUpGamesUserControl
 		Me.DeleteGameSetupButton.Name = "DeleteGameSetupButton"
 		Me.DeleteGameSetupButton.Size = New System.Drawing.Size(75, 23)
 		Me.DeleteGameSetupButton.TabIndex = 8
-		Me.DeleteGameSetupButton.Text = "Delete"
+		Me.DeleteGameSetupButton.Text = "删除"
 		Me.DeleteGameSetupButton.UseVisualStyleBackColor = True
 		'
 		'BrowseForGamePathFileNameButton
@@ -407,7 +406,7 @@ Partial Class SetUpGamesUserControl
 		Me.BrowseForGamePathFileNameButton.Name = "BrowseForGamePathFileNameButton"
 		Me.BrowseForGamePathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForGamePathFileNameButton.TabIndex = 4
-		Me.BrowseForGamePathFileNameButton.Text = "Browse..."
+		Me.BrowseForGamePathFileNameButton.Text = "浏览..."
 		Me.BrowseForGamePathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'GamePathFileNameTextBox
@@ -427,7 +426,7 @@ Partial Class SetUpGamesUserControl
 		Me.ModelCompilerLabel.Name = "ModelCompilerLabel"
 		Me.ModelCompilerLabel.Size = New System.Drawing.Size(90, 13)
 		Me.ModelCompilerLabel.TabIndex = 5
-		Me.ModelCompilerLabel.Text = "Model compiler:"
+		Me.ModelCompilerLabel.Text = "模型编译器："
 		'
 		'BrowseForCompilerPathFileNameButton
 		'
@@ -436,7 +435,7 @@ Partial Class SetUpGamesUserControl
 		Me.BrowseForCompilerPathFileNameButton.Name = "BrowseForCompilerPathFileNameButton"
 		Me.BrowseForCompilerPathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForCompilerPathFileNameButton.TabIndex = 7
-		Me.BrowseForCompilerPathFileNameButton.Text = "Browse..."
+		Me.BrowseForCompilerPathFileNameButton.Text = "浏览..."
 		Me.BrowseForCompilerPathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'CompilerPathFileNameTextBox
@@ -465,7 +464,7 @@ Partial Class SetUpGamesUserControl
 		Me.GoBackButton.Name = "GoBackButton"
 		Me.GoBackButton.Size = New System.Drawing.Size(75, 23)
 		Me.GoBackButton.TabIndex = 52
-		Me.GoBackButton.Text = "Go Back"
+		Me.GoBackButton.Text = "返回"
 		Me.GoBackButton.UseVisualStyleBackColor = True
 		'
 		'SteamLibraryPathsDataGridView
@@ -510,8 +509,6 @@ Partial Class SetUpGamesUserControl
 		'
 		'SetUpGamesUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.Panel1)
 		Me.Name = "SetUpGamesUserControl"
 		Me.Size = New System.Drawing.Size(784, 546)

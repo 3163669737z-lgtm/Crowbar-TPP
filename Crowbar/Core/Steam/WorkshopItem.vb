@@ -581,10 +581,10 @@ Public Class WorkshopItem
 
 	Public Enum SteamUGCPublishedItemVisibility
 		'<Description("<no change>")> NoChange = -1
-		<Description("Public")> [Public] = 0
-		<Description("Friends-Only")> FriendsOnly = 1
-		<Description("Hidden")> Hidden = 2
-		<Description("Unlisted")> Unlisted = 3
+		<Description("公开")> [Public] = 0
+		<Description("仅好友可见")> FriendsOnly = 1
+		<Description("私密")> Hidden = 2
+		<Description("不公开列出")> Unlisted = 3
 	End Enum
 
 #End Region

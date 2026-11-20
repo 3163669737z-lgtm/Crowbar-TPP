@@ -30,26 +30,16 @@ Public Class SourceQcFile31
 
 			mainOutputFileStream = Me.theOutputFileStreamWriter
 
+			qciFileName = Me.theOutputFileNameWithoutExtension + "_" + qciGroupName + ".qci"
+			qciPathFileName = Path.Combine(Me.theOutputPath, qciFileName)
 			Try
-				'qciPathFileName = Path.Combine(Me.theOutputPathName, Me.theOutputFileNameWithoutExtension + "_flexes.qci")
-				qciFileName = Me.theOutputFileNameWithoutExtension + "_" + qciGroupName + ".qci"
-				qciPathFileName = Path.Combine(Me.theOutputPath, qciFileName)
-
-				Me.theOutputFileStreamWriter = File.CreateText(qciPathFileName)
-
-				'Me.WriteFlexLines()
-				'Me.WriteFlexControllerLines()
-				'Me.WriteFlexRuleLines()
-				writeGroupAction.Invoke()
-			Catch ex As Exception
-				Throw
+				FileManager.WriteTextAtomically(qciPathFileName,
+					Sub(writer)
+						Me.theOutputFileStreamWriter = writer
+						writeGroupAction()
+					End Sub)
 			Finally
-				If Me.theOutputFileStreamWriter IsNot Nothing Then
-					Me.theOutputFileStreamWriter.Flush()
-					Me.theOutputFileStreamWriter.Close()
-
-					Me.theOutputFileStreamWriter = mainOutputFileStream
-				End If
+				Me.theOutputFileStreamWriter = mainOutputFileStream
 			End Try
 
 			Try

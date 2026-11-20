@@ -33,7 +33,7 @@ Public Class SourceMdlFile10
 		Me.theMdlFileData.theID = Me.theMdlFileData.id
 		Me.theMdlFileData.version = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.name = Me.theInputFileReader.ReadChars(64)
+		Me.theMdlFileData.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 		Me.theMdlFileData.theModelName = CStr(Me.theMdlFileData.name).Trim(Chr(0))
 
 		Me.theMdlFileData.fileSize = Me.theInputFileReader.ReadInt32()
@@ -124,7 +124,7 @@ Public Class SourceMdlFile10
 					'boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aBone As New SourceMdlBone10()
 
-					aBone.name = Me.theInputFileReader.ReadChars(32)
+					aBone.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 32)
 					aBone.theName = aBone.name
 					aBone.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(aBone.theName)
 					aBone.parentBoneIndex = Me.theInputFileReader.ReadInt32()
@@ -221,7 +221,7 @@ Public Class SourceMdlFile10
 				'attachmentInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim anAttachment As New SourceMdlAttachment10()
 
-				anAttachment.name = Me.theInputFileReader.ReadChars(32)
+				anAttachment.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 32)
 				anAttachment.theName = anAttachment.name
 				anAttachment.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(anAttachment.theName)
 				anAttachment.type = Me.theInputFileReader.ReadInt32()
@@ -310,7 +310,7 @@ Public Class SourceMdlFile10
 
 					fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-					aSequence.name = Me.theInputFileReader.ReadChars(32)
+					aSequence.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 32)
 					aSequence.theName = aSequence.name
 					aSequence.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(aSequence.theName)
 
@@ -404,9 +404,9 @@ Public Class SourceMdlFile10
 					'boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aSequenceGroup As New SourceMdlSequenceGroup10()
 
-					aSequenceGroup.name = Me.theInputFileReader.ReadChars(32)
+					aSequenceGroup.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 32)
 					aSequenceGroup.theName = CStr(aSequenceGroup.name).Trim(Chr(0))
-					aSequenceGroup.fileName = Me.theInputFileReader.ReadChars(64)
+					aSequenceGroup.fileName = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 					aSequenceGroup.theFileName = CStr(aSequenceGroup.fileName).Trim(Chr(0))
 					aSequenceGroup.cacheOffset = Me.theInputFileReader.ReadInt32()
 					aSequenceGroup.data = Me.theInputFileReader.ReadInt32()
@@ -565,7 +565,7 @@ Public Class SourceMdlFile10
 					bodyPartInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aBodyPart As New SourceMdlBodyPart10()
 
-					aBodyPart.name = Me.theInputFileReader.ReadChars(64)
+					aBodyPart.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 					aBodyPart.theName = CStr(aBodyPart.name).Trim(Chr(0))
 					aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
 					aBodyPart.base = Me.theInputFileReader.ReadInt32()
@@ -596,6 +596,8 @@ Public Class SourceMdlFile10
 
 				'fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				'Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theBodyParts")
+			Catch ex As InvalidDataException
+				Throw
 			Catch ex As Exception
 				Dim debug As Integer = 4242
 			End Try
@@ -620,11 +622,7 @@ Public Class SourceMdlFile10
 					'boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aTexture As New SourceMdlTexture10()
 
-					'aTexture.fileName = Me.theInputFileReader.ReadChars(64)
-					'aTexture.theFileName = CStr(aTexture.fileName).Trim(Chr(0))
-					Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(64)
-					aTexture.theFileName = Text.Encoding.Default.GetString(bytes)
-					aTexture.theFileName = aTexture.theFileName.Trim(Chr(0))
+					aTexture.theFileName = CStr(FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)).Trim(Chr(0))
 					aTexture.flags = Me.theInputFileReader.ReadInt32()
 					aTexture.width = Me.theInputFileReader.ReadUInt32()
 					aTexture.height = Me.theInputFileReader.ReadUInt32()
@@ -646,6 +644,8 @@ Public Class SourceMdlFile10
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "theMdlFileData.theTextures alignment")
+			Catch ex As InvalidDataException
+				Throw
 			Catch ex As Exception
 				Dim debug As Integer = 4242
 			End Try
@@ -706,7 +706,7 @@ Public Class SourceMdlFile10
 		Me.theMdlFileData.theID = Me.theMdlFileData.id
 		Me.theMdlFileData.version = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.name = Me.theInputFileReader.ReadChars(64)
+		Me.theMdlFileData.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 		Me.theMdlFileData.theModelName = CStr(Me.theMdlFileData.name).Trim(Chr(0))
 
 		Me.theMdlFileData.fileSize = Me.theInputFileReader.ReadInt32()
@@ -840,6 +840,42 @@ Public Class SourceMdlFile10
 
 			Me.theMdlFileData.theBoneTransforms.Add(boneTransform)
 		Next
+
+		If (Me.theMdlFileData.flags And SourceMdlFileData10.XashBoneWeights) <> 0 Then
+			Me.ReadXashSkinTransforms()
+		End If
+	End Sub
+
+	Private Sub ReadXashSkinTransforms()
+		Dim data As SourceMdlFileData10 = Me.theMdlFileData
+		Const boneInfoSize As Integer = 128
+		Dim first As Long = CLng(data.boneOffset) + 112L * data.boneCount
+		If (data.flags And SourceMdlFileData10.XashBoneInfo) = 0 OrElse
+			first + CLng(boneInfoSize) * data.boneCount > Me.theInputFileReader.BaseStream.Length Then
+			Throw New InvalidDataException("Xash3D MDL 的绑定姿态数据不完整。")
+		End If
+		data.theXashSkinTransforms = New List(Of SourceBoneTransform10)(data.boneCount)
+		For index As Integer = 0 To data.boneCount - 1
+			Me.theInputFileReader.BaseStream.Position = first + CLng(boneInfoSize) * index
+			Dim c0 As New SourceVector(), c1 As New SourceVector(), c2 As New SourceVector(), c3 As New SourceVector()
+			c0.x = Me.theInputFileReader.ReadSingle()
+			c1.x = Me.theInputFileReader.ReadSingle()
+			c2.x = Me.theInputFileReader.ReadSingle()
+			c3.x = Me.theInputFileReader.ReadSingle()
+			c0.y = Me.theInputFileReader.ReadSingle()
+			c1.y = Me.theInputFileReader.ReadSingle()
+			c2.y = Me.theInputFileReader.ReadSingle()
+			c3.y = Me.theInputFileReader.ReadSingle()
+			c0.z = Me.theInputFileReader.ReadSingle()
+			c1.z = Me.theInputFileReader.ReadSingle()
+			c2.z = Me.theInputFileReader.ReadSingle()
+			c3.z = Me.theInputFileReader.ReadSingle()
+			Dim bone As SourceBoneTransform10 = data.theBoneTransforms(index)
+			Dim skin As New SourceBoneTransform10()
+			MathModule.R_ConcatTransforms(bone.matrixColumn0, bone.matrixColumn1, bone.matrixColumn2, bone.matrixColumn3,
+				c0, c1, c2, c3, skin.matrixColumn0, skin.matrixColumn1, skin.matrixColumn2, skin.matrixColumn3)
+			data.theXashSkinTransforms.Add(skin)
+		Next
 	End Sub
 
 	Public Sub WriteInternalMdlFileName(ByVal internalMdlFileName As String)
@@ -879,7 +915,7 @@ Public Class SourceMdlFile10
 					anEvent.frameIndex = Me.theInputFileReader.ReadInt32()
 					anEvent.eventIndex = Me.theInputFileReader.ReadInt32()
 					anEvent.eventType = Me.theInputFileReader.ReadInt32()
-					anEvent.options = Me.theInputFileReader.ReadChars(64)
+					anEvent.options = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 					anEvent.theOptions = CStr(anEvent.options).Trim(Chr(0))
 
 					aSequence.theEvents.Add(anEvent)
@@ -983,7 +1019,7 @@ Public Class SourceMdlFile10
 				'modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aModel As New SourceMdlModel10()
 
-				aModel.name = Me.theInputFileReader.ReadChars(64)
+				aModel.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 				aModel.theName = CStr(aModel.name).Trim(Chr(0))
 				aModel.type = Me.theInputFileReader.ReadInt32()
 				aModel.boundingRadius = Me.theInputFileReader.ReadSingle()
@@ -1012,12 +1048,43 @@ Public Class SourceMdlFile10
 				Me.ReadModelVertexes(aModel)
 				Me.ReadModelNormals(aModel)
 				Me.ReadMeshes(aModel)
+				If (Me.theMdlFileData.flags And SourceMdlFileData10.XashBoneWeights) <> 0 AndAlso aModel.vertexCount > 0 AndAlso aModel.groupCount <> 0 Then
+					Me.ReadXashVertexWeights(aModel)
+				End If
 
 				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 			Next
+		Catch ex As InvalidDataException
+			Throw
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
+	End Sub
+
+	Private Sub ReadXashVertexWeights(model As SourceMdlModel10)
+		' Xash3D reuses the GoldSource deformation-group fields as weight table offsets.
+		Dim offset As Long = model.groupCount
+		If offset < 244 OrElse offset + 8L * model.vertexCount > Me.theInputFileReader.BaseStream.Length Then
+			Throw New InvalidDataException("Xash3D MDL 的顶点权重表无效。")
+		End If
+		Me.theInputFileReader.BaseStream.Position = offset
+		model.theXashWeights = New List(Of List(Of KeyValuePair(Of Integer, Double)))(model.vertexCount)
+		For index As Integer = 0 To model.vertexCount - 1
+			Dim weights As Byte() = Me.theInputFileReader.ReadBytes(4)
+			Dim links As New List(Of KeyValuePair(Of Integer, Double))(4)
+			For slot As Integer = 0 To 3
+				Dim bone As Integer = Me.theInputFileReader.ReadByte()
+				If bone = &HFF Then
+					Continue For
+				End If
+				If bone >= Me.theMdlFileData.boneCount Then
+					Throw New InvalidDataException("Xash3D MDL 的顶点权重引用了无效的骨骼。")
+				End If
+				links.Add(New KeyValuePair(Of Integer, Double)(bone, weights(slot) / 255.0))
+			Next
+			model.theXashWeights.Add(links)
+		Next
+		Me.theMdlFileData.theFileSeekLog.Add(offset, Me.theInputFileReader.BaseStream.Position - 1, "Xash3D vertex weights")
 	End Sub
 
 	Private Sub ReadModelVertexBoneInfos(ByVal aModel As SourceMdlModel10)
@@ -1234,6 +1301,13 @@ Public Class SourceMdlFile10
 	End Sub
 
 	Private Sub ReadTextureData(ByVal aTexture As SourceMdlTexture10)
+		If String.Equals(Path.GetExtension(aTexture.theFileName), ".pvr", StringComparison.OrdinalIgnoreCase) Then
+			Me.theInputFileReader.BaseStream.Position = aTexture.dataOffset
+			DreamcastStudioTexture.Read(Me.theInputFileReader, aTexture)
+			Me.theMdlFileData.theFileSeekLog.Add(aTexture.dataOffset, Me.theInputFileReader.BaseStream.Position - 1, "Dreamcast studio texture")
+			Return
+		End If
+
 		'Dim boneInputFileStreamPosition As Long
 		'Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long

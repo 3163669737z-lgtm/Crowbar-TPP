@@ -1,4 +1,4 @@
-﻿Imports System.IO
+Imports System.IO
 
 Public Class SourceSmdFile14
 
@@ -131,7 +131,7 @@ Public Class SourceSmdFile14
 					'							VectorSubtract( sequence[i].panim[q]->pos[k][j], adj, sequence[i].panim[q]->pos[k][j] );
 					'[...]
 					'			VectorCopy( motion, sequence[i].linearmovement );
-					scale = frameIndex / (aSequenceDesc.frameCount - 1)
+					scale = If(aSequenceDesc.frameCount > 1, frameIndex / (aSequenceDesc.frameCount - 1), 0)
 					If (aSequenceDesc.motiontype And SourceModule10.STUDIO_LX) = SourceModule10.STUDIO_LX Then
 						position.x += scale * aSequenceDesc.linearmovement.x
 					End If
@@ -228,144 +228,51 @@ Public Class SourceSmdFile14
 	End Sub
 
 	Public Sub WriteTrianglesSection(ByVal aBodyModel As SourceMdlModel14)
-		Dim line As String = ""
-		Dim materialLine As String = ""
-		Dim vertex1Line As String = ""
-		Dim vertex2Line As String = ""
-		Dim vertex3Line As String = ""
-		'Dim materialIndex As Integer
-		'Dim materialName As String
-		'Dim aMesh As SourceMdlMesh14
-		'Dim aTexture As SourceMdlTexture14
-		Dim boneIndex As Integer
-		Dim aVertexIndex As Integer
-
-		'triangles
-		line = "triangles"
-		Me.theOutputFileStreamWriter.WriteLine(line)
-
-		Try
-			'If aBodyModel.theMeshes IsNot Nothing Then
-			'	For meshIndex As Integer = 0 To aBodyModel.theMeshes.Count - 1
-			'		aMesh = aBodyModel.theMeshes(meshIndex)
-			'		materialIndex = aMesh.skinref
-			'		aTexture = Me.theMdlFileData.theTextures(materialIndex)
-			'		materialName = aTexture.theFileName
-
-			'		'For groupIndex As Integer = 1 To aStripOrFan.theVertexInfos.Count - 2
-			'		'	materialLine = materialName
-
-			'		'	vertex1Line = Me.GetVertexLine(aBodyModel, aStripOrFan.theVertexInfos(0), aTexture)
-			'		'	vertex2Line = Me.GetVertexLine(aBodyModel, aStripOrFan.theVertexInfos(groupIndex + 1), aTexture)
-			'		'	vertex3Line = Me.GetVertexLine(aBodyModel, aStripOrFan.theVertexInfos(groupIndex), aTexture)
-
-			'		'	If vertex1Line.StartsWith("// ") OrElse vertex2Line.StartsWith("// ") OrElse vertex3Line.StartsWith("// ") Then
-			'		'		materialLine = "// " + materialLine
-			'		'		If Not vertex1Line.StartsWith("// ") Then
-			'		'			vertex1Line = "// " + vertex1Line
-			'		'		End If
-			'		'		If Not vertex2Line.StartsWith("// ") Then
-			'		'			vertex2Line = "// " + vertex2Line
-			'		'		End If
-			'		'		If Not vertex3Line.StartsWith("// ") Then
-			'		'			vertex3Line = "// " + vertex3Line
-			'		'		End If
-			'		'	End If
-			'		'	Me.theOutputFileStreamWriter.WriteLine(materialLine)
-			'		'	Me.theOutputFileStreamWriter.WriteLine(vertex1Line)
-			'		'	Me.theOutputFileStreamWriter.WriteLine(vertex2Line)
-			'		'	Me.theOutputFileStreamWriter.WriteLine(vertex3Line)
-			'		'Next
-			'	Next
-			'End If
-			For aVertexIndexIndex As Integer = 0 To Me.theMdlFileData.theIndexes.Count - 3 Step 3
-				materialLine = Me.theMdlFileData.theTextures(0).theTextureName
-
-				boneIndex = 0
-
-				aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex)
-				vertex1Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
-				aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex + 2)
-				vertex2Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
-				aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex + 1)
-				vertex3Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
-
-				If vertex1Line.StartsWith("// ") OrElse vertex2Line.StartsWith("// ") OrElse vertex3Line.StartsWith("// ") Then
-					materialLine = "// " + materialLine
-					If Not vertex1Line.StartsWith("// ") Then
-						vertex1Line = "// " + vertex1Line
-					End If
-					If Not vertex2Line.StartsWith("// ") Then
-						vertex2Line = "// " + vertex2Line
-					End If
-					If Not vertex3Line.StartsWith("// ") Then
-						vertex3Line = "// " + vertex3Line
-					End If
-				End If
-				Me.theOutputFileStreamWriter.WriteLine(materialLine)
-				Me.theOutputFileStreamWriter.WriteLine(vertex1Line)
-				Me.theOutputFileStreamWriter.WriteLine(vertex2Line)
-				Me.theOutputFileStreamWriter.WriteLine(vertex3Line)
+		Me.theOutputFileStreamWriter.WriteLine("triangles")
+		For Each modelInfo As SourceMdlWeightingHeader14 In aBodyModel.theWeightingHeaders
+			Dim material As String = Me.theMdlFileData.theTextures(modelInfo.weightingHeaderIndex).theTextureName
+			For Each mesh As SourceMdlWeightingBoneData14 In modelInfo.theWeightingBoneDatas
+				For first As Integer = mesh.firstIndex To mesh.firstIndex + mesh.indexCount - 3 Step 3
+					Me.theOutputFileStreamWriter.WriteLine(material)
+					WriteVertex(first + 1, mesh)
+					WriteVertex(first, mesh)
+					WriteVertex(first + 2, mesh)
+				Next
 			Next
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
+		Next
+		Me.theOutputFileStreamWriter.WriteLine("end")
+	End Sub
 
-		line = "end"
-		Me.theOutputFileStreamWriter.WriteLine(line)
+	Private Sub WriteVertex(index As Integer, mesh As SourceMdlWeightingBoneData14)
+		Dim vertexIndex As Integer = Me.theMdlFileData.theIndexes(index)
+		Dim position As SourceVector = Me.theMdlFileData.theVertexes(vertexIndex)
+		Dim normal As SourceVector = Me.theMdlFileData.theNormals(vertexIndex)
+		Dim uv As SourceVector = Me.theMdlFileData.theUVs(vertexIndex)
+		Dim weighting As SourceMdlWeighting14 = Me.theMdlFileData.theWeightings(vertexIndex)
+		Dim format As IFormatProvider = TheApp.InternalNumberFormat
+		Dim line As New System.Text.StringBuilder()
+		line.Append("  0")
+		For Each value As Double In {position.x, position.y, position.z, normal.x, normal.y, normal.z, uv.x, -uv.y}
+			line.Append(" ").Append(value.ToString("0.000000", format))
+		Next
+		line.Append(" ").Append(weighting.boneCount.ToString(format))
+		For slot As Integer = 0 To weighting.bones.Length - 1
+			Dim mapping As Integer = weighting.bones(slot)
+			If mapping = &HFF Then
+				Continue For
+			End If
+			Dim bone As Integer = mesh.theWeightingBoneIndexes(mapping)
+			If bone >= Me.theMdlFileData.boneCount Then
+				Throw New InvalidDataException("Nightfire MDL 网格的骨骼索引无效。")
+			End If
+			line.Append(" ").Append(bone.ToString(format)).Append(" ").Append(weighting.weights(slot).ToString("0.000000", format))
+		Next
+		Me.theOutputFileStreamWriter.WriteLine(line.ToString())
 	End Sub
 
 #End Region
 
-#Region "Private Delegates"
-
-#End Region
-
 #Region "Private Methods"
-
-	Private Function GetVertexLine(ByVal boneIndex As Integer, ByVal position As SourceVector, ByVal normal As SourceVector, ByVal uv As SourceVector, ByVal weightingHeader As SourceMdlWeightingHeader14, ByVal weighting As SourceMdlWeighting14) As String
-		Dim line As String
-
-		line = ""
-		Try
-			line = "  "
-			line += boneIndex.ToString(TheApp.InternalNumberFormat)
-
-			line += " "
-			line += position.x.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += position.y.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += position.z.ToString("0.000000", TheApp.InternalNumberFormat)
-
-			line += " "
-			line += normal.x.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += normal.y.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += normal.z.ToString("0.000000", TheApp.InternalNumberFormat)
-
-			line += " "
-			line += uv.x.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += (-uv.y).ToString("0.000000", TheApp.InternalNumberFormat)
-
-			If weighting.boneCount > 0 Then
-				line += " "
-				line += weighting.boneCount.ToString(TheApp.InternalNumberFormat)
-				For x As Integer = 0 To weighting.boneCount - 1
-					line += " "
-					line += weightingHeader.theWeightingBoneDatas(0).theWeightingBoneIndexes(weighting.bones(x)).ToString(TheApp.InternalNumberFormat)
-					line += " "
-					line += weighting.weights(x).ToString("0.000000", TheApp.InternalNumberFormat)
-				Next
-			End If
-		Catch ex As Exception
-			line = "// " + line
-		End Try
-
-		Return line
-	End Function
 
 	'static void CalcAnimation( const CStudioHdr *pStudioHdr,	Vector *pos, Quaternion *q, 
 	'	mstudioseqdesc_t &seqdesc,

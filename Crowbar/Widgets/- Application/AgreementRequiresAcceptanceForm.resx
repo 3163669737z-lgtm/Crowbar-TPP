@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TextBox1.Text" xml:space="preserve">
-    <value>Publishing a new workshop item, or updating the content folder or file of an existing item, requires accepting the Steam Subscriber Agreement (which might have been updated since you last accepted).
-Unless the agreement is accepted, the items will be available only to you.</value>
+    <value>发布新的创意工坊项目，或更新现有项目的内容文件夹或文件，需要接受 Steam 订户协议（该协议自您上次接受后可能已更新）。
+除非接受该协议，否则这些项目将仅对您可见。</value>
   </data>
 </root>

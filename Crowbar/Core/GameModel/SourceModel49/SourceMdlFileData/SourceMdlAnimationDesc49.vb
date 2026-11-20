@@ -7,6 +7,16 @@ Public Class SourceMdlAnimationDesc49
 		Me.theCorrectiveAnimationName = ""
 	End Sub
 
+	Friend theSmdExportName As String
+
+	Friend Function GetSmdRelativePathFileName(modelName As String) As String
+		If String.IsNullOrEmpty(Me.theSmdRelativePathFileName) Then
+			Dim name As String = If(String.IsNullOrWhiteSpace(Me.theSmdExportName), Me.theName, Me.theSmdExportName)
+			Me.theSmdRelativePathFileName = SourceFileNamesModule.CreateNamedAnimationSmdRelativePath(modelName, name)
+		End If
+		Return Me.theSmdRelativePathFileName
+	End Function
+
 	'FROM: AlienSwarm_source\src\public\studio.h
 	'struct mstudioanimdesc_t
 	'{

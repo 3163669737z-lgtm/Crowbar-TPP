@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.IO
 
 Public Class MappingTool
@@ -106,7 +106,7 @@ Public Class MappingTool
 		info = CType(e.Argument, MappingToolInfo)
 		Me.theGameSetupSelectedIndex = info.gameSetupSelectedIndex
 		If MappingToolInputsAreOkay() Then
-			Me.UpdateProgress(1, "Mapping tool opened.")
+			Me.UpdateProgress(1, "地图工具已打开。")
 			Me.RunMappingTool()
 		End If
 	End Sub
@@ -124,7 +124,7 @@ Public Class MappingTool
 
 		If Not File.Exists(mappingToolPathFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage("The mapping tool, """ + mappingToolPathFileName + """, does not exist.")
+			Me.WriteErrorMessage("地图工具 """ + mappingToolPathFileName + """ 不存在。")
 			Me.UpdateProgress(1, My.Resources.ErrorMessageSDKMissingCause)
 		End If
 
@@ -191,7 +191,7 @@ Public Class MappingTool
 	End Sub
 
 	Private Sub WriteErrorMessage(ByVal line As String)
-		Me.UpdateProgressInternal(1, "ERROR: " + line)
+		Me.UpdateProgressInternal(1, "错误：" + line)
 	End Sub
 
 	Private Sub UpdateProgress(ByVal indentLevel As Integer, ByVal line As String)

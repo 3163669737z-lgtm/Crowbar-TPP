@@ -159,7 +159,7 @@ Partial Class BlackMesaTagsUserControl
 		Me.GroupBox1.Size = New System.Drawing.Size(167, 206)
 		Me.GroupBox1.TabIndex = 1
 		Me.GroupBox1.TabStop = False
-		Me.GroupBox1.Text = "Extras"
+		Me.GroupBox1.Text = "附加标签"
 		'
 		'ExtraTag1TextBox
 		'
@@ -208,7 +208,7 @@ Partial Class BlackMesaTagsUserControl
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(46, 13)
 		Me.Label5.TabIndex = 8
-		Me.Label5.Text = "Extra 5:"
+		Me.Label5.Text = "附加 5："
 		'
 		'Label4
 		'
@@ -217,7 +217,7 @@ Partial Class BlackMesaTagsUserControl
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(46, 13)
 		Me.Label4.TabIndex = 6
-		Me.Label4.Text = "Extra 4:"
+		Me.Label4.Text = "附加 4："
 		'
 		'Label3
 		'
@@ -226,7 +226,7 @@ Partial Class BlackMesaTagsUserControl
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(46, 13)
 		Me.Label3.TabIndex = 4
-		Me.Label3.Text = "Extra 3:"
+		Me.Label3.Text = "附加 3："
 		'
 		'Label2
 		'
@@ -235,7 +235,7 @@ Partial Class BlackMesaTagsUserControl
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(46, 13)
 		Me.Label2.TabIndex = 2
-		Me.Label2.Text = "Extra 2:"
+		Me.Label2.Text = "附加 2："
 		'
 		'Label1
 		'
@@ -244,12 +244,12 @@ Partial Class BlackMesaTagsUserControl
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(46, 13)
 		Me.Label1.TabIndex = 0
-		Me.Label1.Text = "Extra 1:"
+		Me.Label1.Text = "附加 1："
 		'
 		'BlackMesaTagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.Controls.Add(Me.GroupBox1)
 		Me.Controls.Add(Me.ModelTagsGroupBox)
 		Me.Controls.Add(Me.MapTagsGroupBox)

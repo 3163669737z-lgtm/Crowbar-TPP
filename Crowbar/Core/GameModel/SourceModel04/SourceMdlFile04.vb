@@ -45,6 +45,16 @@ Public Class SourceMdlFile04
 
 		Me.theMdlFileData.unknown02 = Me.theInputFileReader.ReadInt32()
 
+		Dim data As SourceMdlFileData04 = Me.theMdlFileData
+		If data.boneCount < 0 OrElse data.bodyPartCount < 0 OrElse data.sequenceDescCount < 0 OrElse data.sequenceFrameCount < 0 OrElse data.unknownCount < 0 Then
+			Throw New InvalidDataException("MDL v4 文件头中的计数无效。")
+		End If
+		Dim minimumSize As Long = 36L + 20L * data.boneCount + 40L * data.sequenceDescCount + 4L * data.unknownCount + 40L * data.bodyPartCount
+		Dim frameSize As Long = 60L + 6L * data.boneCount
+		If minimumSize > data.theActualFileSize OrElse data.sequenceFrameCount > (data.theActualFileSize - minimumSize) \ frameSize Then
+			Throw New InvalidDataException("MDL v4 文件中的数据不完整。")
+		End If
+
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "MDL File Header")
 	End Sub
@@ -108,16 +118,21 @@ Public Class SourceMdlFile04
 				'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 				Me.theMdlFileData.theSequenceDescs = New List(Of SourceMdlSequenceDesc04)(Me.theMdlFileData.sequenceDescCount)
+				Dim remainingFrames As Integer = Me.theMdlFileData.sequenceFrameCount
 				For sequenceDescIndex As Integer = 0 To Me.theMdlFileData.sequenceDescCount - 1
 					fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 					Dim aSequenceDesc As New SourceMdlSequenceDesc04()
 
-					aSequenceDesc.name = Me.theInputFileReader.ReadChars(aSequenceDesc.name.Length)
+					aSequenceDesc.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, aSequenceDesc.name.Length)
 					aSequenceDesc.theName = aSequenceDesc.name
 					aSequenceDesc.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(aSequenceDesc.theName)
 					aSequenceDesc.frameCount = Me.theInputFileReader.ReadInt32()
 					aSequenceDesc.flag = Me.theInputFileReader.ReadInt32()
+					If aSequenceDesc.frameCount < 0 OrElse aSequenceDesc.frameCount > remainingFrames Then
+						Throw New InvalidDataException("MDL v4 动画的帧数无效。")
+					End If
+					remainingFrames -= aSequenceDesc.frameCount
 
 					Me.theMdlFileData.theSequenceDescs.Add(aSequenceDesc)
 
@@ -145,6 +160,8 @@ Public Class SourceMdlFile04
 
 					Me.ReadSequences(aSequenceDesc)
 				Next
+			Catch ex As InvalidDataException
+				Throw
 			Catch ex As Exception
 				Dim debug As Integer = 4242
 			End Try
@@ -168,7 +185,7 @@ Public Class SourceMdlFile04
 
 					Dim aBodyPart As New SourceMdlBodyPart04()
 
-					aBodyPart.name = Me.theInputFileReader.ReadChars(aBodyPart.name.Length)
+					aBodyPart.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, aBodyPart.name.Length)
 					aBodyPart.theName = aBodyPart.name
 					aBodyPart.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(aBodyPart.theName)
 					aBodyPart.unknown = Me.theInputFileReader.ReadInt32()
@@ -237,9 +254,9 @@ Public Class SourceMdlFile04
 					For x As Integer = 0 To aSequence.unknown.Length - 1
 						aSequence.unknown(x) = Me.theInputFileReader.ReadInt32()
 					Next
-					aSequence.unknownSingle01 = Me.theInputFileReader.ReadSingle()
-					aSequence.unknownSingle02 = Me.theInputFileReader.ReadSingle()
-					aSequence.unknownSingle03 = Me.theInputFileReader.ReadSingle()
+					aSequence.rootPosition.x = Me.theInputFileReader.ReadSingle()
+					aSequence.rootPosition.y = Me.theInputFileReader.ReadSingle()
+					aSequence.rootPosition.z = Me.theInputFileReader.ReadSingle()
 					'aSequence.positionScaleX = Me.theInputFileReader.ReadInt16()
 					'aSequence.positionScaleY = Me.theInputFileReader.ReadInt16()
 					'aSequence.positionScaleZ = Me.theInputFileReader.ReadInt16()
@@ -278,14 +295,13 @@ Public Class SourceMdlFile04
 				For sequenceIndex As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
 					Dim aSequenceValue As New SourceMdlSequenceValue04()
 
-					aSequenceValue.position = New SourceVector()
+					Dim bone As SourceMdlBone04 = Me.theMdlFileData.theBones(sequenceIndex)
+					aSequenceValue.position = If(bone.parentBoneIndex = -1, aSequence.rootPosition, bone.position)
 					aSequenceValue.rotation = New SourceVector()
-					aSequenceValue.position.x = Me.theInputFileReader.ReadByte()
-					aSequenceValue.position.y = Me.theInputFileReader.ReadByte()
-					aSequenceValue.position.z = Me.theInputFileReader.ReadByte()
-					aSequenceValue.rotation.X = Me.theInputFileReader.ReadByte()
-					aSequenceValue.rotation.Y = Me.theInputFileReader.ReadByte()
-					aSequenceValue.rotation.Z = Me.theInputFileReader.ReadByte()
+					' The three unsigned values encode hundredths of a degree.
+					aSequenceValue.rotation.x = MathModule.DegreesToRadians(Me.theInputFileReader.ReadUInt16() / 100.0)
+					aSequenceValue.rotation.y = MathModule.DegreesToRadians(Me.theInputFileReader.ReadUInt16() / 100.0)
+					aSequenceValue.rotation.z = MathModule.DegreesToRadians(Me.theInputFileReader.ReadUInt16() / 100.0)
 					'aSequenceValue.position = New SourceVector()
 					'aSequenceValue.position.x = Me.theInputFileReader.ReadSingle()
 					'aSequenceValue.position.y = Me.theInputFileReader.ReadSingle()
@@ -417,7 +433,7 @@ Public Class SourceMdlFile04
 
 					Dim aMesh As New SourceMdlMesh04()
 
-					aMesh.name = Me.theInputFileReader.ReadChars(aMesh.name.Length)
+					aMesh.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, aMesh.name.Length)
 					aMesh.theName = aMesh.name
 					aMesh.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(aMesh.theName)
 					aMesh.faceCount = Me.theInputFileReader.ReadInt32()

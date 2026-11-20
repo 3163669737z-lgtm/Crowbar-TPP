@@ -1,53 +1,53 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 
 Public Module AppEnums
 
 	Public Enum InputOptions
-		<Description("File")> File
-		<Description("Folder")> Folder
-		<Description("Folder and subfolders")> FolderRecursion
+		<Description("文件")> File
+		<Description("文件夹")> Folder
+		<Description("文件夹及子文件夹")> FolderRecursion
 	End Enum
 
 	Public Enum DownloadOutputPathOptions
 		'<Description("Downloads folder")> DownloadsFolder
-		<Description("Documents folder")> DocumentsFolder
-		<Description("Work folder")> WorkFolder
+		<Description("文档文件夹")> DocumentsFolder
+		<Description("工作文件夹")> WorkFolder
 	End Enum
 
 	Public Enum UnpackOutputPathOptions
-		<Description("Same folder (as Package)")> SameFolder
-		<Description("Subfolder (of Package)")> Subfolder
-		<Description("Work folder")> WorkFolder
-		<Description("Game's addons folder")> GameAddonsFolder
+		<Description("包文件所在文件夹")> SameFolder
+		<Description("包文件目录的子文件夹")> Subfolder
+		<Description("工作文件夹")> WorkFolder
+		<Description("游戏的 addons 文件夹")> GameAddonsFolder
 	End Enum
 
 	Public Enum DecompileOutputPathOptions
-		<Description("Work folder")> WorkFolder
-		<Description("Subfolder (of MDL input)")> Subfolder
+		<Description("工作文件夹")> WorkFolder
+		<Description("MDL 输入目录的子文件夹")> Subfolder
 	End Enum
 
 	Public Enum CompileOutputPathOptions
-		<Description("Game's ""models"" folder")> GameModelsFolder
-		<Description("Work folder")> WorkFolder
-		<Description("Subfolder (of QC input)")> Subfolder
+		<Description("游戏的 models 文件夹")> GameModelsFolder
+		<Description("工作文件夹")> WorkFolder
+		<Description("QC 输入目录的子文件夹")> Subfolder
 	End Enum
 
 	Public Enum PackInputOptions
-		<Description("Folder")> Folder
-		<Description("Parent of child folders")> ParentFolder
+		<Description("文件夹")> Folder
+		<Description("多个子文件夹的上一级")> ParentFolder
 	End Enum
 
 	Public Enum PackOutputPathOptions
-		<Description("Work folder")> WorkFolder
-		<Description("Parent folder")> ParentFolder
+		<Description("工作文件夹")> WorkFolder
+		<Description("上一级文件夹")> ParentFolder
 	End Enum
 
 	Public Enum PublishSearchFieldOptions
 		<Description("ID")> ID
-		<Description("Owner")> Owner
-		<Description("Title")> Title
-		<Description("Description")> Description
-		<Description("[All fields]")> AllFields
+		<Description("所有者")> Owner
+		<Description("标题")> Title
+		<Description("描述")> Description
+		<Description("全部字段")> AllFields
 	End Enum
 
 	Public Enum StatusMessage
@@ -68,6 +68,8 @@ Public Module AppEnums
 
 		<Description("ErrorInvalidMdlFileId")> ErrorInvalidMdlFileId
 		<Description("ErrorInvalidInternalMdlFileSize")> ErrorInvalidInternalMdlFileSize
+		<Description("PartialSuccess")> PartialSuccess
+		<Description("Unsupported")> Unsupported
 	End Enum
 
 	<FlagsAttribute>
@@ -153,9 +155,11 @@ Public Module AppEnums
 	End Enum
 
 	Public Enum SupportedMdlVersion
-		<Description("Do not override")> DoNotOverride
+		<Description("不覆盖版本")> DoNotOverride
+		<Description("04")> MDLv04
 		<Description("06")> MDLv06
 		<Description("10")> MDLv10
+		<Description("14")> MDLv14
 		<Description("2531")> MDLv2531
 		<Description("27")> MDLv27
 		<Description("28")> MDLv28

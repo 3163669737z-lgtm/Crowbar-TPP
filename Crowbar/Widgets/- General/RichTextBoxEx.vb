@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 
 Public Class RichTextBoxEx
 	Inherits RichTextBox
@@ -211,16 +211,16 @@ Public Class RichTextBoxEx
 
 	Private WithEvents CustomMenu As ContextMenuStrip
 
-	Private WithEvents UndoToolStripMenuItem As New ToolStripMenuItem("&Undo")
-	Private WithEvents RedoToolStripMenuItem As New ToolStripMenuItem("&Redo")
+	Private WithEvents UndoToolStripMenuItem As New ToolStripMenuItem("撤销")
+	Private WithEvents RedoToolStripMenuItem As New ToolStripMenuItem("重做")
 	Private WithEvents Separator0ToolStripSeparator As New ToolStripSeparator()
-	Private WithEvents CutToolStripMenuItem As New ToolStripMenuItem("Cu&t")
-	Private WithEvents CopyToolStripMenuItem As New ToolStripMenuItem("&Copy")
-	Private WithEvents PasteToolStripMenuItem As New ToolStripMenuItem("&Paste")
-	Private WithEvents DeleteToolStripMenuItem As New ToolStripMenuItem("&Delete")
+	Private WithEvents CutToolStripMenuItem As New ToolStripMenuItem("剪切")
+	Private WithEvents CopyToolStripMenuItem As New ToolStripMenuItem("复制")
+	Private WithEvents PasteToolStripMenuItem As New ToolStripMenuItem("粘贴")
+	Private WithEvents DeleteToolStripMenuItem As New ToolStripMenuItem("删除")
 	Private WithEvents Separator1ToolStripSeparator As New ToolStripSeparator()
-	Private WithEvents SelectAllToolStripMenuItem As New ToolStripMenuItem("Select &All")
-	Private WithEvents CopyAllToolStripMenuItem As New ToolStripMenuItem("Copy A&ll")
+	Private WithEvents SelectAllToolStripMenuItem As New ToolStripMenuItem("全选")
+	Private WithEvents CopyAllToolStripMenuItem As New ToolStripMenuItem("全部复制")
 
 	Private theCueBannerText As String
 	Private theOriginalFont As Font

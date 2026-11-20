@@ -9,6 +9,14 @@ Public Class SourceModel49
 		MyBase.New(mdlPathFileName, mdlVersion)
 	End Sub
 
+	Friend Sub New(mdlPathFileName As String, mdlVersion As Integer, externalMesh As Source49ExternalMesh)
+		Me.New(mdlPathFileName, mdlVersion)
+		Me.theExternalMesh = externalMesh
+	End Sub
+
+	Private ReadOnly theExternalMesh As Source49ExternalMesh
+	Private theMeshLayout As Source49ExternalMesh
+
 #End Region
 
 #Region "Properties"
@@ -48,7 +56,7 @@ Public Class SourceModel49
 			If Not Me.theMdlFileData.theMdlFileOnlyHasAnimations _
 					 AndAlso Me.theMdlFileData.theBones IsNot Nothing _
 					 AndAlso Me.theMdlFileData.theBones.Count > 0 _
-					 AndAlso Me.theVtxFileData IsNot Nothing Then
+					 AndAlso Me.theVtxFileData IsNot Nothing AndAlso Me.theVvdFileData49 IsNot Nothing Then
 				Return True
 			Else
 				Return False
@@ -62,6 +70,7 @@ Public Class SourceModel49
 					 AndAlso Me.theMdlFileData.theBones IsNot Nothing _
 					 AndAlso Me.theMdlFileData.theBones.Count > 0 _
 					 AndAlso Me.theVtxFileData IsNot Nothing _
+					 AndAlso Me.theVvdFileData49 IsNot Nothing _
 					 AndAlso Me.theVtxFileData.lodCount > 0 Then
 				Return True
 			Else
@@ -111,7 +120,7 @@ Public Class SourceModel49
 
 	Public Overrides ReadOnly Property HasVertexAnimationData As Boolean
 		Get
-			If Not Me.theMdlFileData.theMdlFileOnlyHasAnimations _
+			If Me.HasMeshData _
 			 AndAlso Me.theMdlFileData.theFlexDescs IsNot Nothing _
 			 AndAlso Me.theMdlFileData.theFlexDescs.Count > 0 Then
 				Return True
@@ -138,31 +147,66 @@ Public Class SourceModel49
 		'If Not Me.theMdlFileDataGeneric.theMdlFileOnlyHasAnimations Then
 		Me.thePhyPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".phy")
 
-		'TODO: If the checksum of the vtx does not match checksum in MDL, check the next vtx.
-		Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".dx11.vtx")
-		If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
-			Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".dx90.vtx")
-			If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
-				Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".dx80.vtx")
-				If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
-					Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".sw.vtx")
-					If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
-						Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".vtx")
-						If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
-							status = status Or FilesFoundFlags.ErrorRequiredVtxFileNotFound
-						End If
-					End If
-				End If
+		Me.theVtxPathFileName = Nothing
+		Me.theVvdPathFileName = Nothing
+		Me.CompatibilityDiagnostics.Clear()
+		If Me.theMeshLayout IsNot Nothing Then
+			If Not Me.theMeshLayout.FindFiles(Me.theVtxPathFileName, Me.theVvdPathFileName, Me.MeshResourceRoot, Me.CompatibilityDiagnostics) Then
+				status = status Or FilesFoundFlags.ErrorRequiredVtxFileNotFound Or FilesFoundFlags.ErrorRequiredVvdFileNotFound
+				Me.CompatibilityDiagnostics.Add("网格不可用，可以导出独立的骨骼、动画和元数据。")
+			End If
+		ElseIf Not Me.theMdlFileData.theMdlFileOnlyHasAnimations Then
+			For Each extension As String In Source49ExternalMesh.VtxExtensions
+				Dim candidate As String = Path.ChangeExtension(Me.theMdlPathFileName, extension)
+				If Not File.Exists(candidate) Then Continue For
+				Me.theVtxPathFileName = candidate
+				Try
+					If Me.VtxFileHasSameChecksum() Then Exit For
+					Me.CompatibilityDiagnostics.Add("跳过 VTX 候选 — " + candidate + " — 校验和与 MDL 不符。")
+				Catch ex As Exception When TypeOf ex Is IOException OrElse TypeOf ex Is UnauthorizedAccessException
+					Me.CompatibilityDiagnostics.Add("跳过 VTX 候选 — " + candidate + " — " + ex.Message)
+				End Try
+				Me.theVtxPathFileName = Nothing
+			Next
+			Me.theVtxFileData = Nothing
+			If Me.theVtxPathFileName Is Nothing Then status = status Or FilesFoundFlags.ErrorRequiredVtxFileNotFound
+			Dim vvd As String = Path.ChangeExtension(Me.theMdlPathFileName, ".vvd")
+			If File.Exists(vvd) Then
+				Me.theVvdPathFileName = vvd
+			Else
+				status = status Or FilesFoundFlags.ErrorRequiredVvdFileNotFound
 			End If
 		End If
 
-		Me.theVvdPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".vvd")
-		If Not File.Exists(Me.theVvdPathFileName) Then
-			status = status Or FilesFoundFlags.ErrorRequiredVvdFileNotFound
-		End If
-		'End If
-
 		Return status
+	End Function
+
+	Public Overrides Function ReadMdlFileHeader() As StatusMessage
+		Dim status As StatusMessage = MyBase.ReadMdlFileHeader()
+		If status = StatusMessage.Success AndAlso Me.theMdlFileDataGeneric IsNot Nothing AndAlso
+			Me.theMdlFileDataGeneric.fileSize <> Me.theMdlFileDataGeneric.theActualFileSize Then
+			Return StatusMessage.ErrorInvalidInternalMdlFileSize
+		End If
+		Return status
+	End Function
+
+	Public Overrides Function ReadVtxFile() As StatusMessage
+		Try
+			Return MyBase.ReadVtxFile()
+		Catch
+			Me.theVtxFileData = Nothing
+			Throw
+		End Try
+	End Function
+
+	Public Overrides Function ReadVvdFile() As StatusMessage
+		Try
+			Return MyBase.ReadVvdFile()
+		Catch
+			Me.theVvdFileData49 = Nothing
+			Me.theVtxFileData = Nothing
+			Throw
+		End Try
 	End Function
 
 	Public Overrides Function ReadPhyFile() As AppEnums.StatusMessage
@@ -209,13 +253,27 @@ Public Class SourceModel49
 		Return status
 	End Function
 
-	Public Overrides Function WriteReferenceMeshFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
-		status = Me.WriteMeshSmdFiles(modelOutputPath, 0, 0)
-
-		Return status
+	Public Overrides Function WriteReferenceMeshFiles(modelOutputPath As String) As StatusMessage
+		If Me.CanWriteSkeletonOnly AndAlso Not Me.HasMeshData Then
+			Dim skeletonPath As String = Path.Combine(modelOutputPath, Me.Name + "_skeleton.smd")
+			Return Me.WriteTextOutput(skeletonPath,
+				Sub()
+					Dim smd As New SourceSmdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData)
+					smd.WriteHeaderComment()
+					smd.WriteHeaderSection()
+					smd.WriteNodesSection()
+					smd.WriteSkeletonSection(0)
+				End Sub)
+		End If
+		Return Me.WriteMeshSmdFiles(modelOutputPath, 0, 0)
 	End Function
+
+	Friend ReadOnly Property CanWriteSkeletonOnly As Boolean
+		Get
+			Return Me.theMeshLayout IsNot Nothing AndAlso Me.theMeshLayout.NeedsMesh AndAlso
+				Me.theMdlFileData.theBones IsNot Nothing AndAlso Me.theMdlFileData.theBones.Count > 0
+		End Get
+	End Property
 
 	Public Overrides Function WriteLodMeshFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
@@ -262,8 +320,7 @@ Public Class SourceModel49
 			End If
 
 			For Each anAnimationDesc As SourceMdlAnimationDesc49 In Me.theMdlFileData.theAnimationDescs
-				anAnimationDesc.theSmdRelativePathFileName = SourceFileNamesModule.CreateAnimationSmdRelativePathFileName(anAnimationDesc.theSmdRelativePathFileName, Me.Name, anAnimationDesc.theName)
-				smdPathFileName = Path.Combine(modelOutputPath, anAnimationDesc.theSmdRelativePathFileName)
+				smdPathFileName = Path.Combine(modelOutputPath, anAnimationDesc.GetSmdRelativePathFileName(Me.Name))
 				smdPath = FileManager.GetPath(smdPathFileName)
 				If FileManager.PathExistsAfterTryToCreate(smdPath) Then
 					Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, smdPathFileName)
@@ -286,30 +343,19 @@ Public Class SourceModel49
 				End If
 			Next
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, modelOutputPath + " — " + ex.Message)
+			status = StatusMessage.Error
 		End Try
 
 		Return status
 	End Function
 
-	Public Overrides Function WriteVrdFile(ByVal vrdPathFileName As String) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, vrdPathFileName)
-		Me.WriteTextFile(vrdPathFileName, AddressOf Me.WriteVrdFile)
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, vrdPathFileName)
-
-		Return status
+	Public Overrides Function WriteVrdFile(vrdPathFileName As String) As StatusMessage
+		Return Me.WriteTextOutput(vrdPathFileName, AddressOf Me.WriteVrdFile)
 	End Function
 
-	Public Overrides Function WriteDeclareSequenceQciFile(ByVal declareSequenceQciPathFileName As String) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, declareSequenceQciPathFileName)
-		Me.WriteTextFile(declareSequenceQciPathFileName, AddressOf Me.WriteDeclareSequenceQciFile)
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, declareSequenceQciPathFileName)
-
-		Return status
+	Public Overrides Function WriteDeclareSequenceQciFile(declareSequenceQciPathFileName As String) As StatusMessage
+		Return Me.WriteTextOutput(declareSequenceQciPathFileName, AddressOf Me.WriteDeclareSequenceQciFile)
 	End Function
 
 	Public Overrides Function WriteVertexAnimationVtaFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
@@ -324,7 +370,7 @@ Public Class SourceModel49
 			For aBodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
 				aBodyPart = Me.theMdlFileData.theBodyParts(aBodyPartIndex)
 
-				If aBodyPart.theFlexFrames Is Nothing OrElse aBodyPart.theFlexFrames.Count <= 1 Then
+				If aBodyPart.theExportFlexVariantsAsDmx OrElse aBodyPart.theFlexFrames Is Nothing OrElse aBodyPart.theFlexFrames.Count <= 1 Then
 					Continue For
 				End If
 
@@ -348,7 +394,8 @@ Public Class SourceModel49
 				End If
 			Next
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, modelOutputPath + " — " + ex.Message)
+			status = StatusMessage.Error
 		End Try
 
 		Return status
@@ -467,16 +514,17 @@ Public Class SourceModel49
 			Me.theMdlFileDataGeneric = Me.theMdlFileData
 		End If
 
-		Dim mdlFile As New SourceMdlFile49(Me.theInputFileReader, Me.theMdlFileData)
+		Dim mdlFile As New SourceMdlFile49(Me.theInputFileReader, Me.theMdlFileData, Me.ReadDiagnostics, Me.NameDiagnostics)
 
 		Me.theMdlFileData.theSectionFrameCount = 0
 		'Me.theMdlFileData.theModelCommandIsUsed = False
 		Me.theMdlFileData.theProceduralBonesCommandIsUsed = False
 		Me.theMdlFileData.theAnimBlockSizeNoStallOptionIsUsed = False
 
-		mdlFile.ReadMdlHeader00("MDL File Header 00")
+		mdlFile.ReadMdlHeader00("MDL File Header 00", If(Me.theExternalMesh IsNot Nothing, Me.Version, 0))
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
 		If Me.theMdlFileData.studioHeader2Offset > 0 Then
+			Me.theInputFileReader.BaseStream.Position = Me.theMdlFileData.studioHeader2Offset
 			mdlFile.ReadMdlHeader02("MDL File Header 02")
 		End If
 
@@ -496,7 +544,7 @@ Public Class SourceModel49
 				mdlFile.ReadAnimationSections()
 				mdlFile.ReadAnimationMdlBlocks()
 			Catch ex As Exception
-				Dim debug As Integer = 4242
+				Me.ReadDiagnostics.Add("读取 MDL 动画 — " + ex.Message)
 			End Try
 		End If
 
@@ -545,7 +593,15 @@ Public Class SourceModel49
 
 		' Post-processing.
 		mdlFile.PostProcess()
+		mdlFile.NormalizeNamesForExport()
 		mdlFile.CreateFlexFrameList()
+		If Me.theMdlFileData.version = 49 AndAlso (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_STATIC_PROP) = 0 AndAlso
+			Me.theMdlFileData.theBodyParts IsNot Nothing AndAlso
+			Me.theMdlFileData.theBodyParts.Exists(Function(part) part.theModels IsNot Nothing AndAlso part.theModels.Count = 1 AndAlso part.theFlexFrames IsNot Nothing AndAlso part.theFlexFrames.Count > 1) Then
+			For Each part As SourceMdlBodyPart In Me.theMdlFileData.theBodyParts
+				part.theExportFlexVariantsAsDmx = SourceDmxBodyModel49.CanExportBodyPart(part)
+			Next
+		End If
 		Common.ProcessTexturePaths(Me.theMdlFileData.theTexturePaths, Me.theMdlFileData.theTextures, Me.theMdlFileData.theModifiedTexturePaths, Me.theMdlFileData.theModifiedTextureFileNames)
 	End Sub
 
@@ -592,7 +648,7 @@ Public Class SourceModel49
 		End If
 
 		'TEST: When a model has a nameCopy, it seems to also use the VTF file strip group topology fields.
-		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData)
+		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData, 0, Me.theMeshLayout?.UsesExtendedStrips)
 
 		vtxFile.ReadSourceVtxHeader()
 		'TODO: Why is this "If" statement needed?
@@ -621,6 +677,7 @@ Public Class SourceModel49
 	Protected Overrides Sub WriteQcFile()
 		'Dim qcFile As New SourceQcFile49(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theVtxFileData, Me.thePhyFileDataGeneric, Me.theAniFileData49, Me.theName)
 		Dim qcFile As New SourceQcFile49(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theVtxFileData, Me.thePhyFileDataGeneric, Me.theName)
+		qcFile.GroupCommitted = Sub(pathFileName) Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, pathFileName)
 
 		Try
 			qcFile.WriteHeaderComment()
@@ -639,7 +696,7 @@ Public Class SourceModel49
 			'End If
 			'qcFile.WriteModelCommand()
 			qcFile.WriteBodyGroupCommand()
-			qcFile.WriteBodyGroupPresetCommand()
+			qcFile.WriteBodyGroupPresetCommand(Me.theExternalMesh IsNot Nothing)
 			qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
 
 			qcFile.WriteSurfacePropCommand()
@@ -686,7 +743,7 @@ Public Class SourceModel49
 			End If
 			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, command)
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		Finally
 		End Try
 	End Sub
@@ -697,11 +754,16 @@ Public Class SourceModel49
 			Me.theMdlFileDataGeneric = Me.theMdlFileData
 		End If
 
-		Dim mdlFile As New SourceMdlFile49(Me.theInputFileReader, Me.theMdlFileData)
+		If Me.Version = 49 Then
+			Me.theMeshLayout = Source49ExternalMesh.ReadLayout(Me.theInputFileReader, Me.theMdlPathFileName, Me.theExternalMesh IsNot Nothing)
+			Me.theInputFileReader.BaseStream.Position = 0
+		End If
+		Dim mdlFile As New SourceMdlFile49(Me.theInputFileReader, Me.theMdlFileData, Me.ReadDiagnostics, Me.NameDiagnostics)
 
-		mdlFile.ReadMdlHeader00("MDL File Header 00")
+		mdlFile.ReadMdlHeader00("MDL File Header 00", If(Me.theExternalMesh IsNot Nothing, Me.Version, 0))
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
 		If Me.theMdlFileData.studioHeader2Offset > 0 Then
+			Me.theInputFileReader.BaseStream.Position = Me.theMdlFileData.studioHeader2Offset
 			mdlFile.ReadMdlHeader02("MDL File Header 02")
 		End If
 
@@ -716,11 +778,12 @@ Public Class SourceModel49
 			Me.theMdlFileDataGeneric = Me.theMdlFileData
 		End If
 
-		Dim mdlFile As New SourceMdlFile49(Me.theInputFileReader, Me.theMdlFileData)
+		Dim mdlFile As New SourceMdlFile49(Me.theInputFileReader, Me.theMdlFileData, Me.ReadDiagnostics, Me.NameDiagnostics)
 
-		mdlFile.ReadMdlHeader00("MDL File Header 00")
+		mdlFile.ReadMdlHeader00("MDL File Header 00", If(Me.theExternalMesh IsNot Nothing, Me.Version, 0))
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
 		If Me.theMdlFileData.studioHeader2Offset > 0 Then
+			Me.theInputFileReader.BaseStream.Position = Me.theMdlFileData.studioHeader2Offset
 			mdlFile.ReadMdlHeader02("MDL File Header 02")
 		End If
 
@@ -768,8 +831,16 @@ Public Class SourceModel49
 								End If
 
 								For extraUvChannelIndex As Integer = -1 To extraUvChannelCount - 1
-									smdFileName = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(lodIndex), bodyPartIndex, modelIndex, lodIndex, Me.theName, Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex).name, extraUvChannelIndex)
+									Dim part As SourceMdlBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+									smdFileName = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(lodIndex), bodyPartIndex, modelIndex, lodIndex, Me.theName, aBodyModel.name, extraUvChannelIndex, part.theName)
 									smdPathFileName = Path.Combine(modelOutputPath, smdFileName)
+									If lodIndex = 0 AndAlso extraUvChannelIndex = -1 Then
+										Dim storedName As String = CStr(aBodyModel.name).Trim(ChrW(0))
+										Dim baseName As String = storedName.Substring(storedName.LastIndexOfAny({"/"c, "\"c}) + 1)
+										If Not String.Equals(baseName, smdFileName, StringComparison.OrdinalIgnoreCase) Then
+											Me.NameDiagnostics.Add("mesh[" + bodyPartIndex.ToString() + "," + modelIndex.ToString() + "] — 导出文件名 """ + smdFileName + """")
+										End If
+									End If
 
 									Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, smdPathFileName)
 									'NOTE: Check here in case writing is canceled in the above event.
@@ -782,9 +853,30 @@ Public Class SourceModel49
 									End If
 
 									Me.theExtraUvChannelIndex = extraUvChannelIndex
-									Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxBodyModel, aBodyModel, bodyPartVertexIndexStart)
+									Dim smdStatus As String = Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxBodyModel, aBodyModel, bodyPartVertexIndexStart)
+									If smdStatus <> "Success" Then
+										Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, smdStatus)
+										status = StatusMessage.Error
+									Else
+										Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
+									End If
 
-									Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
+									If lodIndex = 0 AndAlso extraUvChannelIndex = -1 AndAlso part.theExportFlexVariantsAsDmx AndAlso SourceDmxBodyModel49.HasFlexes(aBodyModel) Then
+										Dim dmxPath As String = Path.ChangeExtension(smdPathFileName, ".dmx")
+										Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, dmxPath)
+										Try
+											FileManager.WriteTextAtomically(dmxPath, Sub(output)
+												Dim dmx As New SourceDmxBodyModel49(output)
+												dmx.Write(Path.GetFileNameWithoutExtension(dmxPath), Me.theMdlFileData, Me.theVvdFileData49, aBodyModel,
+														  aVtxBodyModel.theVtxModelLods(0), bodyPartVertexIndexStart)
+											End Sub)
+										Catch ex As Exception
+											Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, dmxPath + " " + ex.Message)
+											status = StatusMessage.Error
+											Continue For
+										End Try
+										Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, dmxPath)
+									End If
 								Next
 							Next
 
@@ -801,86 +893,60 @@ Public Class SourceModel49
 	Protected Overrides Sub WriteMeshSmdFile(ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel07, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer)
 		Dim smdFile As New SourceSmdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData, Me.theVvdFileData49)
 
-		Try
-			smdFile.WriteHeaderComment()
+		smdFile.WriteHeaderComment()
 
-			smdFile.WriteHeaderSection()
-			smdFile.WriteNodesSection()
-			smdFile.WriteSkeletonSection(lodIndex)
-			smdFile.WriteTrianglesSection(aVtxModel, lodIndex, aModel, bodyPartVertexIndexStart, Me.theExtraUvChannelIndex)
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
+		smdFile.WriteHeaderSection()
+		smdFile.WriteNodesSection()
+		smdFile.WriteSkeletonSection(lodIndex)
+		smdFile.WriteTrianglesSection(aVtxModel, lodIndex, aModel, bodyPartVertexIndexStart, Me.theExtraUvChannelIndex)
 	End Sub
 
 	Protected Overrides Sub WritePhysicsMeshSmdFile()
 		Dim physicsMeshSmdFile As New SourceSmdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData, Me.thePhyFileDataGeneric)
 
-		Try
-			physicsMeshSmdFile.WriteHeaderComment()
+		physicsMeshSmdFile.WriteHeaderComment()
 
-			physicsMeshSmdFile.WriteHeaderSection()
-			physicsMeshSmdFile.WriteNodesSection()
-			physicsMeshSmdFile.WriteSkeletonSection(-1)
-			physicsMeshSmdFile.WriteTrianglesSectionForPhysics()
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		Finally
-		End Try
+		physicsMeshSmdFile.WriteHeaderSection()
+		physicsMeshSmdFile.WriteNodesSection()
+		physicsMeshSmdFile.WriteSkeletonSection(-1)
+		physicsMeshSmdFile.WriteTrianglesSectionForPhysics()
 	End Sub
 
 	Protected Overrides Sub WriteVrdFile()
 		Dim vrdFile As New SourceVrdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData)
 
-		Try
-			vrdFile.WriteHeaderComment()
-			vrdFile.WriteCommands()
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		Finally
-		End Try
+		vrdFile.WriteHeaderComment()
+		vrdFile.WriteCommands()
 	End Sub
 
 	Protected Overrides Sub WriteDeclareSequenceQciFile()
 		Dim qciFile As New SourceQcFile49(Me.theOutputFileTextWriter, Me.theMdlFileData, Me.theName)
 
-		Try
-			qciFile.WriteHeaderComment()
+		qciFile.WriteHeaderComment()
 
-			qciFile.WriteQciDeclareSequenceLines()
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
+		qciFile.WriteQciDeclareSequenceLines()
 	End Sub
 
 	Protected Overrides Sub WriteBoneAnimationSmdFile(ByVal aSequenceDesc As SourceMdlSequenceDescBase, ByVal anAnimationDesc As SourceMdlAnimationDescBase)
 		Dim smdFile As New SourceSmdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData)
 
-		Try
-			smdFile.WriteHeaderComment()
+		smdFile.WriteHeaderComment()
 
-			smdFile.WriteHeaderSection()
-			smdFile.WriteNodesSection()
-			smdFile.WriteSkeletonSectionForAnimation(aSequenceDesc, anAnimationDesc)
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
+		smdFile.WriteHeaderSection()
+		smdFile.WriteNodesSection()
+		smdFile.WriteSkeletonSectionForAnimation(aSequenceDesc, anAnimationDesc)
 	End Sub
 
 	Protected Overrides Sub WriteVertexAnimationVtaFile(ByVal bodyPart As SourceMdlBodyPart)
 		Dim vertexAnimationVtaFile As New SourceVtaFile49(Me.theOutputFileTextWriter, Me.theMdlFileData, Me.theVvdFileData49, bodyPart)
 
-		Try
-			vertexAnimationVtaFile.WriteHeaderComment()
+		vertexAnimationVtaFile.WriteHeaderComment()
 
-			vertexAnimationVtaFile.WriteHeaderSection()
-			vertexAnimationVtaFile.WriteNodesSection()
-			vertexAnimationVtaFile.WriteSkeletonSectionForVertexAnimation()
-			vertexAnimationVtaFile.WriteVertexAnimationSection()
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		Finally
-		End Try
+		vertexAnimationVtaFile.WriteHeaderSection()
+		vertexAnimationVtaFile.WriteNodesSection()
+		vertexAnimationVtaFile.WriteSkeletonSectionForVertexAnimation()
+		vertexAnimationVtaFile.WriteVertexAnimationSection()
+		Dim debug As Integer = 4242
 	End Sub
 
 	Protected Overrides Sub WriteMdlFileNameToMdlFile(ByVal internalMdlFileName As String)
@@ -927,37 +993,15 @@ Public Class SourceModel49
 		End If
 	End Sub
 
-	Private Function WriteCorrectiveAnimationSmdFile(ByVal smdPathFileName As String, ByVal aSequenceDesc As SourceMdlSequenceDescBase, ByVal anAnimationDesc As SourceMdlAnimationDescBase) As String
-		Dim status As String = "Success"
-
-		Try
-			Me.theOutputFileTextWriter = File.CreateText(smdPathFileName)
-
-			Dim smdFile As New SourceSmdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData)
-
-			Try
-				smdFile.WriteHeaderComment()
-
-				smdFile.WriteHeaderSection()
-				smdFile.WriteNodesSection()
-				smdFile.WriteSkeletonSectionForAnimation(aSequenceDesc, anAnimationDesc, True)
-			Catch ex As Exception
-				Dim debug As Integer = 4242
-			End Try
-		Catch ex As PathTooLongException
-			status = "ERROR: Crowbar tried to create """ + smdPathFileName + """ but the system gave this message: " + ex.Message
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		Finally
-			If Me.theOutputFileTextWriter IsNot Nothing Then
-				If Me.theOutputFileTextWriter.BaseStream IsNot Nothing Then
-					Me.theOutputFileTextWriter.Flush()
-				End If
-				Me.theOutputFileTextWriter.Close()
-			End If
-		End Try
-
-		Return status
+	Private Function WriteCorrectiveAnimationSmdFile(smdPathFileName As String, sequence As SourceMdlSequenceDescBase, animation As SourceMdlAnimationDescBase) As String
+		Return Me.WriteTextFile(smdPathFileName,
+			Sub()
+				Dim smd As New SourceSmdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData)
+				smd.WriteHeaderComment()
+				smd.WriteHeaderSection()
+				smd.WriteNodesSection()
+				smd.WriteSkeletonSectionForAnimation(sequence, animation, True)
+			End Sub)
 	End Function
 
 #End Region

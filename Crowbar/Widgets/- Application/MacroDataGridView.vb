@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 
 Public Class MacroDataGridView
 	Inherits DataGridView
@@ -54,17 +54,17 @@ Public Class MacroDataGridView
 		Me.SetMacroInSelectedGameSetupToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.SetMacroInSelectedGameSetupToolStripMenuItem.Name = "SetMacroInSelectedGameSetupToolStripMenuItem"
 		Me.SetMacroInSelectedGameSetupToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
-		Me.SetMacroInSelectedGameSetupToolStripMenuItem.Text = "Set macro in selected game setup(s)"
+		Me.SetMacroInSelectedGameSetupToolStripMenuItem.Text = "在所选游戏设置中设置宏"
 
 		Me.ClearMacroInSelectedGameSetupToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ClearMacroInSelectedGameSetupToolStripMenuItem.Name = "ClearMacroInSelectedGameSetupToolStripMenuItem"
 		Me.ClearMacroInSelectedGameSetupToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
-		Me.ClearMacroInSelectedGameSetupToolStripMenuItem.Text = "Clear macro in selected game setup(s)"
+		Me.ClearMacroInSelectedGameSetupToolStripMenuItem.Text = "在所选游戏设置中清除宏"
 
 		Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Name = "ChangeToThisMacroInSelectedGameSetupToolStripMenuItem"
 		Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
-		Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Text = "Change to this macro in selected game setup(s)"
+		Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Text = "在所选游戏设置中更改为此宏"
 
 		Me.MacroMenuToolStripSeparator0 = New System.Windows.Forms.ToolStripSeparator
 		Me.MacroMenuToolStripSeparator0.Name = "MacroMenuToolStripSeparator0"
@@ -72,17 +72,17 @@ Public Class MacroDataGridView
 		Me.SetMacroInAllGameSetupsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.SetMacroInAllGameSetupsToolStripMenuItem.Name = "SetMacroInAllGameSetupsToolStripMenuItem"
 		Me.SetMacroInAllGameSetupsToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
-		Me.SetMacroInAllGameSetupsToolStripMenuItem.Text = "Set macro in all game setups"
+		Me.SetMacroInAllGameSetupsToolStripMenuItem.Text = "在所有游戏设置中设置宏"
 
 		Me.ClearMacroInAllGameSetupsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ClearMacroInAllGameSetupsToolStripMenuItem.Name = "ClearMacroInAllGameSetupsToolStripMenuItem"
 		Me.ClearMacroInAllGameSetupsToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
-		Me.ClearMacroInAllGameSetupsToolStripMenuItem.Text = "Clear macro in all game setups"
+		Me.ClearMacroInAllGameSetupsToolStripMenuItem.Text = "在所有游戏设置中清除宏"
 
 		Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Name = "ChangeToThisMacroInAllGameSetupsToolStripMenuItem"
 		Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
-		Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Text = "Change to this macro in all game setups"
+		Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Text = "在所有游戏设置中更改为此宏"
 
 		Me.MacroMenuToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator
 		Me.MacroMenuToolStripSeparator1.Name = "MacroMenuToolStripSeparator1"
@@ -114,7 +114,7 @@ Public Class MacroDataGridView
 		'      and adding it causes a selection of text within a cell to return Nothing from Me.GetClipboardContent().
 		'Me.CopyToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.C), System.Windows.Forms.Keys)
 		Me.CopyToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
-		Me.CopyToolStripMenuItem.Text = "Copy"
+		Me.CopyToolStripMenuItem.Text = "复制"
 		''
 		''PasteToolStripMenuItem
 		''

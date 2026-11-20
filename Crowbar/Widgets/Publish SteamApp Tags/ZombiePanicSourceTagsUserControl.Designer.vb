@@ -101,7 +101,7 @@ Partial Class ZombiePanicSourceTagsUserControl
 		Me.GameModeRadioButton.Size = New System.Drawing.Size(85, 17)
 		Me.GameModeRadioButton.TabIndex = 4
 		Me.GameModeRadioButton.TabStop = True
-		Me.GameModeRadioButton.Text = "Game Mode:"
+		Me.GameModeRadioButton.Text = "游戏模式："
 		Me.GameModeRadioButton.UseVisualStyleBackColor = True
 		'
 		'GUIsCheckBox
@@ -155,7 +155,7 @@ Partial Class ZombiePanicSourceTagsUserControl
 		Me.CustomModelsRadioButton.Name = "CustomModelsRadioButton"
 		Me.CustomModelsRadioButton.Size = New System.Drawing.Size(101, 17)
 		Me.CustomModelsRadioButton.TabIndex = 7
-		Me.CustomModelsRadioButton.Text = "Custom Models:"
+		Me.CustomModelsRadioButton.Text = "自定义模型："
 		Me.CustomModelsRadioButton.UseVisualStyleBackColor = True
 		'
 		'SoundPackCheckBox
@@ -209,7 +209,7 @@ Partial Class ZombiePanicSourceTagsUserControl
 		Me.CustomSoundsRadioButton.Name = "CustomSoundsRadioButton"
 		Me.CustomSoundsRadioButton.Size = New System.Drawing.Size(103, 17)
 		Me.CustomSoundsRadioButton.TabIndex = 12
-		Me.CustomSoundsRadioButton.Text = "Custom Sounds:"
+		Me.CustomSoundsRadioButton.Text = "自定义声音："
 		Me.CustomSoundsRadioButton.UseVisualStyleBackColor = True
 		'
 		'MiscellaneousRadioButton
@@ -267,8 +267,8 @@ Partial Class ZombiePanicSourceTagsUserControl
 		'
 		'ZombiePanicSourceTagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.AutoScroll = True
 		Me.Controls.Add(Me.CustomModelsPanel)
 		Me.Controls.Add(Me.CustomSoundsPanel)

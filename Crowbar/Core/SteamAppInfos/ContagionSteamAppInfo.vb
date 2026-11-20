@@ -12,7 +12,7 @@ Public Class ContagionSteamAppInfo
 		Me.Name = "Contagion"
 		Me.UsesSteamUGC = True
 		Me.CanUseContentFolderOrFile = True
-		Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source Engine VPK Files")
+		Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source 引擎 VPK 文件")
 		Me.TagsControlType = GetType(ContagionTagsUserControl)
 	End Sub
 

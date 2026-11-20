@@ -1,4 +1,4 @@
-Imports System.Runtime.InteropServices
+﻿Imports System.Runtime.InteropServices
 
 Public Enum JobObjectInfoType
 	AssociateCompletionPortInformation = 7
@@ -82,7 +82,7 @@ Public Class WindowsJob
 		Marshal.StructureToPtr(extendedInfo, extendedInfoPtr, False)
 
 		If Not SetInformationJobObject(m_handle, JobObjectInfoType.ExtendedLimitInformation, extendedInfoPtr, CUInt(length)) Then
-			Throw New Exception(String.Format("Unable to set information.  Error: {0}", Marshal.GetLastWin32Error()))
+			Throw New Exception(String.Format("无法设置信息。错误：{0}", Marshal.GetLastWin32Error()))
 		End If
 	End Sub
 

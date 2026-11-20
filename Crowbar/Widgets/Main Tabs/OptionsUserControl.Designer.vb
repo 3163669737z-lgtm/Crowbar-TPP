@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class OptionsUserControl
 	Inherits BaseUserControl
 
@@ -117,7 +117,7 @@ Partial Class OptionsUserControl
 		Me.IntegrateContextMenuItemsCheckBox.Name = "IntegrateContextMenuItemsCheckBox"
 		Me.IntegrateContextMenuItemsCheckBox.Size = New System.Drawing.Size(223, 17)
 		Me.IntegrateContextMenuItemsCheckBox.TabIndex = 0
-		Me.IntegrateContextMenuItemsCheckBox.Text = "Integrate Crowbar context menu items"
+		Me.IntegrateContextMenuItemsCheckBox.Text = "集成 Crowbar 上下文菜单项"
 		Me.IntegrateContextMenuItemsCheckBox.UseVisualStyleBackColor = True
 		'
 		'Label1
@@ -127,7 +127,7 @@ Partial Class OptionsUserControl
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(112, 13)
 		Me.Label1.TabIndex = 2
-		Me.Label1.Text = "Context menu items:"
+		Me.Label1.Text = "上下文菜单项："
 		'
 		'IntegrateAsSubmenuCheckBox
 		'
@@ -136,7 +136,7 @@ Partial Class OptionsUserControl
 		Me.IntegrateAsSubmenuCheckBox.Name = "IntegrateAsSubmenuCheckBox"
 		Me.IntegrateAsSubmenuCheckBox.Size = New System.Drawing.Size(202, 17)
 		Me.IntegrateAsSubmenuCheckBox.TabIndex = 4
-		Me.IntegrateAsSubmenuCheckBox.Text = "Integrate as a ""Crowbar"" submenu"
+		Me.IntegrateAsSubmenuCheckBox.Text = "集成为 ""Crowbar"" 子菜单"
 		Me.IntegrateAsSubmenuCheckBox.UseVisualStyleBackColor = True
 		'
 		'GroupBox1
@@ -151,7 +151,7 @@ Partial Class OptionsUserControl
 		Me.GroupBox1.Size = New System.Drawing.Size(309, 467)
 		Me.GroupBox1.TabIndex = 2
 		Me.GroupBox1.TabStop = False
-		Me.GroupBox1.Text = "Windows Explorer Context Menu"
+		Me.GroupBox1.Text = "Windows 资源管理器上下文菜单"
 		Me.GroupBox1.Visible = False
 		'
 		'Panel7
@@ -178,7 +178,7 @@ Partial Class OptionsUserControl
 		Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.Name = "OptionsContextMenuCompileFolderAndSubfoldersCheckBox"
 		Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.Size = New System.Drawing.Size(247, 17)
 		Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.TabIndex = 7
-		Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.Text = "Compile folder and subfolders to <folder>"
+		Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.Text = "将文件夹及子文件夹编译到 <folder>"
 		Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsContextMenuCompileFolderCheckBox
@@ -188,7 +188,7 @@ Partial Class OptionsUserControl
 		Me.OptionsContextMenuCompileFolderCheckBox.Name = "OptionsContextMenuCompileFolderCheckBox"
 		Me.OptionsContextMenuCompileFolderCheckBox.Size = New System.Drawing.Size(166, 17)
 		Me.OptionsContextMenuCompileFolderCheckBox.TabIndex = 6
-		Me.OptionsContextMenuCompileFolderCheckBox.Text = "Compile folder to <folder>"
+		Me.OptionsContextMenuCompileFolderCheckBox.Text = "将文件夹编译到 <folder>"
 		Me.OptionsContextMenuCompileFolderCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsContextMenuCompileQcFileCheckBox
@@ -198,7 +198,7 @@ Partial Class OptionsUserControl
 		Me.OptionsContextMenuCompileQcFileCheckBox.Name = "OptionsContextMenuCompileQcFileCheckBox"
 		Me.OptionsContextMenuCompileQcFileCheckBox.Size = New System.Drawing.Size(105, 17)
 		Me.OptionsContextMenuCompileQcFileCheckBox.TabIndex = 5
-		Me.OptionsContextMenuCompileQcFileCheckBox.Text = "Compile QC file"
+		Me.OptionsContextMenuCompileQcFileCheckBox.Text = "编译 QC 文件"
 		Me.OptionsContextMenuCompileQcFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsContextMenuDecompileFolderAndSubfoldersCheckBox
@@ -208,7 +208,7 @@ Partial Class OptionsUserControl
 		Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.Name = "OptionsContextMenuDecompileFolderAndSubfoldersCheckBox"
 		Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.Size = New System.Drawing.Size(259, 17)
 		Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.TabIndex = 4
-		Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.Text = "Decompile folder and subfolders to <folder>"
+		Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.Text = "将文件夹及子文件夹反编译到 <folder>"
 		Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsContextMenuDecompileFolderCheckBox
@@ -218,7 +218,7 @@ Partial Class OptionsUserControl
 		Me.OptionsContextMenuDecompileFolderCheckBox.Name = "OptionsContextMenuDecompileFolderCheckBox"
 		Me.OptionsContextMenuDecompileFolderCheckBox.Size = New System.Drawing.Size(178, 17)
 		Me.OptionsContextMenuDecompileFolderCheckBox.TabIndex = 3
-		Me.OptionsContextMenuDecompileFolderCheckBox.Text = "Decompile folder to <folder>"
+		Me.OptionsContextMenuDecompileFolderCheckBox.Text = "将文件夹反编译到 <folder>"
 		Me.OptionsContextMenuDecompileFolderCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsContextMenuDecompileMdlFileCheckBox
@@ -228,7 +228,7 @@ Partial Class OptionsUserControl
 		Me.OptionsContextMenuDecompileMdlFileCheckBox.Name = "OptionsContextMenuDecompileMdlFileCheckBox"
 		Me.OptionsContextMenuDecompileMdlFileCheckBox.Size = New System.Drawing.Size(189, 17)
 		Me.OptionsContextMenuDecompileMdlFileCheckBox.TabIndex = 2
-		Me.OptionsContextMenuDecompileMdlFileCheckBox.Text = "Decompile MDL file to <folder>"
+		Me.OptionsContextMenuDecompileMdlFileCheckBox.Text = "将 MDL 文件反编译到 <folder>"
 		Me.OptionsContextMenuDecompileMdlFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsContextMenuViewMdlFileCheckBox
@@ -238,7 +238,7 @@ Partial Class OptionsUserControl
 		Me.OptionsContextMenuViewMdlFileCheckBox.Name = "OptionsContextMenuViewMdlFileCheckBox"
 		Me.OptionsContextMenuViewMdlFileCheckBox.Size = New System.Drawing.Size(96, 17)
 		Me.OptionsContextMenuViewMdlFileCheckBox.TabIndex = 1
-		Me.OptionsContextMenuViewMdlFileCheckBox.Text = "View MDL file"
+		Me.OptionsContextMenuViewMdlFileCheckBox.Text = "查看 MDL 文件"
 		Me.OptionsContextMenuViewMdlFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsContextMenuOpenWithCrowbarCheckBox
@@ -248,7 +248,7 @@ Partial Class OptionsUserControl
 		Me.OptionsContextMenuOpenWithCrowbarCheckBox.Name = "OptionsContextMenuOpenWithCrowbarCheckBox"
 		Me.OptionsContextMenuOpenWithCrowbarCheckBox.Size = New System.Drawing.Size(128, 17)
 		Me.OptionsContextMenuOpenWithCrowbarCheckBox.TabIndex = 0
-		Me.OptionsContextMenuOpenWithCrowbarCheckBox.Text = "Open with Crowbar"
+		Me.OptionsContextMenuOpenWithCrowbarCheckBox.Text = "用 Crowbar 打开"
 		Me.OptionsContextMenuOpenWithCrowbarCheckBox.UseVisualStyleBackColor = True
 		'
 		'ContextMenuUseDefaultsButton
@@ -258,7 +258,7 @@ Partial Class OptionsUserControl
 		Me.ContextMenuUseDefaultsButton.Name = "ContextMenuUseDefaultsButton"
 		Me.ContextMenuUseDefaultsButton.Size = New System.Drawing.Size(100, 23)
 		Me.ContextMenuUseDefaultsButton.TabIndex = 19
-		Me.ContextMenuUseDefaultsButton.Text = "Use Defaults"
+		Me.ContextMenuUseDefaultsButton.Text = "使用默认值"
 		Me.ContextMenuUseDefaultsButton.UseVisualStyleBackColor = True
 		'
 		'AutoOpenMdlFileCheckBox
@@ -268,7 +268,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenMdlFileCheckBox.Name = "AutoOpenMdlFileCheckBox"
 		Me.AutoOpenMdlFileCheckBox.Size = New System.Drawing.Size(71, 17)
 		Me.AutoOpenMdlFileCheckBox.TabIndex = 2
-		Me.AutoOpenMdlFileCheckBox.Text = "MDL file:"
+		Me.AutoOpenMdlFileCheckBox.Text = "MDL 文件："
 		Me.AutoOpenMdlFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'AutoOpenQcFileCheckBox
@@ -278,7 +278,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenQcFileCheckBox.Name = "AutoOpenQcFileCheckBox"
 		Me.AutoOpenQcFileCheckBox.Size = New System.Drawing.Size(63, 17)
 		Me.AutoOpenQcFileCheckBox.TabIndex = 4
-		Me.AutoOpenQcFileCheckBox.Text = "QC file:"
+		Me.AutoOpenQcFileCheckBox.Text = "QC 文件："
 		Me.AutoOpenQcFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'GroupBox2
@@ -302,7 +302,7 @@ Partial Class OptionsUserControl
 		Me.GroupBox2.Size = New System.Drawing.Size(200, 467)
 		Me.GroupBox2.TabIndex = 0
 		Me.GroupBox2.TabStop = False
-		Me.GroupBox2.Text = "Windows Explorer Auto-Open"
+		Me.GroupBox2.Text = "Windows 资源管理器自动打开"
 		'
 		'Panel2
 		'
@@ -323,7 +323,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenGmaFileForPublishRadioButton.Size = New System.Drawing.Size(63, 17)
 		Me.AutoOpenGmaFileForPublishRadioButton.TabIndex = 13
 		Me.AutoOpenGmaFileForPublishRadioButton.TabStop = True
-		Me.AutoOpenGmaFileForPublishRadioButton.Text = "Publish"
+		Me.AutoOpenGmaFileForPublishRadioButton.Text = "发布"
 		Me.AutoOpenGmaFileForPublishRadioButton.UseVisualStyleBackColor = True
 		'
 		'AutoOpenGmaFileForUnpackRadioButton
@@ -334,7 +334,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenGmaFileForUnpackRadioButton.Size = New System.Drawing.Size(64, 17)
 		Me.AutoOpenGmaFileForUnpackRadioButton.TabIndex = 12
 		Me.AutoOpenGmaFileForUnpackRadioButton.TabStop = True
-		Me.AutoOpenGmaFileForUnpackRadioButton.Text = "Unpack"
+		Me.AutoOpenGmaFileForUnpackRadioButton.Text = "解包"
 		Me.AutoOpenGmaFileForUnpackRadioButton.UseVisualStyleBackColor = True
 		'
 		'AutoOpenVpkPanel
@@ -356,7 +356,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenVpkFileForPublishRadioButton.Size = New System.Drawing.Size(63, 17)
 		Me.AutoOpenVpkFileForPublishRadioButton.TabIndex = 13
 		Me.AutoOpenVpkFileForPublishRadioButton.TabStop = True
-		Me.AutoOpenVpkFileForPublishRadioButton.Text = "Publish"
+		Me.AutoOpenVpkFileForPublishRadioButton.Text = "发布"
 		Me.AutoOpenVpkFileForPublishRadioButton.UseVisualStyleBackColor = True
 		'
 		'AutoOpenVpkFileForUnpackRadioButton
@@ -367,7 +367,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenVpkFileForUnpackRadioButton.Size = New System.Drawing.Size(64, 17)
 		Me.AutoOpenVpkFileForUnpackRadioButton.TabIndex = 12
 		Me.AutoOpenVpkFileForUnpackRadioButton.TabStop = True
-		Me.AutoOpenVpkFileForUnpackRadioButton.Text = "Unpack"
+		Me.AutoOpenVpkFileForUnpackRadioButton.Text = "解包"
 		Me.AutoOpenVpkFileForUnpackRadioButton.UseVisualStyleBackColor = True
 		'
 		'Label14
@@ -379,7 +379,7 @@ Partial Class OptionsUserControl
 		Me.Label14.Name = "Label14"
 		Me.Label14.Size = New System.Drawing.Size(89, 17)
 		Me.Label14.TabIndex = 18
-		Me.Label14.Text = "Unpack"
+		Me.Label14.Text = "解包"
 		'
 		'AutoOpenFpxFileCheckBox
 		'
@@ -388,7 +388,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenFpxFileCheckBox.Name = "AutoOpenFpxFileCheckBox"
 		Me.AutoOpenFpxFileCheckBox.Size = New System.Drawing.Size(66, 17)
 		Me.AutoOpenFpxFileCheckBox.TabIndex = 17
-		Me.AutoOpenFpxFileCheckBox.Text = "FPX file:"
+		Me.AutoOpenFpxFileCheckBox.Text = "FPX 文件："
 		Me.AutoOpenFpxFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'AutoOpenGmaFileCheckBox
@@ -398,7 +398,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenGmaFileCheckBox.Name = "AutoOpenGmaFileCheckBox"
 		Me.AutoOpenGmaFileCheckBox.Size = New System.Drawing.Size(73, 17)
 		Me.AutoOpenGmaFileCheckBox.TabIndex = 15
-		Me.AutoOpenGmaFileCheckBox.Text = "GMA file:"
+		Me.AutoOpenGmaFileCheckBox.Text = "GMA 文件："
 		Me.AutoOpenGmaFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'Label5
@@ -409,7 +409,7 @@ Partial Class OptionsUserControl
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(43, 13)
 		Me.Label5.TabIndex = 6
-		Me.Label5.Text = "Folder:"
+		Me.Label5.Text = "文件夹："
 		'
 		'AutoOpenFolderPanel
 		'
@@ -432,7 +432,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenFolderForPackRadioButton.Size = New System.Drawing.Size(48, 17)
 		Me.AutoOpenFolderForPackRadioButton.TabIndex = 15
 		Me.AutoOpenFolderForPackRadioButton.TabStop = True
-		Me.AutoOpenFolderForPackRadioButton.Text = "Pack"
+		Me.AutoOpenFolderForPackRadioButton.Text = "打包"
 		Me.AutoOpenFolderForPackRadioButton.UseVisualStyleBackColor = True
 		'
 		'AutoOpenFolderForCompileRadioButton
@@ -443,7 +443,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenFolderForCompileRadioButton.Size = New System.Drawing.Size(67, 17)
 		Me.AutoOpenFolderForCompileRadioButton.TabIndex = 14
 		Me.AutoOpenFolderForCompileRadioButton.TabStop = True
-		Me.AutoOpenFolderForCompileRadioButton.Text = "Compile"
+		Me.AutoOpenFolderForCompileRadioButton.Text = "编译"
 		Me.AutoOpenFolderForCompileRadioButton.UseVisualStyleBackColor = True
 		'
 		'AutoOpenFolderForDecompileRadioButton
@@ -454,7 +454,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenFolderForDecompileRadioButton.Size = New System.Drawing.Size(79, 17)
 		Me.AutoOpenFolderForDecompileRadioButton.TabIndex = 13
 		Me.AutoOpenFolderForDecompileRadioButton.TabStop = True
-		Me.AutoOpenFolderForDecompileRadioButton.Text = "Decompile"
+		Me.AutoOpenFolderForDecompileRadioButton.Text = "反编译"
 		Me.AutoOpenFolderForDecompileRadioButton.UseVisualStyleBackColor = True
 		'
 		'AutoOpenFolderForUnpackRadioButton
@@ -465,7 +465,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenFolderForUnpackRadioButton.Size = New System.Drawing.Size(64, 17)
 		Me.AutoOpenFolderForUnpackRadioButton.TabIndex = 12
 		Me.AutoOpenFolderForUnpackRadioButton.TabStop = True
-		Me.AutoOpenFolderForUnpackRadioButton.Text = "Unpack"
+		Me.AutoOpenFolderForUnpackRadioButton.Text = "解包"
 		Me.AutoOpenFolderForUnpackRadioButton.UseVisualStyleBackColor = True
 		'
 		'Label4
@@ -477,7 +477,7 @@ Partial Class OptionsUserControl
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(89, 17)
 		Me.Label4.TabIndex = 5
-		Me.Label4.Text = "Compile"
+		Me.Label4.Text = "编译"
 		'
 		'Label2
 		'
@@ -487,9 +487,7 @@ Partial Class OptionsUserControl
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(188, 83)
 		Me.Label2.TabIndex = 14
-		Me.Label2.Text = "Change the default program to Crowbar for the following file extensions and which" &
-	" tab to set up. This includes when files or folders are dragged onto the ""Crowba" &
-	"r.exe"" file."
+		Me.Label2.Text = "将以下文件扩展名的默认程序更改为 Crowbar，并设置相应标签页。这包括将文件或文件夹拖到 ""Crowbar.exe"" 文件上的情况。"
 		'
 		'AutoOpenUseDefaultsButton
 		'
@@ -498,7 +496,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenUseDefaultsButton.Name = "AutoOpenUseDefaultsButton"
 		Me.AutoOpenUseDefaultsButton.Size = New System.Drawing.Size(100, 23)
 		Me.AutoOpenUseDefaultsButton.TabIndex = 8
-		Me.AutoOpenUseDefaultsButton.Text = "Use Defaults"
+		Me.AutoOpenUseDefaultsButton.Text = "使用默认值"
 		Me.AutoOpenUseDefaultsButton.UseVisualStyleBackColor = True
 		'
 		'Panel1
@@ -525,7 +523,7 @@ Partial Class OptionsUserControl
 		Me.Label9.Name = "Label9"
 		Me.Label9.Size = New System.Drawing.Size(44, 13)
 		Me.Label9.TabIndex = 20
-		Me.Label9.Text = "Set Up:"
+		Me.Label9.Text = "设置："
 		'
 		'Label8
 		'
@@ -534,7 +532,7 @@ Partial Class OptionsUserControl
 		Me.Label8.Name = "Label8"
 		Me.Label8.Size = New System.Drawing.Size(39, 13)
 		Me.Label8.TabIndex = 19
-		Me.Label8.Text = "Open:"
+		Me.Label8.Text = "打开："
 		'
 		'AutoOpenMdlFileForDecompileCheckBox
 		'
@@ -543,7 +541,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenMdlFileForDecompileCheckBox.Name = "AutoOpenMdlFileForDecompileCheckBox"
 		Me.AutoOpenMdlFileForDecompileCheckBox.Size = New System.Drawing.Size(80, 17)
 		Me.AutoOpenMdlFileForDecompileCheckBox.TabIndex = 1
-		Me.AutoOpenMdlFileForDecompileCheckBox.Text = "Decompile"
+		Me.AutoOpenMdlFileForDecompileCheckBox.Text = "反编译"
 		Me.AutoOpenMdlFileForDecompileCheckBox.UseVisualStyleBackColor = True
 		'
 		'AutoOpenMdlFileForViewCheckBox
@@ -553,7 +551,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenMdlFileForViewCheckBox.Name = "AutoOpenMdlFileForViewCheckBox"
 		Me.AutoOpenMdlFileForViewCheckBox.Size = New System.Drawing.Size(51, 17)
 		Me.AutoOpenMdlFileForViewCheckBox.TabIndex = 2
-		Me.AutoOpenMdlFileForViewCheckBox.Text = "View"
+		Me.AutoOpenMdlFileForViewCheckBox.Text = "查看"
 		Me.AutoOpenMdlFileForViewCheckBox.UseVisualStyleBackColor = True
 		'
 		'AutoOpenMdlFileForPreviewCheckBox
@@ -563,7 +561,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenMdlFileForPreviewCheckBox.Name = "AutoOpenMdlFileForPreviewCheckBox"
 		Me.AutoOpenMdlFileForPreviewCheckBox.Size = New System.Drawing.Size(65, 17)
 		Me.AutoOpenMdlFileForPreviewCheckBox.TabIndex = 0
-		Me.AutoOpenMdlFileForPreviewCheckBox.Text = "Preview"
+		Me.AutoOpenMdlFileForPreviewCheckBox.Text = "预览"
 		Me.AutoOpenMdlFileForPreviewCheckBox.UseVisualStyleBackColor = True
 		'
 		'AutoOpenMdlFileForViewingRadioButton
@@ -600,7 +598,7 @@ Partial Class OptionsUserControl
 		Me.AutoOpenVpkFileCheckBox.Name = "AutoOpenVpkFileCheckBox"
 		Me.AutoOpenVpkFileCheckBox.Size = New System.Drawing.Size(67, 17)
 		Me.AutoOpenVpkFileCheckBox.TabIndex = 0
-		Me.AutoOpenVpkFileCheckBox.Text = "VPK file:"
+		Me.AutoOpenVpkFileCheckBox.Text = "VPK 文件："
 		Me.AutoOpenVpkFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'GroupBox3
@@ -620,7 +618,7 @@ Partial Class OptionsUserControl
 		Me.GroupBox3.Size = New System.Drawing.Size(200, 467)
 		Me.GroupBox3.TabIndex = 1
 		Me.GroupBox3.TabStop = False
-		Me.GroupBox3.Text = "Windows Explorer Drag-and-Drop"
+		Me.GroupBox3.Text = "Windows 资源管理器拖放"
 		'
 		'Panel5
 		'
@@ -641,7 +639,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropGmaFileForPublishRadioButton.Size = New System.Drawing.Size(63, 17)
 		Me.DragAndDropGmaFileForPublishRadioButton.TabIndex = 13
 		Me.DragAndDropGmaFileForPublishRadioButton.TabStop = True
-		Me.DragAndDropGmaFileForPublishRadioButton.Text = "Publish"
+		Me.DragAndDropGmaFileForPublishRadioButton.Text = "发布"
 		Me.DragAndDropGmaFileForPublishRadioButton.UseVisualStyleBackColor = True
 		'
 		'DragAndDropGmaFileForUnpackRadioButton
@@ -652,7 +650,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropGmaFileForUnpackRadioButton.Size = New System.Drawing.Size(64, 17)
 		Me.DragAndDropGmaFileForUnpackRadioButton.TabIndex = 12
 		Me.DragAndDropGmaFileForUnpackRadioButton.TabStop = True
-		Me.DragAndDropGmaFileForUnpackRadioButton.Text = "Unpack"
+		Me.DragAndDropGmaFileForUnpackRadioButton.Text = "解包"
 		Me.DragAndDropGmaFileForUnpackRadioButton.UseVisualStyleBackColor = True
 		'
 		'Panel6
@@ -674,7 +672,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropVpkFileForPublishRadioButton.Size = New System.Drawing.Size(63, 17)
 		Me.DragAndDropVpkFileForPublishRadioButton.TabIndex = 13
 		Me.DragAndDropVpkFileForPublishRadioButton.TabStop = True
-		Me.DragAndDropVpkFileForPublishRadioButton.Text = "Publish"
+		Me.DragAndDropVpkFileForPublishRadioButton.Text = "发布"
 		Me.DragAndDropVpkFileForPublishRadioButton.UseVisualStyleBackColor = True
 		'
 		'DragAndDropVpkFileForUnpackRadioButton
@@ -685,7 +683,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropVpkFileForUnpackRadioButton.Size = New System.Drawing.Size(64, 17)
 		Me.DragAndDropVpkFileForUnpackRadioButton.TabIndex = 12
 		Me.DragAndDropVpkFileForUnpackRadioButton.TabStop = True
-		Me.DragAndDropVpkFileForUnpackRadioButton.Text = "Unpack"
+		Me.DragAndDropVpkFileForUnpackRadioButton.Text = "解包"
 		Me.DragAndDropVpkFileForUnpackRadioButton.UseVisualStyleBackColor = True
 		'
 		'Label7
@@ -696,7 +694,7 @@ Partial Class OptionsUserControl
 		Me.Label7.Name = "Label7"
 		Me.Label7.Size = New System.Drawing.Size(54, 13)
 		Me.Label7.TabIndex = 21
-		Me.Label7.Text = "GMA file:"
+		Me.Label7.Text = "GMA 文件："
 		'
 		'Label6
 		'
@@ -706,7 +704,7 @@ Partial Class OptionsUserControl
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(48, 13)
 		Me.Label6.TabIndex = 20
-		Me.Label6.Text = "VPK file:"
+		Me.Label6.Text = "VPK 文件："
 		'
 		'Label13
 		'
@@ -716,7 +714,7 @@ Partial Class OptionsUserControl
 		Me.Label13.Name = "Label13"
 		Me.Label13.Size = New System.Drawing.Size(43, 13)
 		Me.Label13.TabIndex = 2
-		Me.Label13.Text = "Folder:"
+		Me.Label13.Text = "文件夹："
 		'
 		'Label12
 		'
@@ -726,7 +724,7 @@ Partial Class OptionsUserControl
 		Me.Label12.Name = "Label12"
 		Me.Label12.Size = New System.Drawing.Size(52, 13)
 		Me.Label12.TabIndex = 0
-		Me.Label12.Text = "MDL file:"
+		Me.Label12.Text = "MDL 文件："
 		'
 		'Panel3
 		'
@@ -752,7 +750,7 @@ Partial Class OptionsUserControl
 		Me.Label10.Name = "Label10"
 		Me.Label10.Size = New System.Drawing.Size(44, 13)
 		Me.Label10.TabIndex = 20
-		Me.Label10.Text = "Set Up:"
+		Me.Label10.Text = "设置："
 		'
 		'Label11
 		'
@@ -761,7 +759,7 @@ Partial Class OptionsUserControl
 		Me.Label11.Name = "Label11"
 		Me.Label11.Size = New System.Drawing.Size(39, 13)
 		Me.Label11.TabIndex = 19
-		Me.Label11.Text = "Open:"
+		Me.Label11.Text = "打开："
 		'
 		'DragAndDropMdlFileForDecompileCheckBox
 		'
@@ -770,7 +768,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropMdlFileForDecompileCheckBox.Name = "DragAndDropMdlFileForDecompileCheckBox"
 		Me.DragAndDropMdlFileForDecompileCheckBox.Size = New System.Drawing.Size(80, 17)
 		Me.DragAndDropMdlFileForDecompileCheckBox.TabIndex = 1
-		Me.DragAndDropMdlFileForDecompileCheckBox.Text = "Decompile"
+		Me.DragAndDropMdlFileForDecompileCheckBox.Text = "反编译"
 		Me.DragAndDropMdlFileForDecompileCheckBox.UseVisualStyleBackColor = True
 		'
 		'DragAndDropMdlFileForViewCheckBox
@@ -780,7 +778,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropMdlFileForViewCheckBox.Name = "DragAndDropMdlFileForViewCheckBox"
 		Me.DragAndDropMdlFileForViewCheckBox.Size = New System.Drawing.Size(51, 17)
 		Me.DragAndDropMdlFileForViewCheckBox.TabIndex = 2
-		Me.DragAndDropMdlFileForViewCheckBox.Text = "View"
+		Me.DragAndDropMdlFileForViewCheckBox.Text = "查看"
 		Me.DragAndDropMdlFileForViewCheckBox.UseVisualStyleBackColor = True
 		'
 		'DragAndDropMdlFileForPreviewCheckBox
@@ -790,7 +788,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropMdlFileForPreviewCheckBox.Name = "DragAndDropMdlFileForPreviewCheckBox"
 		Me.DragAndDropMdlFileForPreviewCheckBox.Size = New System.Drawing.Size(65, 17)
 		Me.DragAndDropMdlFileForPreviewCheckBox.TabIndex = 0
-		Me.DragAndDropMdlFileForPreviewCheckBox.Text = "Preview"
+		Me.DragAndDropMdlFileForPreviewCheckBox.Text = "预览"
 		Me.DragAndDropMdlFileForPreviewCheckBox.UseVisualStyleBackColor = True
 		'
 		'DragAndDropMdlFileForPreviewingRadioButton
@@ -828,9 +826,7 @@ Partial Class OptionsUserControl
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(188, 83)
 		Me.Label3.TabIndex = 19
-		Me.Label3.Text = "Choose which tabs Crowbar sets up and which tab opens when a file or folder is dr" &
-	"opped on Crowbar. Dropping on any tab left unset below will only set up that tab" &
-	"."
+		Me.Label3.Text = "选择当文件或文件夹拖放到 Crowbar 上时要设置哪些标签页，以及打开哪个标签页。拖放到下方未设置的任何标签页上，只会设置该标签页。"
 		'
 		'DragAndDropUseDefaultsButton
 		'
@@ -839,7 +835,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropUseDefaultsButton.Name = "DragAndDropUseDefaultsButton"
 		Me.DragAndDropUseDefaultsButton.Size = New System.Drawing.Size(100, 23)
 		Me.DragAndDropUseDefaultsButton.TabIndex = 4
-		Me.DragAndDropUseDefaultsButton.Text = "Use Defaults"
+		Me.DragAndDropUseDefaultsButton.Text = "使用默认值"
 		Me.DragAndDropUseDefaultsButton.UseVisualStyleBackColor = True
 		'
 		'Panel4
@@ -863,7 +859,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropFolderForPackRadioButton.Size = New System.Drawing.Size(48, 17)
 		Me.DragAndDropFolderForPackRadioButton.TabIndex = 3
 		Me.DragAndDropFolderForPackRadioButton.TabStop = True
-		Me.DragAndDropFolderForPackRadioButton.Text = "Pack"
+		Me.DragAndDropFolderForPackRadioButton.Text = "打包"
 		Me.DragAndDropFolderForPackRadioButton.UseVisualStyleBackColor = True
 		'
 		'DragAndDropFolderForCompileRadioButton
@@ -874,7 +870,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropFolderForCompileRadioButton.Size = New System.Drawing.Size(67, 17)
 		Me.DragAndDropFolderForCompileRadioButton.TabIndex = 2
 		Me.DragAndDropFolderForCompileRadioButton.TabStop = True
-		Me.DragAndDropFolderForCompileRadioButton.Text = "Compile"
+		Me.DragAndDropFolderForCompileRadioButton.Text = "编译"
 		Me.DragAndDropFolderForCompileRadioButton.UseVisualStyleBackColor = True
 		'
 		'DragAndDropFolderForDecompileRadioButton
@@ -885,7 +881,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropFolderForDecompileRadioButton.Size = New System.Drawing.Size(79, 17)
 		Me.DragAndDropFolderForDecompileRadioButton.TabIndex = 1
 		Me.DragAndDropFolderForDecompileRadioButton.TabStop = True
-		Me.DragAndDropFolderForDecompileRadioButton.Text = "Decompile"
+		Me.DragAndDropFolderForDecompileRadioButton.Text = "反编译"
 		Me.DragAndDropFolderForDecompileRadioButton.UseVisualStyleBackColor = True
 		'
 		'DragAndDropFolderForUnpackRadioButton
@@ -896,7 +892,7 @@ Partial Class OptionsUserControl
 		Me.DragAndDropFolderForUnpackRadioButton.Size = New System.Drawing.Size(64, 17)
 		Me.DragAndDropFolderForUnpackRadioButton.TabIndex = 0
 		Me.DragAndDropFolderForUnpackRadioButton.TabStop = True
-		Me.DragAndDropFolderForUnpackRadioButton.Text = "Unpack"
+		Me.DragAndDropFolderForUnpackRadioButton.Text = "解包"
 		Me.DragAndDropFolderForUnpackRadioButton.UseVisualStyleBackColor = True
 		'
 		'ApplyLabel
@@ -906,8 +902,7 @@ Partial Class OptionsUserControl
 		Me.ApplyLabel.Name = "ApplyLabel"
 		Me.ApplyLabel.Size = New System.Drawing.Size(509, 13)
 		Me.ApplyLabel.TabIndex = 18
-		Me.ApplyLabel.Text = "Windows is not using what is specified above. Click the Apply button to apply the" &
-	" options above."
+		Me.ApplyLabel.Text = "Windows 尚未使用上述设置。点击" & ChrW(&H201C) & "应用" & ChrW(&H201D) & "按钮以应用上述选项。"
 		'
 		'ApplyButton
 		'
@@ -915,7 +910,7 @@ Partial Class OptionsUserControl
 		Me.ApplyButton.Name = "ApplyButton"
 		Me.ApplyButton.Size = New System.Drawing.Size(50, 23)
 		Me.ApplyButton.TabIndex = 20
-		Me.ApplyButton.Text = "Apply"
+		Me.ApplyButton.Text = "应用"
 		Me.ApplyButton.UseVisualStyleBackColor = True
 		'
 		'ApplyPanel
@@ -936,13 +931,11 @@ Partial Class OptionsUserControl
 		Me.SingleInstanceCheckBox.Name = "SingleInstanceCheckBox"
 		Me.SingleInstanceCheckBox.Size = New System.Drawing.Size(336, 17)
 		Me.SingleInstanceCheckBox.TabIndex = 4
-		Me.SingleInstanceCheckBox.Text = "Restrict to single instance (only one Crowbar open at a time)"
+		Me.SingleInstanceCheckBox.Text = "限制为单实例（一次只能打开一个 Crowbar）"
 		Me.SingleInstanceCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.SingleInstanceCheckBox)
 		Me.Controls.Add(Me.ApplyPanel)
 		Me.Controls.Add(Me.GroupBox3)

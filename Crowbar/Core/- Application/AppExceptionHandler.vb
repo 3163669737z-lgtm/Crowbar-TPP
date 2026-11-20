@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Threading
 
 Public Class AppExceptionHandler
@@ -19,26 +19,26 @@ Public Class AppExceptionHandler
 			errorReportText += vbCrLf
 			errorReportText += vbCrLf
 
-			errorReportText += "=== Steps to reproduce the error ==="
+			errorReportText += "=== 重现错误的步骤 ==="
 			errorReportText += vbCrLf
-			errorReportText += "[Describe the last few tasks you did in "
+			errorReportText += "[请描述错误发生前，您在 "
 			errorReportText += My.Application.Info.ProductName
-			errorReportText += " before the error occurred.]"
+			errorReportText += " 中执行的最后几个任务。]"
 			errorReportText += vbCrLf
 			errorReportText += vbCrLf
 
-			errorReportText += "=== What you expected to see ==="
+			errorReportText += "=== 您期望看到的结果 ==="
 			errorReportText += vbCrLf
-			errorReportText += "[Explain what you expected "
+			errorReportText += "[请说明您期望 "
 			errorReportText += My.Application.Info.ProductName
-			errorReportText += " to do.]"
+			errorReportText += " 执行的操作。]"
 			errorReportText += vbCrLf
 			errorReportText += vbCrLf
 
-			errorReportText += "=== Context info ==="
+			errorReportText += "=== 上下文信息 ==="
 			errorReportText += vbCrLf
 			If TheApp Is Nothing Then
-				errorReportText += "Exception occured before or after TheApp's lifetime."
+				errorReportText += "异常发生在 TheApp 生命周期之前或之后。"
 			Else
 				'If TheApp.Settings.ViewerIsRunning Then
 				'	errorReportText += "Viewing "
@@ -46,12 +46,12 @@ Public Class AppExceptionHandler
 				'	errorReportText += vbCrLf
 				'End If
 				If TheApp.Settings.DecompilerIsRunning Then
-					errorReportText += "Decompiling "
+					errorReportText += "正在反编译 "
 					errorReportText += TheApp.Settings.DecompileMdlPathFileName
 					errorReportText += vbCrLf
 				End If
 				If TheApp.Settings.CompilerIsRunning Then
-					errorReportText += "Compiling "
+					errorReportText += "正在编译 "
 					errorReportText += TheApp.Settings.CompileQcPathFileName
 					errorReportText += vbCrLf
 				End If
@@ -59,13 +59,13 @@ Public Class AppExceptionHandler
 			errorReportText += vbCrLf
 			errorReportText += vbCrLf
 
-			errorReportText += "=== Exception error description ==="
+			errorReportText += "=== 异常错误描述 ==="
 			errorReportText += vbCrLf
 			errorReportText += t.Exception.Message
 			errorReportText += vbCrLf
 			errorReportText += vbCrLf
 
-			errorReportText += "=== Call stack ==="
+			errorReportText += "=== 调用堆栈 ==="
 			errorReportText += vbCrLf
 			errorReportText += t.Exception.StackTrace
 			errorReportText += vbCrLf

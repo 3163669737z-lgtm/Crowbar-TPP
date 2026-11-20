@@ -228,11 +228,7 @@ Public Class SourceModel36
 		'physicsMeshPathFileName = Path.Combine(modelOutputPath, Me.thePhysicsMeshSmdFileName)
 		Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName = SourceFileNamesModule.CreatePhysicsSmdFileName(Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName, Me.theName)
 		physicsMeshPathFileName = Path.Combine(modelOutputPath, Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName)
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, physicsMeshPathFileName)
-		Me.WriteTextFile(physicsMeshPathFileName, AddressOf Me.WritePhysicsMeshSmdFile)
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, physicsMeshPathFileName)
-
-		Return status
+		Return Me.WriteTextOutput(physicsMeshPathFileName, AddressOf Me.WritePhysicsMeshSmdFile)
 	End Function
 
 	Public Overrides Function WriteBoneAnimationSmdFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
@@ -559,7 +555,7 @@ Public Class SourceModel36
 			End If
 			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, Command)
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		Finally
 		End Try
 	End Sub

@@ -128,14 +128,16 @@
     <value>..\resources\crowbar_icon_large.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="About_ProductDescription" xml:space="preserve">
-    <value>GoldSource and Source Engine Modding Toolset:
-* Decompiler of MDL and related files.
-* Compiler interface to StudioMDL.exe tool.
-* Model viewer interface to Half-Life Model Viewer tool.
-* Unpacker of Fairy Tale Busters APK, Tactical Intervention FPX, Garry's Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
-* Packer interface to Garry's Mod GMA and Source-engine VPK packer tools.
-* Downloader of Workshop items from any Steam game that allows public downloads.
-* Publisher of Workshop items for several Source-engine games.</value>
+    <value>GoldSource 与 Source 引擎模组工具集：
+* MDL 及相关文件的反编译器。
+* StudioMDL.exe 工具的编译接口。
+* Half-Life Model Viewer 工具的模型查看接口。
+* Fairy Tale Busters APK、Tactical Intervention FPX、Garry&apos;s Mod GMA、Vampire: The Masquerade - Bloodlines VPK 以及 Source 引擎 VPK 文件的解包器。
+* Garry&apos;s Mod GMA 与 Source 引擎 VPK 打包工具的打包接口。
+* 从任何允许公开下载的 Steam 游戏下载创意工坊项目的下载器。
+* 多个 Source 引擎游戏创意工坊项目的发布器。
+
+现代界面版基于 ZeqMacaw 的 Crowbar 和 Starfelll 的改版。</value>
   </data>
   <data name="Decompile_DebugAniFileNameSuffix" xml:space="preserve">
     <value>decompile-ANI.txt</value>
@@ -168,7 +170,7 @@
     <value>http://steamcommunity.com/groups/CrowbarTool</value>
   </data>
   <data name="ErrorMessageSDKMissingCause" xml:space="preserve">
-    <value>Possible causes: The game's SDK or Authoring Tools has not been installed (usually via Steam Library Tools) or the path given to Crowbar (via Set Up Games button) is incorrect.</value>
+    <value>可能的原因：该游戏的 SDK 或创作工具尚未安装（通常通过 Steam 库工具安装），或者提供给 Crowbar 的路径（通过“设置游戏”按钮）不正确。</value>
   </data>
   <data name="FindNext" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\FindNext.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -189,10 +191,10 @@
     <value>..\resources\Refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="About_GotoSteamGroupText" xml:space="preserve">
-    <value>Goto Steam Group</value>
+    <value>前往 Steam 组</value>
   </data>
   <data name="About_GotoSteamProfileText" xml:space="preserve">
-    <value>Goto Steam Profile</value>
+    <value>前往 Steam 个人资料</value>
   </data>
   <data name="CrowbarGuideBanner" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\CrowbarGuideBanner.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -249,10 +251,10 @@
     <value>..\Resources\Steamworks.NET.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ToggleWordWrapCurrentlyOff" xml:space="preserve">
-    <value>Toggle Word Wrap - currently not wrapping</value>
+    <value>切换自动换行 - 当前未换行</value>
   </data>
   <data name="ToggleWordWrapCurrentlyOn" xml:space="preserve">
-    <value>Toggle Word Wrap - currently wrapping</value>
+    <value>切换自动换行 - 当前已换行</value>
   </data>
   <data name="lzham_x86" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lzham_x86.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

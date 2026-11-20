@@ -62,7 +62,7 @@ Public Class BackgroundSteamPipe
 
 			Dim steamPipeToGetAppID As New SteamPipe()
 			Me.theActiveSteamPipes.Add(steamPipeToGetAppID)
-			Dim resultOfGetAppID As String = steamPipeToGetAppID.Open("GetItemAppID", bw, "Getting item app ID")
+			Dim resultOfGetAppID As String = steamPipeToGetAppID.Open("GetItemAppID", bw, "正在获取项目 App ID")
 			If resultOfGetAppID <> "success" Then
 				outputInfo.Result = "error"
 				e.Result = outputInfo
@@ -98,7 +98,7 @@ Public Class BackgroundSteamPipe
 				TheApp.SetSteamAppId(CUInt(appID_text))
 			Else
 				'NOTE: Error message is stored in publishedItem.Title.
-				bw.ReportProgress(0, "ERROR: " + publishedItem.Title + vbCrLf)
+				bw.ReportProgress(0, "错误：" + publishedItem.Title + vbCrLf)
 				outputInfo.Result = "error"
 				e.Result = outputInfo
 				Me.theActiveBackgroundWorkers.Remove(bw)
@@ -111,7 +111,7 @@ Public Class BackgroundSteamPipe
 
 		Dim steamPipe As New SteamPipe()
 		Me.theActiveSteamPipes.Add(steamPipe)
-		Dim result As String = steamPipe.Open("DownloadItem", bw, "Downloading item")
+		Dim result As String = steamPipe.Open("DownloadItem", bw, "正在下载项目")
 		If result <> "success" Then
 			outputInfo.Result = "error"
 			e.Result = outputInfo
@@ -130,7 +130,7 @@ Public Class BackgroundSteamPipe
 		ElseIf result = "success_SteamUGC" Then
 			outputInfo.AppID = UInteger.Parse(returned_AppID_Text)
 		Else
-			bw.ReportProgress(0, "ERROR: Unable to download the content file name from Steam." + vbCrLf)
+			bw.ReportProgress(0, "错误：无法从 Steam 下载内容文件名。" + vbCrLf + "")
 		End If
 		outputInfo.Result = result
 
@@ -156,7 +156,7 @@ Public Class BackgroundSteamPipe
 
 		Dim steamPipe As New SteamPipe()
 		Me.theActiveSteamPipes.Add(steamPipe)
-		Dim result As String = steamPipe.Open("UnsubscribeItem", bw, "Unsubscribing from item")
+		Dim result As String = steamPipe.Open("UnsubscribeItem", bw, "正在取消订阅项目")
 		If result <> "success" Then
 			outputInfo.Result = "error"
 			e.Result = outputInfo
@@ -167,7 +167,7 @@ Public Class BackgroundSteamPipe
 
 		result = steamPipe.SteamUGC_UnsubscribeItem(inputInfo.PublishedItemID)
 		If result <> "success" Then
-			bw.ReportProgress(0, "ERROR: Unable to download the content file name from Steam." + vbCrLf)
+			bw.ReportProgress(0, "错误：无法从 Steam 下载内容文件名。" + vbCrLf + "")
 		End If
 		outputInfo.Result = result
 
@@ -201,7 +201,7 @@ Public Class BackgroundSteamPipe
 
 		Dim steamPipe As New SteamPipe()
 		Me.theActiveSteamPipes.Add(steamPipe)
-		Dim result As String = steamPipe.Open("GetPublishedItems", bw, "Getting list of published items")
+		Dim result As String = steamPipe.Open("GetPublishedItems", bw, "正在获取已发布项目列表")
 		If result <> "success" Then
 			e.Cancel = True
 			Me.theActiveSteamPipes.Remove(steamPipe)
@@ -215,7 +215,7 @@ Public Class BackgroundSteamPipe
 			Dim result_SteamUGC_CreateQueryUserUGCRequest As String
 			result_SteamUGC_CreateQueryUserUGCRequest = steamPipe.SteamUGC_CreateQueryUserUGCRequest(appID_text, pageNumber)
 			If result_SteamUGC_CreateQueryUserUGCRequest <> "success" Then
-				bw.ReportProgress(0, "ERROR: " + result_SteamUGC_CreateQueryUserUGCRequest + vbCrLf)
+				bw.ReportProgress(0, "错误：" + result_SteamUGC_CreateQueryUserUGCRequest + vbCrLf)
 				Exit While
 			End If
 
@@ -293,7 +293,7 @@ Public Class BackgroundSteamPipe
 		Me.theGetItemDetailsSteamPipe = New SteamPipe()
 		Me.theActiveSteamPipes.Add(Me.theGetItemDetailsSteamPipe)
 
-		Dim result As String = Me.theGetItemDetailsSteamPipe.Open("GetItemDetails", bw, "Getting item details")
+		Dim result As String = Me.theGetItemDetailsSteamPipe.Open("GetItemDetails", bw, "正在获取项目详情")
 		If result <> "success" Then
 			e.Cancel = True
 			Me.theActiveSteamPipes.Remove(Me.theGetItemDetailsSteamPipe)
@@ -325,7 +325,7 @@ Public Class BackgroundSteamPipe
 			result = Me.theGetItemDetailsSteamPipe.Crowbar_DownloadPreviewFile(publishedItem.PreviewImagePathFileName)
 		Else
 			'NOTE: Error message is stored in publishedItem.Title.
-			bw.ReportProgress(0, "ERROR: " + publishedItem.Title + vbCrLf)
+			bw.ReportProgress(0, "错误：" + publishedItem.Title + vbCrLf)
 			bw.ReportProgress(1, Nothing)
 		End If
 
@@ -363,7 +363,7 @@ Public Class BackgroundSteamPipe
 
 		Dim steamPipe As New SteamPipe()
 		Me.theActiveSteamPipes.Add(steamPipe)
-		Dim result As String = steamPipe.Open("DeleteItem", bw, "Deleting item")
+		Dim result As String = steamPipe.Open("DeleteItem", bw, "正在删除项目")
 		If result <> "success" Then
 			e.Cancel = True
 			Me.theActiveSteamPipes.Remove(steamPipe)
@@ -427,7 +427,7 @@ Public Class BackgroundSteamPipe
 		If inputInfo.Item.ContentPathFolderOrFileNameIsChanged AndAlso inputInfo.Item.ContentPathFolderOrFileName <> "" Then
 			Dim processedFileCheckIsSuccessful As Boolean = True
 			Try
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Processing content for upload." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "正在处理要上传的内容。" + vbCrLf + "")
 				processedContentPathFolderOrFileName = inputInfo.AppInfo.ProcessFileBeforeUpload(inputInfo.Item, bw)
 
 				If inputInfo.AppInfo.CanUseContentFolderOrFile Then
@@ -444,12 +444,12 @@ Public Class BackgroundSteamPipe
 					End If
 				End If
 			Catch ex As Exception
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + ex.Message + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：" + ex.Message + vbCrLf)
 				processedFileCheckIsSuccessful = False
 			End Try
 
 			If Not processedFileCheckIsSuccessful Then
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Processing content failed. Review log messages above for reason." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：内容处理失败。请查看上方日志消息了解原因。" + vbCrLf + "")
 				e.Cancel = True
 				Me.theActiveBackgroundWorkers.Remove(bw)
 				Exit Sub
@@ -464,7 +464,7 @@ Public Class BackgroundSteamPipe
 
 		Dim steamPipe As New SteamPipe()
 		Me.theActiveSteamPipes.Add(steamPipe)
-		Dim result As String = steamPipe.Open("PublishItem", bw, "Publishing item")
+		Dim result As String = steamPipe.Open("PublishItem", bw, "正在发布项目")
 		If result <> "success" Then
 			e.Cancel = True
 			Me.theActiveSteamPipes.Remove(steamPipe)
@@ -519,7 +519,7 @@ Public Class BackgroundSteamPipe
 				outputInfo.PublishedItemID = returnedPublishedItemID
 				outputInfo.SteamAgreementStatus = "NotAccepted"
 			Else
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Unable to create workshop item. Steam error message: " + resultOfCreateItem + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：无法创建创意工坊项目。Steam 错误消息：" + resultOfCreateItem + vbCrLf)
 				outputInfo.Result = "Failed"
 				'Return outputInfo
 			End If
@@ -548,9 +548,9 @@ Public Class BackgroundSteamPipe
 							If Directory.Exists(processedContentPathFolderOrFileName) OrElse (inputInfo.AppInfo.CanUseContentFolderOrFile AndAlso File.Exists(processedContentPathFolderOrFileName)) Then
 								Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(processedContentPathFolderOrFileName)
 								If setItemContentWasSuccessful = "success" Then
-									Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content completed." + vbCrLf)
+									Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目内容设置完成。" + vbCrLf + "")
 								Else
-									Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content failed." + vbCrLf)
+									Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目内容设置失败。" + vbCrLf + "")
 									outputInfo.Result = "Failed"
 									'Return outputInfo
 								End If
@@ -560,14 +560,14 @@ Public Class BackgroundSteamPipe
 
 					If outputInfo.Result <> "Failed" Then
 						If inputInfo.Item.IsDraft Then
-							Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing new item." + vbCrLf)
+							Me.thePublishItemBackgroundWorker.ReportProgress(0, "正在发布新项目。" + vbCrLf + "")
 						Else
-							Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing the update." + vbCrLf)
+							Me.thePublishItemBackgroundWorker.ReportProgress(0, "正在发布更新。" + vbCrLf + "")
 						End If
 
 						result = Me.SubmitItemUpdate(steamPipe, changeNote)
 						If result = "success" Then
-							Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing succeeded." + vbCrLf)
+							Me.thePublishItemBackgroundWorker.ReportProgress(0, "发布成功。" + vbCrLf + "")
 							outputInfo.Result = "Succeeded"
 							If outputInfo.PublishedItemID = "0" Then
 								outputInfo.PublishedItemID = inputInfo.Item.ID
@@ -620,7 +620,7 @@ Public Class BackgroundSteamPipe
 		Dim previewFileName As String = Path.GetFileName(inputInfo.Item.PreviewImagePathFileName)
 		Dim resultForPreview_SteamRemoteStorage_FileWrite As String = steamPipe.SteamRemoteStorage_FileWrite(inputInfo.Item.PreviewImagePathFileName, previewFileName)
 		If resultForPreview_SteamRemoteStorage_FileWrite <> "success" Then
-			Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + resultForPreview_SteamRemoteStorage_FileWrite + vbCrLf)
+			Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：" + resultForPreview_SteamRemoteStorage_FileWrite + vbCrLf)
 			outputInfo.Result = "Failed"
 			'Return outputInfo
 		End If
@@ -630,18 +630,18 @@ Public Class BackgroundSteamPipe
 				Dim fileName As String = Path.GetFileName(processedContentPathFolderOrFileName)
 				Dim resultForContent_SteamRemoteStorage_FileWrite As String = steamPipe.SteamRemoteStorage_FileWrite(processedContentPathFolderOrFileName, fileName)
 				If resultForContent_SteamRemoteStorage_FileWrite <> "success" Then
-					Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + resultForContent_SteamRemoteStorage_FileWrite + vbCrLf)
+					Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：" + resultForContent_SteamRemoteStorage_FileWrite + vbCrLf)
 					outputInfo.Result = "Failed"
 					'Return outputInfo
 				Else
 					Dim appID_text As String = inputInfo.AppInfo.ID.ToString()
 
-					Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing new item." + vbCrLf)
+					Me.thePublishItemBackgroundWorker.ReportProgress(0, "正在发布新项目。" + vbCrLf + "")
 					Dim returnedPublishedItemID As String = ""
 					Dim resultOfCreateItem As String = steamPipe.SteamRemoteStorage_PublishWorkshopFile(fileName, previewFileName, appID_text, inputInfo.Item.Title, inputInfo.Item.Description, inputInfo.Item.VisibilityText, inputInfo.Item.Tags, returnedPublishedItemID)
 
 					If resultOfCreateItem = "success" Then
-						Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing succeeded." + vbCrLf)
+						Me.thePublishItemBackgroundWorker.ReportProgress(0, "发布成功。" + vbCrLf + "")
 						outputInfo.PublishedItemID = returnedPublishedItemID
 						outputInfo.Result = "Succeeded"
 					ElseIf resultOfCreateItem = "success_agreement" Then
@@ -650,7 +650,7 @@ Public Class BackgroundSteamPipe
 						outputInfo.PublishedItemID = returnedPublishedItemID
 						outputInfo.SteamAgreementStatus = "NotAccepted"
 					Else
-						Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Unable to publish workshop item. Steam error message: " + resultOfCreateItem + vbCrLf)
+						Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：无法发布创意工坊项目。Steam 错误消息：" + resultOfCreateItem + vbCrLf)
 						outputInfo.Result = "Failed"
 					End If
 				End If
@@ -672,7 +672,7 @@ Public Class BackgroundSteamPipe
 
 		Dim result As String = ""
 
-		Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing non-content parts of update." + vbCrLf)
+		Me.thePublishItemBackgroundWorker.ReportProgress(0, "正在发布更新的非内容部分。" + vbCrLf + "")
 		result = Me.StartItemUpdate(steamPipe, inputInfo.AppInfo.ID.ToString(), inputInfo.Item.ID)
 		If result <> "success" Then
 			outputInfo.Result = "Failed"
@@ -686,7 +686,7 @@ Public Class BackgroundSteamPipe
 				'NOTE: The changeNote will not be changed via this SteamUGC function call because updated item is in SteamRemoteStorage.
 				result = Me.SubmitItemUpdate(steamPipe, changeNote)
 				If result = "success" Then
-					Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing non-content parts of update succeeded." + vbCrLf)
+					Me.thePublishItemBackgroundWorker.ReportProgress(0, "更新的非内容部分发布成功。" + vbCrLf + "")
 					outputInfo.PublishedItemID = inputInfo.Item.ID
 					outputInfo.Result = "Succeeded"
 				ElseIf result = "success_agreement" Then
@@ -713,37 +713,37 @@ Public Class BackgroundSteamPipe
 						Dim result_SteamRemoteStorage_FileWrite As String = steamPipe.SteamRemoteStorage_FileWrite(processedContentPathFolderOrFileName, fileName)
 						If result_SteamRemoteStorage_FileWrite <> "success" Then
 							'TODO: This error seems to occur when content file is bigger than available space for app's Steam Cloud.
-							Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Not enough space on this game's Steam Cloud for content file." + result_SteamRemoteStorage_FileWrite + vbCrLf)
+							Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：此游戏的 Steam 云没有足够空间存放内容文件。" + result_SteamRemoteStorage_FileWrite + vbCrLf)
 							outputInfo.Result = "Failed"
 							'Return outputInfo
 						Else
 							Dim result_SteamRemoteStorage_CreatePublishedFileUpdateRequest As String = steamPipe.SteamRemoteStorage_CreatePublishedFileUpdateRequest(inputInfo.Item.ID)
 							If result_SteamRemoteStorage_CreatePublishedFileUpdateRequest <> "success" Then
-								Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + result_SteamRemoteStorage_CreatePublishedFileUpdateRequest + vbCrLf)
+								Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：" + result_SteamRemoteStorage_CreatePublishedFileUpdateRequest + vbCrLf)
 								outputInfo.Result = "Failed"
 								'Return outputInfo
 							Else
 								Dim result_SteamRemoteStorage_UpdatePublishedFileFile As String = steamPipe.SteamRemoteStorage_UpdatePublishedFileFile(fileName)
 								If result_SteamRemoteStorage_UpdatePublishedFileFile <> "success" Then
-									Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Update of content file failed." + vbCrLf)
+									Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：内容文件更新失败。" + vbCrLf + "")
 									outputInfo.Result = "Failed"
 									'Return outputInfo
 								Else
-									Dim updateCompletedLogText As String = "Update of content file"
+									Dim updateCompletedLogText As String = "更新内容文件"
 
 									Dim result_SteamRemoteStorage_UpdatePublishedFileSetChangeDescription As String = steamPipe.SteamRemoteStorage_UpdatePublishedFileSetChangeDescription(changeNote)
 									If result_SteamRemoteStorage_UpdatePublishedFileSetChangeDescription <> "success" Then
-										Me.thePublishItemBackgroundWorker.ReportProgress(0, "WARNING: Update of change note failed." + vbCrLf)
+										Me.thePublishItemBackgroundWorker.ReportProgress(0, "警告：更改说明更新失败。" + vbCrLf + "")
 									Else
 										updateCompletedLogText += " and change note"
 									End If
 
 									' Copy content file from RemoteStorage (Steam Cloud) to SteamUGC storage. The copy might actually occur in an earlier function call.
-									Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing the content part of update." + vbCrLf)
+									Me.thePublishItemBackgroundWorker.ReportProgress(0, "正在发布更新的内容部分。" + vbCrLf + "")
 									Dim result_SteamRemoteStorage_CommitPublishedFileUpdate As String = steamPipe.SteamRemoteStorage_CommitPublishedFileUpdate()
 									If result_SteamRemoteStorage_CommitPublishedFileUpdate = "success" Then
 										'Me.thePublishItemBackgroundWorker.ReportProgress(0, updateCompletedLogText + " completed." + vbCrLf)
-										Me.thePublishItemBackgroundWorker.ReportProgress(0, "Publishing the content part of update succeeded." + vbCrLf)
+										Me.thePublishItemBackgroundWorker.ReportProgress(0, "更新的内容部分发布成功。" + vbCrLf + "")
 										outputInfo.PublishedItemID = inputInfo.Item.ID
 										outputInfo.Result = "Succeeded"
 									ElseIf result_SteamRemoteStorage_CommitPublishedFileUpdate = "success_agreement" Then
@@ -783,9 +783,9 @@ Public Class BackgroundSteamPipe
 		If inputInfo.Item.TitleIsChanged AndAlso inputInfo.Item.Title <> "" Then
 			Dim setItemTitleWasSuccessful As String = steamPipe.SteamUGC_SetItemTitle(inputInfo.Item.Title)
 			If setItemTitleWasSuccessful = "success" Then
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item title completed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目标题设置完成。" + vbCrLf + "")
 			Else
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item title failed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目标题设置失败。" + vbCrLf + "")
 				Return "error"
 			End If
 		End If
@@ -793,9 +793,9 @@ Public Class BackgroundSteamPipe
 		If inputInfo.Item.DescriptionIsChanged AndAlso inputInfo.Item.Description <> "" Then
 			Dim setItemDescriptionWasSuccessful As String = steamPipe.SteamUGC_SetItemDescription(inputInfo.Item.Description)
 			If setItemDescriptionWasSuccessful = "success" Then
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item description completed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目描述设置完成。" + vbCrLf + "")
 			Else
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item description failed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目描述设置失败。" + vbCrLf + "")
 				Return "error"
 			End If
 		End If
@@ -803,9 +803,9 @@ Public Class BackgroundSteamPipe
 		If inputInfo.Item.PreviewImagePathFileNameIsChanged AndAlso inputInfo.Item.PreviewImagePathFileName <> "" Then
 			Dim setItemPreviewWasSuccessful As String = steamPipe.SteamUGC_SetItemPreview(inputInfo.Item.PreviewImagePathFileName)
 			If setItemPreviewWasSuccessful = "success" Then
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item preview completed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目预览设置完成。" + vbCrLf + "")
 			Else
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item preview failed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目预览设置失败。" + vbCrLf + "")
 				Return "error"
 			End If
 		End If
@@ -814,9 +814,9 @@ Public Class BackgroundSteamPipe
 			Dim visibility_text As String = inputInfo.Item.VisibilityText
 			Dim setItemVisibilityWasSuccessful As String = steamPipe.SteamUGC_SetItemVisibility(visibility_text)
 			If setItemVisibilityWasSuccessful = "success" Then
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item visibility completed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目可见性设置完成。" + vbCrLf + "")
 			Else
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item visibility failed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目可见性设置失败。" + vbCrLf + "")
 				Return "error"
 			End If
 		End If
@@ -824,9 +824,9 @@ Public Class BackgroundSteamPipe
 		If inputInfo.Item.TagsIsChanged Then
 			Dim setItemTagsWasSuccessful As String = steamPipe.SteamUGC_SetItemTags(inputInfo.Item.Tags)
 			If setItemTagsWasSuccessful = "success" Then
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item tags completed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目标签设置完成。" + vbCrLf + "")
 			Else
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item tags failed." + vbCrLf)
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "项目标签设置失败。" + vbCrLf + "")
 				Return "error"
 			End If
 		End If
@@ -838,7 +838,7 @@ Public Class BackgroundSteamPipe
 	Private Function StartItemUpdate(ByVal steamPipe As SteamPipe, ByVal appID_Text As String, ByVal itemID_text As String) As String
 		Dim result As String = steamPipe.SteamUGC_StartItemUpdate(appID_Text, itemID_text)
 		If result <> "success" Then
-			Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Unable to start the update of item." + vbCrLf)
+			Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：无法开始更新项目。" + vbCrLf + "")
 		End If
 		Return result
 	End Function
@@ -847,7 +847,7 @@ Public Class BackgroundSteamPipe
 	Private Function SubmitItemUpdate(ByVal steamPipe As SteamPipe, ByVal changeNote As String) As String
 		Dim result As String = steamPipe.SteamUGC_SubmitItemUpdate(changeNote)
 		If Not result.StartsWith("success") Then
-			Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Unable to submit the update of item. Steam error: " + result + vbCrLf)
+			Me.thePublishItemBackgroundWorker.ReportProgress(0, "错误：无法提交项目更新。Steam 错误：" + result + vbCrLf)
 		End If
 		Return result
 	End Function

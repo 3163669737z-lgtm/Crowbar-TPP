@@ -1,8 +1,9 @@
-Imports System.Collections.ObjectModel
+﻿Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Text
 
 Public Class MainForm
+	Private Shared ReadOnly MinimumClientSizeAt96Dpi As New Size(792, 572)
 
 #Region "Create and Destroy"
 
@@ -17,10 +18,13 @@ Public Class MainForm
 
 		' This call is required by the designer.
 		InitializeComponent()
-
-		' Add any initialization after the InitializeComponent() call.
-		'Me.InitWidgets(Me)
-		'Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		If TheApp IsNot Nothing Then
+			' Create the handle on the restored monitor so its DPI is known before Load.
+			Me.StartPosition = FormStartPosition.Manual
+			Dim savedLocation As Point = TheApp.Settings.WindowLocation
+			Dim workArea As Rectangle = Screen.FromPoint(savedLocation).WorkingArea
+			Me.Location = If(workArea.Contains(savedLocation), savedLocation, workArea.Location)
+		End If
 	End Sub
 
 #End Region
@@ -28,47 +32,11 @@ Public Class MainForm
 #Region "Init and Free"
 
 	Private Sub Init()
-		Try
-			Me.Location = TheApp.Settings.WindowLocation
-			Me.Size = TheApp.Settings.WindowSize
-			Me.WindowState = TheApp.Settings.WindowState
-
-			' Ensure minimum size of window. 
-			'     Usually MinimumSize Handles this, but MinimumSize changes when Windows Theme Message Box Font Is something weird Like "SimSun-ExtB" 8pt.
-			'     Thus, set the minimum size manually here.
-			Dim minimumWidth As Integer = 800
-			Dim minimumHeight As Integer = 600
-			If Me.MinimumSize.Width < minimumWidth OrElse Me.MinimumSize.Height < minimumHeight Then
-				Me.MinimumSize = New Size(minimumWidth, minimumHeight)
-			End If
-			If Me.Width < Me.MinimumSize.Width Then
-				Me.Width = Me.MinimumSize.Width
-			End If
-			If Me.Height < Me.MinimumSize.Height Then
-				Me.Height = Me.MinimumSize.Height
-			End If
-
-			If TheApp.CommandLineOption_Settings_IsEnabled Then
-				TheApp.Settings.MainWindowSelectedTabIndex = Me.MainTabControl.TabPages.IndexOf(Me.UpdateTabPage)
-			End If
-			Me.MainTabControl.SelectedIndex = TheApp.Settings.MainWindowSelectedTabIndex
-
-			Dim aScreen As Screen
-			aScreen = Screen.FromControl(Me)
-			'WorkingArea means the area of the screen without the Windows taskbar.
-			Dim aScreenWorkingArea As Rectangle
-			aScreenWorkingArea = aScreen.WorkingArea
-			' Ensure at least 60 px of Title Bar visible
-			If Me.Location.X < aScreenWorkingArea.Left OrElse Me.Location.X + 60 > aScreenWorkingArea.Left + aScreenWorkingArea.Width Then
-				Me.Left = aScreenWorkingArea.Left
-			End If
-			' Ensure top visible
-			If Me.Location.Y < aScreenWorkingArea.Top OrElse Me.Location.Y + Me.Size.Height > aScreenWorkingArea.Top + aScreenWorkingArea.Height Then
-				Me.Top = aScreenWorkingArea.Top
-			End If
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
+		RestoreWindowPlacement()
+		If TheApp.CommandLineOption_Settings_IsEnabled Then
+			TheApp.Settings.MainWindowSelectedTabIndex = Me.MainTabControl.TabPages.IndexOf(Me.UpdateTabPage)
+		End If
+		Me.MainTabControl.SelectedIndex = Math.Max(0, Math.Min(TheApp.Settings.MainWindowSelectedTabIndex, Me.MainTabControl.TabCount - 1))
 
 		''TEST:
 		'JumpList()
@@ -136,13 +104,10 @@ Public Class MainForm
 		RemoveHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
 		RemoveHandler Me.UpdateUserControl1.UpdateAvailable, AddressOf Me.UpdateUserControl1_UpdateAvailable
 
-		If Me.WindowState = FormWindowState.Normal Then
-			TheApp.Settings.WindowLocation = Me.Location
-			TheApp.Settings.WindowSize = Me.Size
-		Else
-			TheApp.Settings.WindowLocation = Me.RestoreBounds.Location
-			TheApp.Settings.WindowSize = Me.RestoreBounds.Size
-		End If
+		Dim normalBounds As Rectangle = If(Me.WindowState = FormWindowState.Normal, Me.Bounds, Me.RestoreBounds)
+		TheApp.Settings.WindowLocation = normalBounds.Location
+		TheApp.Settings.WindowSize = New Size(CInt(normalBounds.Width * 96.0 / Me.DeviceDpi),
+			CInt(normalBounds.Height * 96.0 / Me.DeviceDpi))
 		TheApp.Settings.WindowState = Me.WindowState
 		TheApp.Settings.MainWindowSelectedTabIndex = Me.MainTabControl.SelectedIndex
 	End Sub
@@ -154,6 +119,46 @@ Public Class MainForm
 #End Region
 
 #Region "Methods"
+
+	Private Sub RestoreWindowPlacement()
+		Dim area As Rectangle = Screen.FromHandle(Me.Handle).WorkingArea
+		UpdateWindowConstraints(area)
+		Dim savedSize As Size = TheApp.Settings.WindowSize
+		Dim width As Integer = Math.Max(Me.MinimumSize.Width, Math.Min(LogicalToDeviceUnits(savedSize.Width), area.Width))
+		Dim height As Integer = Math.Max(Me.MinimumSize.Height, Math.Min(LogicalToDeviceUnits(savedSize.Height), area.Height))
+		Dim left As Integer = Math.Max(area.Left, Math.Min(Me.Left, area.Right - width))
+		Dim top As Integer = Math.Max(area.Top, Math.Min(Me.Top, area.Bottom - height))
+		Me.SetBounds(left, top, width, height)
+		Me.WindowState = If(TheApp.Settings.WindowState = FormWindowState.Maximized, FormWindowState.Maximized, FormWindowState.Normal)
+	End Sub
+
+	Private Sub UpdateWindowConstraints(ByVal workArea As Rectangle)
+		Dim minimumClient As New Size(LogicalToDeviceUnits(MinimumClientSizeAt96Dpi.Width),
+			LogicalToDeviceUnits(MinimumClientSizeAt96Dpi.Height))
+		Dim minimumWindow As Size = Me.SizeFromClientSize(minimumClient)
+		Dim needsScroll As Boolean = minimumWindow.Width > workArea.Width OrElse minimumWindow.Height > workArea.Height
+
+		' The original layout fits inside the scrollable area on smaller scaled screens.
+		Me.AutoScrollMinSize = If(needsScroll, minimumClient, Size.Empty)
+		Me.AutoScroll = needsScroll
+		Me.MinimumSize = New Size(Math.Min(minimumWindow.Width, workArea.Width), Math.Min(minimumWindow.Height, workArea.Height))
+	End Sub
+
+	Protected Overrides Sub OnDpiChanged(ByVal e As DpiChangedEventArgs)
+		MyBase.OnDpiChanged(e)
+		If e.Cancel OrElse Not Me.IsHandleCreated Then Return
+
+		' Recalculate after WinForms scales the window and applies the suggested bounds.
+		Me.BeginInvoke(New MethodInvoker(
+			Sub()
+				If Me.IsDisposed Then Return
+				Dim area As Rectangle = Screen.FromHandle(Me.Handle).WorkingArea
+				UpdateWindowConstraints(area)
+				If Me.AutoScroll AndAlso Me.WindowState = FormWindowState.Normal Then
+					Me.Size = New Size(Math.Min(Me.Width, area.Width), Math.Min(Me.Height, area.Height))
+				End If
+			End Sub))
+	End Sub
 
 	Public Sub Startup(ByVal commandLineValues As ReadOnlyCollection(Of String))
 		If commandLineValues.Count > 1 Then
@@ -313,9 +318,9 @@ Public Class MainForm
 
 	Private Sub UpdateUserControl1_UpdateAvailable(ByVal sender As System.Object, ByVal e As UpdateUserControl.UpdateAvailableEventArgs)
 		If e.UpdateIsAvailable Then
-			Me.UpdateTabPage.Text = "Update Available"
+			Me.UpdateTabPage.Text = "有可用更新"
 		Else
-			Me.UpdateTabPage.Text = "Update"
+			Me.UpdateTabPage.Text = "更新"
 		End If
 	End Sub
 

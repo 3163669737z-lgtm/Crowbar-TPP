@@ -579,7 +579,7 @@ Public Class SourceQcFile14
 					Dim aTexture As SourceMdlTexture14
 					aTexture = Me.theMdlFileData.theTextures(aSkinFamily(j))
 
-					textureFileNames.Add(aTexture.theFileName)
+					textureFileNames.Add(aTexture.theTextureName)
 				Next
 
 				skinFamiliesOfTextureFileNames.Add(textureFileNames)

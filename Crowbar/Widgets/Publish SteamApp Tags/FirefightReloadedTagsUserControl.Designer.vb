@@ -163,7 +163,7 @@ Partial Class FirefightReloadedTagsUserControl
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(73, 13)
 		Me.Label1.TabIndex = 0
-		Me.Label1.Text = "ADDON TYPE"
+		Me.Label1.Text = "附加组件类型"
 		'
 		'WeaponCheckBox
 		'
@@ -179,8 +179,8 @@ Partial Class FirefightReloadedTagsUserControl
 		'
 		'FirefightReloadedTagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.AutoScroll = True
 		Me.Controls.Add(Me.WeaponCheckBox)
 		Me.Controls.Add(Me.Label1)

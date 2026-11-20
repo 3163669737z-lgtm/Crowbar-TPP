@@ -56,7 +56,7 @@ Partial Class GarrysModTagsUserControl
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(33, 13)
 		Me.Label1.TabIndex = 0
-		Me.Label1.Text = "Type:"
+		Me.Label1.Text = "类型："
 		'
 		'CheckBox1
 		'
@@ -184,7 +184,7 @@ Partial Class GarrysModTagsUserControl
 		Me.GroupBox1.Size = New System.Drawing.Size(151, 228)
 		Me.GroupBox1.TabIndex = 2
 		Me.GroupBox1.TabStop = False
-		Me.GroupBox1.Text = "Choose up to two"
+		Me.GroupBox1.Text = "最多选择两个"
 		'
 		'AddonTagCheckBox
 		'
@@ -206,12 +206,12 @@ Partial Class GarrysModTagsUserControl
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(63, 13)
 		Me.Label2.TabIndex = 10
-		Me.Label2.Text = "Always set:"
+		Me.Label2.Text = "始终设置："
 		'
 		'GarrysModTagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.Controls.Add(Me.Label2)
 		Me.Controls.Add(Me.AddonTagCheckBox)
 		Me.Controls.Add(Me.GroupBox1)

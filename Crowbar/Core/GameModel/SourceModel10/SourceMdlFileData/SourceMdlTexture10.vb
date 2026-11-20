@@ -13,6 +13,7 @@
 
 	Public fileName(63) As Char
 	Public flags As Integer
+	Friend Const XashHalfFloatUvs As Integer = &H80000000
 	Public width As UInt32
 	Public height As UInt32
 	Public dataOffset As UInt32

@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.ComponentModel
 
 Public MustInherit Class SourceModel
@@ -8,29 +8,38 @@ Public MustInherit Class SourceModel
 	Public Shared Function Create(ByVal mdlPathFileName As String, ByVal overrideVersion As SupportedMdlVersion, ByRef version As Integer) As SourceModel
 		Dim model As SourceModel = Nothing
 		Dim storedVersion As Integer
+		Dim id As String = Nothing
 
 		Try
-			storedVersion = SourceModel.GetVersion(mdlPathFileName)
+			storedVersion = SourceModel.GetVersion(mdlPathFileName, id)
 			If overrideVersion = SupportedMdlVersion.DoNotOverride Then
 				version = storedVersion
 			Else
 				version = CInt(EnumHelper.GetDescription(overrideVersion))
 			End If
 
-			'If version = 4 Then
-			'	'NOT IMPLEMENTED YET.
-			'	'model = New SourceModel04(mdlPathFileName, version)
-			'Else
-			If version = 6 Then
+			If id = "MDLZ" Then
+				If version = 14 Then
+					Return New SourceModel14(mdlPathFileName, version) With {.HeaderVersion = storedVersion}
+				End If
+				Return Nothing
+			End If
+
+
+			If storedVersion = 53 AndAlso (overrideVersion = SupportedMdlVersion.DoNotOverride OrElse version = 49) Then
+				model = TrySource49Layout(mdlPathFileName, storedVersion)
+				If model IsNot Nothing Then
+					version = 49
+					Return model
+				End If
+			End If
+
+			If version = 4 Then
+				model = New SourceModel04(mdlPathFileName, version)
+			ElseIf version = 6 Then
 				model = New SourceModel06(mdlPathFileName, version)
 			ElseIf version = 10 Then
 				model = New SourceModel10(mdlPathFileName, version)
-				'ElseIf version = 11 Then
-				'NOT IMPLEMENTED YET.
-				'model = New SourceModel10(mdlPathFileName, version)
-				'ElseIf version = 14 Then
-				'NOT IMPLEMENTED YET.
-				'model = New SourceModel14(mdlPathFileName, version)
 			ElseIf version = 2531 Then
 				model = New SourceModel2531(mdlPathFileName, version)
 			ElseIf version = 27 Then
@@ -89,17 +98,31 @@ Public MustInherit Class SourceModel
 			ElseIf version = 59 Then
 				model = New SourceModel49(mdlPathFileName, version)
 			Else
-				' Version not implemented.
-				model = Nothing
+				If overrideVersion = SupportedMdlVersion.DoNotOverride Then
+					model = TrySource49Layout(mdlPathFileName, storedVersion)
+					If model IsNot Nothing Then version = 49
+				End If
 			End If
 		Catch ex As Exception
 			Throw
 		End Try
 
+		If model IsNot Nothing AndAlso Not model.HeaderVersion.HasValue Then
+			model.HeaderVersion = storedVersion
+			If overrideVersion <> SupportedMdlVersion.DoNotOverride Then model.LayoutReason = " — 手动指定版本"
+		End If
 		Return model
 	End Function
 
-	Private Shared Function GetVersion(mdlPathFileName As String) As Integer
+	Private Shared Function TrySource49Layout(mdlPathFileName As String, declaredVersion As Integer) As SourceModel49
+		Dim layout As Source49ExternalMesh = Source49ExternalMesh.Probe(mdlPathFileName)
+		If layout Is Nothing Then Return Nothing
+		If layout.IsMeshCompanion Then Throw New NotSupportedException("此 MDL 是配套网格。请选择包含骨骼和体组的主 MDL。")
+		Return New SourceModel49(mdlPathFileName, 49, layout) With {
+			.HeaderVersion = declaredVersion, .LayoutReason = " — 内联名称、文件长度、骨骼和体组表符合 Source v49"}
+	End Function
+
+	Private Shared Function GetVersion(mdlPathFileName As String, ByRef id As String) As Integer
 		Dim version As Integer
 		Dim inputFileStream As FileStream
 		Dim inputFileReader As BinaryReader
@@ -114,15 +137,14 @@ Public MustInherit Class SourceModel
 					'NOTE: Important to set System.Text.Encoding.ASCII so that ReadChars() only reads in one byte per Char.
 					inputFileReader = New BinaryReader(inputFileStream, System.Text.Encoding.ASCII)
 
-					Dim id As String
 					id = inputFileReader.ReadChars(4)
 					version = inputFileReader.ReadInt32()
 					If id = "MDLZ" Then
 						If version <> 14 Then
-							Throw New FormatException("File with header ID (first 4 bytes of file) of 'MDLZ' (without quotes) does not have expected MDL version of 14. MDL file is not a GoldSource- or Source-engine MDL file.")
+							Throw New FormatException("文件头 ID（文件前 4 字节）为 'MDLZ'（不含引号）的文件没有预期的 MDL 版本 14。MDL 文件不是 GoldSource 或 Source 引擎的 MDL 文件。")
 						End If
 					ElseIf id <> "IDST" Then
-						Throw New FormatException("File does not have expected MDL header ID (first 4 bytes of file) of 'IDST' or 'MDLZ' (without quotes). MDL file is not a GoldSource- or Source-engine MDL file.")
+						Throw New FormatException("文件没有预期的 MDL 文件头 ID（文件前 4 字节）'IDST' 或 'MDLZ'（不含引号）。MDL 文件不是 GoldSource 或 Source 引擎的 MDL 文件。")
 					End If
 				Catch ex As FormatException
 					Throw
@@ -176,6 +198,7 @@ Public MustInherit Class SourceModel
 			Return Me.theVersion
 		End Get
 	End Property
+	Friend Property HeaderVersion As Integer?
 
 	Public ReadOnly Property Name() As String
 		Get
@@ -427,20 +450,9 @@ Public MustInherit Class SourceModel
 		Return status
 	End Function
 
-	Public Overridable Function WriteQcFile(ByVal qcPathFileName As String) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-		Dim writeStatus As String
-
+	Public Overridable Function WriteQcFile(qcPathFileName As String) As StatusMessage
 		Me.theQcPathFileName = qcPathFileName
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, qcPathFileName)
-		writeStatus = Me.WriteTextFile(qcPathFileName, AddressOf Me.WriteQcFile)
-		If writeStatus = "Success" Then
-			Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, qcPathFileName)
-		Else
-			Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, writeStatus)
-		End If
-
-		Return status
+		Return Me.WriteTextOutput(qcPathFileName, AddressOf Me.WriteQcFile)
 	End Function
 
 	Public Overridable Function WriteReferenceMeshFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
@@ -456,28 +468,7 @@ Public MustInherit Class SourceModel
 	End Function
 
 	Public Overridable Function WriteMeshSmdFile(ByVal smdPathFileName As String, ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel07, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer) As String
-		Dim status As String = "Success"
-
-		Try
-			Me.theOutputFileTextWriter = File.CreateText(smdPathFileName)
-
-			Me.WriteMeshSmdFile(lodIndex, aVtxModel, aModel, bodyPartVertexIndexStart)
-		Catch ex As PathTooLongException
-			status = "ERROR: Crowbar tried to create """ + smdPathFileName + """ but the system gave this message: " + ex.Message
-		Catch ex As ArgumentException
-			Dim debug As Integer = 4242
-		Catch ex As NotSupportedException
-			Dim debug As Integer = 4242
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		Finally
-			If Me.theOutputFileTextWriter IsNot Nothing Then
-				Me.theOutputFileTextWriter.Flush()
-				Me.theOutputFileTextWriter.Close()
-			End If
-		End Try
-
-		Return status
+		Return Me.WriteTextFile(smdPathFileName, Sub() Me.WriteMeshSmdFile(lodIndex, aVtxModel, aModel, bodyPartVertexIndexStart))
 	End Function
 
 	Public Overridable Function WritePhysicsMeshSmdFile(ByVal modelOutputPath As String) As AppEnums.StatusMessage
@@ -499,47 +490,11 @@ Public MustInherit Class SourceModel
 	End Function
 
 	Public Overridable Function WriteBoneAnimationSmdFile(ByVal smdPathFileName As String, ByVal aSequenceDesc As SourceMdlSequenceDescBase, ByVal anAnimationDesc As SourceMdlAnimationDescBase) As String
-		Dim status As String = "Success"
-
-		Try
-			Me.theOutputFileTextWriter = File.CreateText(smdPathFileName)
-
-			Me.WriteBoneAnimationSmdFile(aSequenceDesc, anAnimationDesc)
-		Catch ex As PathTooLongException
-			status = "ERROR: Crowbar tried to create """ + smdPathFileName + """ but the system gave this message: " + ex.Message
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		Finally
-			If Me.theOutputFileTextWriter IsNot Nothing Then
-				If Me.theOutputFileTextWriter.BaseStream IsNot Nothing Then
-					Me.theOutputFileTextWriter.Flush()
-				End If
-				Me.theOutputFileTextWriter.Close()
-			End If
-		End Try
-
-		Return status
+		Return Me.WriteTextFile(smdPathFileName, Sub() Me.WriteBoneAnimationSmdFile(aSequenceDesc, anAnimationDesc))
 	End Function
 
 	Public Overridable Function WriteVertexAnimationVtaFile(ByVal vtaPathFileName As String, ByVal bodyPart As SourceMdlBodyPart) As String
-		Dim status As String = "Success"
-
-		Try
-			Me.theOutputFileTextWriter = File.CreateText(vtaPathFileName)
-
-			Me.WriteVertexAnimationVtaFile(bodyPart)
-		Catch ex As PathTooLongException
-			status = "ERROR: Crowbar tried to create """ + vtaPathFileName + """ but the system gave this message: " + ex.Message
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		Finally
-			If Me.theOutputFileTextWriter IsNot Nothing Then
-				Me.theOutputFileTextWriter.Flush()
-				Me.theOutputFileTextWriter.Close()
-			End If
-		End Try
-
-		Return status
+		Return Me.WriteTextFile(vtaPathFileName, Sub() Me.WriteVertexAnimationVtaFile(bodyPart))
 	End Function
 
 	Public Overridable Function WriteVrdFile(ByVal vrdPathFileName As String) As AppEnums.StatusMessage
@@ -757,29 +712,19 @@ Public MustInherit Class SourceModel
 	End Sub
 
 	Protected Sub ReadFile(ByVal pathFileName As String, ByVal readFileAction As ReadFileDelegate)
-		Dim inputFileStream As FileStream = Nothing
-		Me.theInputFileReader = Nothing
+		Me.LastReadError = Nothing
 		Try
-			inputFileStream = New FileStream(pathFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
-			If inputFileStream IsNot Nothing Then
-				Try
-					Me.theInputFileReader = New BinaryReader(inputFileStream, System.Text.Encoding.UTF8)
-
-					readFileAction.Invoke()
-				Catch ex As Exception
-					Throw
-				Finally
-					If Me.theInputFileReader IsNot Nothing Then
-						Me.theInputFileReader.Close()
-					End If
-				End Try
-			End If
+			Using input As New FileStream(pathFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+				Using reader As New BinaryReader(input, System.Text.Encoding.UTF8)
+					Me.theInputFileReader = reader
+					readFileAction()
+				End Using
+			End Using
 		Catch ex As Exception
+			Me.LastReadError = pathFileName + " — " + ex.Message
 			Throw
 		Finally
-			If inputFileStream IsNot Nothing Then
-				inputFileStream.Close()
-			End If
+			Me.theInputFileReader = Nothing
 		End Try
 	End Sub
 
@@ -809,25 +754,30 @@ Public MustInherit Class SourceModel
 		End Try
 	End Sub
 
+	Protected Function WriteTextOutput(outputPathFileName As String, write As WriteTextFileDelegate) As StatusMessage
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, outputPathFileName)
+		Dim result As String = Me.WriteTextFile(outputPathFileName, write)
+		If result = "Success" Then
+			Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, outputPathFileName)
+			Return StatusMessage.Success
+		End If
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, result)
+		Return StatusMessage.Error
+	End Function
+
 	Protected Function WriteTextFile(ByVal outputPathFileName As String, ByVal writeTextFileAction As WriteTextFileDelegate) As String
-		Dim status As String = "Success"
-
 		Try
-			Me.theOutputFileTextWriter = File.CreateText(outputPathFileName)
-
-			writeTextFileAction.Invoke()
-		Catch ex As PathTooLongException
-			status = "ERROR: Crowbar tried to create """ + outputPathFileName + """ but the system gave this message: " + ex.Message
+			FileManager.WriteTextAtomically(outputPathFileName,
+				Sub(writer)
+					Me.theOutputFileTextWriter = writer
+					writeTextFileAction()
+				End Sub)
+			Return "Success"
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Return "写出失败 """ + outputPathFileName + """ — " + ex.Message
 		Finally
-			If Me.theOutputFileTextWriter IsNot Nothing Then
-				Me.theOutputFileTextWriter.Flush()
-				Me.theOutputFileTextWriter.Close()
-			End If
+			Me.theOutputFileTextWriter = Nothing
 		End Try
-
-		Return status
 	End Function
 
 	Protected Sub NotifySourceModelProgress(ByVal progress As ProgressOptions, ByVal message As String)
@@ -844,7 +794,7 @@ Public MustInherit Class SourceModel
 			debugFile.WriteHeaderComment()
 			debugFile.WriteFileSeekLog(fileSeekLog)
 		Catch ex As PathTooLongException
-			status = "ERROR: Crowbar tried to create """ + debugPathFileName + """ but the system gave this message: " + ex.Message
+			status = "错误：Crowbar 尝试创建 """ + debugPathFileName + """，但系统返回了此消息：" + ex.Message
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		Finally
@@ -880,7 +830,7 @@ Public MustInherit Class SourceModel
 		'	mdlFileData49 = CType(Me.theMdlFileDataGeneric, SourceMdlFileData49)
 		'End If
 
-		ioTextLines.Add("=== General Info ===")
+		ioTextLines.Add("=== 常规信息 ===")
 		ioTextLines.Add("")
 
 		Dim fileTypeId As String
@@ -888,14 +838,16 @@ Public MustInherit Class SourceModel
 		If fileTypeId = "IDST" Then
 			ioTextLines.Add("MDL file type ID: " + fileTypeId)
 		Else
-			ioTextLines.Add("ERROR: MDL file type ID is not IDST. This is either a corrupted MDL file or not a GoldSource or Source model file.")
+			ioTextLines.Add("错误：MDL 文件类型 ID 不是 IDST。这要么是损坏的 MDL 文件，要么不是 GoldSource 或 Source 模型文件。")
 		End If
 
 		Dim extraVersionText As String = ""
 		If mdlVersionOverride <> SupportedMdlVersion.DoNotOverride Then
 			extraVersionText = "   Model version override: " + EnumHelper.GetDescription(mdlVersionOverride)
+		ElseIf Me.HeaderVersion.HasValue AndAlso Me.HeaderVersion.Value <> Me.Version Then
+			extraVersionText = "   识别的数据布局：v" + Me.Version.ToString()
 		End If
-		ioTextLines.Add("MDL file version: " + Me.theMdlFileDataGeneric.version.ToString("N0") + extraVersionText)
+		ioTextLines.Add("MDL file version: " + Me.HeaderVersion.GetValueOrDefault(Me.theMdlFileDataGeneric.version).ToString("N0") + extraVersionText)
 
 		ioTextLines.Add("MDL stored file name: """ + Me.theMdlFileDataGeneric.theModelName + """")
 		'If mdlFileData48 IsNot Nothing AndAlso mdlFileData48.nameCopyOffset > 0 Then
@@ -913,7 +865,7 @@ Public MustInherit Class SourceModel
 			ioTextLines.Add("MDL stored file size: " + storedFileSize.ToString("N0") + " bytes")
 			ioTextLines.Add("MDL actual file size: " + actualFileSize.ToString("N0") + " bytes")
 			If Me.theMdlFileDataGeneric.fileSize <> Me.theMdlFileDataGeneric.theActualFileSize Then
-				ioTextLines.Add("WARNING: MDL file size is different than the internally-stored file size. This means the MDL file was changed after compiling -- possibly corrupted from hex-editing.")
+				ioTextLines.Add("警告：MDL 文件大小与内部存储的文件大小不同。这意味着 MDL 文件在编译后被更改过——可能是十六进制编辑导致损坏。")
 			End If
 		Else
 			ioTextLines.Add("MDL file size: " + actualFileSize.ToString("N0") + " bytes")
@@ -927,14 +879,14 @@ Public MustInherit Class SourceModel
 	Private Sub GetModelFileDataFromMdlFile(ByVal ioTextLines As List(Of String))
 		Me.CheckForRequiredFiles()
 
-		ioTextLines.Add("=== Model Files ===")
+		ioTextLines.Add("=== 模型文件 ===")
 		ioTextLines.Add("")
 
 		If Me.AniFileIsUsed Then
 			If File.Exists(Me.theAniPathFileName) Then
 				ioTextLines.Add("""" + Path.GetFileName(Me.theAniPathFileName) + """")
 			Else
-				ioTextLines.Add("ERROR: File not found: """ + Path.GetFileName(Me.theAniPathFileName) + """")
+				ioTextLines.Add("错误：文件未找到：""" + Path.GetFileName(Me.theAniPathFileName) + """")
 			End If
 		End If
 
@@ -953,7 +905,7 @@ Public MustInherit Class SourceModel
 			If File.Exists(Me.theTextureMdlPathFileName) Then
 				ioTextLines.Add("""" + Path.GetFileName(Me.theTextureMdlPathFileName) + """")
 			Else
-				ioTextLines.Add("ERROR: File not found: """ + Path.GetFileName(Me.theTextureMdlPathFileName) + """")
+				ioTextLines.Add("错误：文件未找到：""" + Path.GetFileName(Me.theTextureMdlPathFileName) + """")
 			End If
 		End If
 
@@ -961,7 +913,7 @@ Public MustInherit Class SourceModel
 			If File.Exists(Me.thePhyPathFileName) Then
 				ioTextLines.Add("""" + Path.GetFileName(Me.thePhyPathFileName) + """")
 			Else
-				ioTextLines.Add("ERROR: File not found: """ + Path.GetFileName(Me.thePhyPathFileName) + """")
+				ioTextLines.Add("错误：文件未找到：""" + Path.GetFileName(Me.thePhyPathFileName) + """")
 			End If
 		End If
 
@@ -970,7 +922,7 @@ Public MustInherit Class SourceModel
 			If File.Exists(Me.theVtxPathFileName) Then
 				ioTextLines.Add("""" + Path.GetFileName(Me.theVtxPathFileName) + """")
 			Else
-				ioTextLines.Add("ERROR: File not found: """ + Path.GetFileName(Me.theVtxPathFileName) + """")
+				ioTextLines.Add("错误：文件未找到：""" + Path.GetFileName(Me.theVtxPathFileName) + """")
 			End If
 		End If
 
@@ -978,13 +930,13 @@ Public MustInherit Class SourceModel
 			If File.Exists(Me.theVvdPathFileName) Then
 				ioTextLines.Add("""" + Path.GetFileName(Me.theVvdPathFileName) + """")
 			Else
-				ioTextLines.Add("ERROR: File not found: """ + Path.GetFileName(Me.theVvdPathFileName) + """")
+				ioTextLines.Add("错误：文件未找到：""" + Path.GetFileName(Me.theVvdPathFileName) + """")
 			End If
 		End If
 	End Sub
 
 	Private Sub GetTextureDataFromMdlFile(ByVal ioTextLines As List(Of String))
-		ioTextLines.Add("=== Material and Texture Info ===")
+		ioTextLines.Add("=== 材质与纹理信息 ===")
 		ioTextLines.Add("")
 
 		If Me.HasTextureData Then
@@ -995,11 +947,11 @@ Public MustInherit Class SourceModel
 					ioTextLines.Add("Texture files are stored within the MDL file.")
 				End If
 			Else
-				ioTextLines.Add("Material Folders ($CDMaterials lines in QC file -- folders where VMT files should be, relative to game's ""materials"" folder): ")
+				ioTextLines.Add("材质文件夹（QC 文件中的 $CDMaterials 行 -- VMT 文件应所在、相对于游戏 ""materials"" 文件夹的文件夹）：")
 				Dim textureFolders As List(Of String)
 				textureFolders = Me.GetTextureFolders()
 				If textureFolders.Count = 0 Then
-					ioTextLines.Add("No material folders set.")
+					ioTextLines.Add("未设置材质文件夹。")
 				Else
 					For Each aTextureFolder As String In textureFolders
 						ioTextLines.Add("""" + aTextureFolder + """")
@@ -1009,12 +961,12 @@ Public MustInherit Class SourceModel
 
 			ioTextLines.Add("")
 
-			ioTextLines.Add("Material File Names (file names in mesh SMD files and in QC $texturegroup command): ")
+			ioTextLines.Add("材质文件名（网格 SMD 文件及 QC $texturegroup 命令中的文件名）：")
 			Dim textureFileNames As List(Of String)
 			textureFileNames = Me.GetTextureFileNames()
 			ioTextLines.Add("(Total used: " + textureFileNames.Count.ToString() + ")")
 			If textureFileNames.Count = 0 Then
-				ioTextLines.Add("No material file names found.")
+				ioTextLines.Add("未找到材质文件名。")
 			Else
 				For Each aTextureFileName As String In textureFileNames
 					ioTextLines.Add("""" + aTextureFileName + """")
@@ -1022,7 +974,7 @@ Public MustInherit Class SourceModel
 			End If
 		Else
 			'ioTextLines.Add("No texture data because this model only has animation data.")
-			ioTextLines.Add("No texture data.")
+			ioTextLines.Add("没有纹理数据。")
 		End If
 	End Sub
 
@@ -1055,6 +1007,13 @@ Public MustInherit Class SourceModel
 	Protected theMdlFileDataGeneric As SourceMdlFileDataBase
 	Protected theAniFileDataGeneric As SourceFileData
 	Protected thePhyFileDataGeneric As SourcePhyFileData
+
+	Friend Property LayoutReason As String = ""
+	Friend Property MeshResourceRoot As String
+	Friend ReadOnly CompatibilityDiagnostics As New List(Of String)
+	Friend ReadOnly NameDiagnostics As New List(Of String)
+	Friend ReadOnly ReadDiagnostics As New List(Of String)
+	Friend Property LastReadError As String
 
 	Protected theInputFileReader As BinaryReader
 	Protected theOutputFileBinaryWriter As BinaryWriter

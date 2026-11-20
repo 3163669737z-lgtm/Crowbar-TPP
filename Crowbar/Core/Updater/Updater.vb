@@ -138,17 +138,17 @@ Public Class Updater
 		outputInfo.UpdateIsAvailable = False
 		Dim updateCheckStatusMessage As String
 		If Not securityProtocolIsSupported Then
-			updateCheckStatusMessage = "Unable to get update info because ""TLS 1.2"" protocol unavailable."
+			updateCheckStatusMessage = "无法获取更新信息，因为 ""TLS 1.2"" 协议不可用。"
 		ElseIf Me.theAppVersion Is Nothing OrElse Me.theRemoteFileLink = "" Then
-			updateCheckStatusMessage = "Unable to get update info. Please try again later."
+			updateCheckStatusMessage = "无法获取更新信息。请稍后再试。"
 		ElseIf Me.theAppVersion = My.Application.Info.Version Then
-			updateCheckStatusMessage = "Crowbar is up to date."
+			updateCheckStatusMessage = "Crowbar 已是最新版本。"
 		ElseIf Me.theAppVersion > My.Application.Info.Version Then
-			updateCheckStatusMessage = "Update to version " + Me.theAppVersion.ToString(2) + " available.   Size: " + MathModule.BinaryByteUnitsConversion(fileSize)
+			updateCheckStatusMessage = "更新到版本：" + Me.theAppVersion.ToString(2) + " available.   Size: " + MathModule.BinaryByteUnitsConversion(fileSize)
 			outputInfo.UpdateIsAvailable = True
 		Else
 			'NOTE: Should not get here if versioning is done correctly.
-			updateCheckStatusMessage = "Crowbar is up to date."
+			updateCheckStatusMessage = "Crowbar 已是最新版本。"
 		End If
 		Dim now As DateTime = DateTime.Now()
 		Dim lastCheckedMessage As String = "   Last checked: " + now.ToLongDateString() + " " + now.ToShortTimeString()
@@ -264,7 +264,7 @@ Public Class Updater
 			sevenZrExeProcess.Start()
 			sevenZrExeProcess.WaitForExit()
 		Catch ex As Exception
-			Throw New System.Exception("Crowbar tried to decompress the file """ + Me.theLocalPathFileName + """ but Windows gave this message: " + ex.Message)
+			Throw New System.Exception("Crowbar 尝试解压文件 """ + Me.theLocalPathFileName + """，但 Windows 返回了此消息：" + ex.Message)
 		Finally
 			sevenZrExeProcess.Close()
 		End Try

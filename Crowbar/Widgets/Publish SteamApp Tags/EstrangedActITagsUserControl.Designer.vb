@@ -23,7 +23,7 @@ Partial Class EstrangedActITagsUserControl
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
 		components = New System.ComponentModel.Container()
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 	End Sub
 
 End Class

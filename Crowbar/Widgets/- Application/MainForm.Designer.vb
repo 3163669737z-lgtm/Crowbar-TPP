@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class MainForm
 	Inherits BaseForm
 
@@ -27,7 +27,7 @@ Partial Class MainForm
 		Me.AboutCrowbarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
 		Me.AboutCrowbarToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-		Me.MainTabControl = New System.Windows.Forms.TabControl()
+		Me.MainTabControl = New Crowbar.CrowbarTabControl()
 		Me.SetUpGamesTabPage = New System.Windows.Forms.TabPage()
 		Me.SetUpGamesUserControl1 = New Crowbar.SetUpGamesUserControl()
 		Me.DownloadTabPage = New System.Windows.Forms.TabPage()
@@ -77,20 +77,20 @@ Partial Class MainForm
 		'
 		Me.AboutCrowbarToolStripMenuItem.Name = "AboutCrowbarToolStripMenuItem"
 		Me.AboutCrowbarToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
-		Me.AboutCrowbarToolStripMenuItem.Text = "About Crowbar"
+		Me.AboutCrowbarToolStripMenuItem.Text = "关于 Crowbar-TPP"
 		'
 		'ToolStripMenuItem1
 		'
 		Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutCrowbarToolStripMenuItem1})
 		Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
 		Me.ToolStripMenuItem1.Size = New System.Drawing.Size(40, 20)
-		Me.ToolStripMenuItem1.Text = "Help"
+		Me.ToolStripMenuItem1.Text = "帮助"
 		'
 		'AboutCrowbarToolStripMenuItem1
 		'
 		Me.AboutCrowbarToolStripMenuItem1.Name = "AboutCrowbarToolStripMenuItem1"
 		Me.AboutCrowbarToolStripMenuItem1.Size = New System.Drawing.Size(155, 22)
-		Me.AboutCrowbarToolStripMenuItem1.Text = "About Crowbar"
+		Me.AboutCrowbarToolStripMenuItem1.Text = "关于 Crowbar-TPP"
 		'
 		'MainTabControl
 		'
@@ -122,7 +122,7 @@ Partial Class MainForm
 		Me.SetUpGamesTabPage.Name = "SetUpGamesTabPage"
 		Me.SetUpGamesTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.SetUpGamesTabPage.TabIndex = 15
-		Me.SetUpGamesTabPage.Text = "Set Up Games"
+		Me.SetUpGamesTabPage.Text = "设置游戏"
 		'
 		'SetUpGamesUserControl1
 		'
@@ -138,16 +138,16 @@ Partial Class MainForm
 		Me.DownloadTabPage.Controls.Add(Me.DownloadUserControl1)
 		Me.DownloadTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.DownloadTabPage.Name = "DownloadTabPage"
-		Me.DownloadTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.DownloadTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.DownloadTabPage.TabIndex = 0
-		Me.DownloadTabPage.Text = "Download"
+		Me.DownloadTabPage.Text = "下载"
 		'
 		'DownloadUserControl1
 		'
 		Me.DownloadUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.DownloadUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.DownloadUserControl1.Name = "DownloadUserControl1"
-		Me.DownloadUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.DownloadUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.DownloadUserControl1.TabIndex = 0
 		'
 		'UnpackTabPage
@@ -156,16 +156,16 @@ Partial Class MainForm
 		Me.UnpackTabPage.Controls.Add(Me.UnpackUserControl1)
 		Me.UnpackTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.UnpackTabPage.Name = "UnpackTabPage"
-		Me.UnpackTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.UnpackTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.UnpackTabPage.TabIndex = 13
-		Me.UnpackTabPage.Text = "Unpack"
+		Me.UnpackTabPage.Text = "解包"
 		'
 		'UnpackUserControl1
 		'
 		Me.UnpackUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.UnpackUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.UnpackUserControl1.Name = "UnpackUserControl1"
-		Me.UnpackUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.UnpackUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.UnpackUserControl1.TabIndex = 0
 		'
 		'PreviewTabPage
@@ -174,9 +174,9 @@ Partial Class MainForm
 		Me.PreviewTabPage.Controls.Add(Me.PreviewViewUserControl)
 		Me.PreviewTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.PreviewTabPage.Name = "PreviewTabPage"
-		Me.PreviewTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.PreviewTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.PreviewTabPage.TabIndex = 12
-		Me.PreviewTabPage.Text = "Preview"
+		Me.PreviewTabPage.Text = "预览"
 		'
 		'PreviewViewUserControl
 		'
@@ -184,7 +184,7 @@ Partial Class MainForm
 		Me.PreviewViewUserControl.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.PreviewViewUserControl.Location = New System.Drawing.Point(0, 0)
 		Me.PreviewViewUserControl.Name = "PreviewViewUserControl"
-		Me.PreviewViewUserControl.Size = New System.Drawing.Size(192, 74)
+		Me.PreviewViewUserControl.Size = New System.Drawing.Size(784, 546)
 		Me.PreviewViewUserControl.TabIndex = 1
 		Me.PreviewViewUserControl.ViewerType = Crowbar.AppEnums.ViewerType.Preview
 		'
@@ -194,16 +194,16 @@ Partial Class MainForm
 		Me.DecompileTabPage.Controls.Add(Me.DecompilerUserControl1)
 		Me.DecompileTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.DecompileTabPage.Name = "DecompileTabPage"
-		Me.DecompileTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.DecompileTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.DecompileTabPage.TabIndex = 0
-		Me.DecompileTabPage.Text = "Decompile"
+		Me.DecompileTabPage.Text = "反编译"
 		'
 		'DecompilerUserControl1
 		'
 		Me.DecompilerUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.DecompilerUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.DecompilerUserControl1.Name = "DecompilerUserControl1"
-		Me.DecompilerUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.DecompilerUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.DecompilerUserControl1.TabIndex = 0
 		'
 		'CompileTabPage
@@ -212,16 +212,16 @@ Partial Class MainForm
 		Me.CompileTabPage.Controls.Add(Me.CompilerUserControl1)
 		Me.CompileTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.CompileTabPage.Name = "CompileTabPage"
-		Me.CompileTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.CompileTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.CompileTabPage.TabIndex = 1
-		Me.CompileTabPage.Text = "Compile"
+		Me.CompileTabPage.Text = "编译"
 		'
 		'CompilerUserControl1
 		'
 		Me.CompilerUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.CompilerUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.CompilerUserControl1.Name = "CompilerUserControl1"
-		Me.CompilerUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.CompilerUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.CompilerUserControl1.TabIndex = 0
 		'
 		'ViewTabPage
@@ -230,9 +230,9 @@ Partial Class MainForm
 		Me.ViewTabPage.Controls.Add(Me.ViewViewUserControl)
 		Me.ViewTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.ViewTabPage.Name = "ViewTabPage"
-		Me.ViewTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.ViewTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.ViewTabPage.TabIndex = 5
-		Me.ViewTabPage.Text = "View"
+		Me.ViewTabPage.Text = "查看"
 		'
 		'ViewViewUserControl
 		'
@@ -240,7 +240,7 @@ Partial Class MainForm
 		Me.ViewViewUserControl.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ViewViewUserControl.Location = New System.Drawing.Point(0, 0)
 		Me.ViewViewUserControl.Name = "ViewViewUserControl"
-		Me.ViewViewUserControl.Size = New System.Drawing.Size(192, 74)
+		Me.ViewViewUserControl.Size = New System.Drawing.Size(784, 546)
 		Me.ViewViewUserControl.TabIndex = 0
 		Me.ViewViewUserControl.ViewerType = Crowbar.AppEnums.ViewerType.View
 		'
@@ -250,16 +250,16 @@ Partial Class MainForm
 		Me.PackTabPage.Controls.Add(Me.PackUserControl1)
 		Me.PackTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.PackTabPage.Name = "PackTabPage"
-		Me.PackTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.PackTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.PackTabPage.TabIndex = 16
-		Me.PackTabPage.Text = "Pack"
+		Me.PackTabPage.Text = "打包"
 		'
 		'PackUserControl1
 		'
 		Me.PackUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.PackUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.PackUserControl1.Name = "PackUserControl1"
-		Me.PackUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.PackUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.PackUserControl1.TabIndex = 0
 		'
 		'PublishTabPage
@@ -268,16 +268,16 @@ Partial Class MainForm
 		Me.PublishTabPage.Controls.Add(Me.PublishUserControl1)
 		Me.PublishTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.PublishTabPage.Name = "PublishTabPage"
-		Me.PublishTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.PublishTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.PublishTabPage.TabIndex = 1
-		Me.PublishTabPage.Text = "Publish"
+		Me.PublishTabPage.Text = "发布"
 		'
 		'PublishUserControl1
 		'
 		Me.PublishUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.PublishUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.PublishUserControl1.Name = "PublishUserControl1"
-		Me.PublishUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.PublishUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.PublishUserControl1.TabIndex = 0
 		'
 		'OptionsTabPage
@@ -286,16 +286,16 @@ Partial Class MainForm
 		Me.OptionsTabPage.Controls.Add(Me.OptionsUserControl1)
 		Me.OptionsTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.OptionsTabPage.Name = "OptionsTabPage"
-		Me.OptionsTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.OptionsTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.OptionsTabPage.TabIndex = 10
-		Me.OptionsTabPage.Text = "Options"
+		Me.OptionsTabPage.Text = "选项"
 		'
 		'OptionsUserControl1
 		'
 		Me.OptionsUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsUserControl1.Name = "OptionsUserControl1"
-		Me.OptionsUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.OptionsUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.OptionsUserControl1.TabIndex = 0
 		'
 		'HelpTabPage
@@ -304,16 +304,16 @@ Partial Class MainForm
 		Me.HelpTabPage.Controls.Add(Me.HelpUserControl1)
 		Me.HelpTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.HelpTabPage.Name = "HelpTabPage"
-		Me.HelpTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.HelpTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.HelpTabPage.TabIndex = 14
-		Me.HelpTabPage.Text = "Help"
+		Me.HelpTabPage.Text = "帮助"
 		'
 		'HelpUserControl1
 		'
 		Me.HelpUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.HelpUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.HelpUserControl1.Name = "HelpUserControl1"
-		Me.HelpUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.HelpUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.HelpUserControl1.TabIndex = 0
 		'
 		'AboutTabPage
@@ -322,16 +322,16 @@ Partial Class MainForm
 		Me.AboutTabPage.Controls.Add(Me.AboutUserControl1)
 		Me.AboutTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.AboutTabPage.Name = "AboutTabPage"
-		Me.AboutTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.AboutTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.AboutTabPage.TabIndex = 11
-		Me.AboutTabPage.Text = "About"
+		Me.AboutTabPage.Text = "关于"
 		'
 		'AboutUserControl1
 		'
 		Me.AboutUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.AboutUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.AboutUserControl1.Name = "AboutUserControl1"
-		Me.AboutUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.AboutUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.AboutUserControl1.TabIndex = 1
 		'
 		'UpdateTabPage
@@ -340,41 +340,40 @@ Partial Class MainForm
 		Me.UpdateTabPage.Controls.Add(Me.UpdateUserControl1)
 		Me.UpdateTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.UpdateTabPage.Name = "UpdateTabPage"
-		Me.UpdateTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.UpdateTabPage.Size = New System.Drawing.Size(784, 546)
 		Me.UpdateTabPage.TabIndex = 19
-		Me.UpdateTabPage.Text = "Update"
+		Me.UpdateTabPage.Text = "更新"
 		'
 		'UpdateUserControl1
 		'
 		Me.UpdateUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.UpdateUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.UpdateUserControl1.Name = "UpdateUserControl1"
-		Me.UpdateUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.UpdateUserControl1.Size = New System.Drawing.Size(784, 546)
 		Me.UpdateUserControl1.TabIndex = 0
 		'
 		'ToolStripMenuItem2
 		'
 		Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
 		Me.ToolStripMenuItem2.Size = New System.Drawing.Size(40, 20)
-		Me.ToolStripMenuItem2.Text = "Help"
+		Me.ToolStripMenuItem2.Text = "帮助"
 		'
 		'AboutCrowbarToolStripMenuItem2
 		'
 		Me.AboutCrowbarToolStripMenuItem2.Name = "AboutCrowbarToolStripMenuItem2"
 		Me.AboutCrowbarToolStripMenuItem2.Size = New System.Drawing.Size(152, 22)
-		Me.AboutCrowbarToolStripMenuItem2.Text = "About Crowbar"
+		Me.AboutCrowbarToolStripMenuItem2.Text = "关于 Crowbar-TPP"
 		'
 		'MainForm
 		'
 		Me.AllowDrop = True
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.ClientSize = New System.Drawing.Size(792, 572)
 		Me.Controls.Add(Me.MainTabControl)
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-		Me.MinimumSize = New System.Drawing.Size(800, 600)
 		Me.Name = "MainForm"
-		Me.Text = "Crowbar-Starfelll"
+		Me.Text = "Crowbar-TPP"
 		Me.MainTabControl.ResumeLayout(False)
 		Me.SetUpGamesTabPage.ResumeLayout(False)
 		Me.DownloadTabPage.ResumeLayout(False)

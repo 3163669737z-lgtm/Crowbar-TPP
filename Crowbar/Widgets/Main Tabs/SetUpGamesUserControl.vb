@@ -14,6 +14,15 @@ Public Class SetUpGamesUserControl
 
 #Region "Init and Free"
 
+	Private Sub LayoutExecutableFields() Handles GameGroupBox.Layout
+		If Not Me.IsHandleCreated Then Return
+		Dim fieldLeft As Integer = Math.Max(LogicalToDeviceUnits(112), Math.Max(
+			Workarounds.FieldLeftAfter(Me.ExecutableLabel, Me.GameAppPathFileNameTextBox),
+			Workarounds.FieldLeftAfter(Me.ExecutableOptionsLabel, Me.GameAppOptionsTextBox)))
+		Workarounds.FitFieldBefore(Me.GameAppPathFileNameTextBox, fieldLeft, Me.BrowseForGameAppPathFileNameButton)
+		Workarounds.FitFieldBefore(Me.GameAppOptionsTextBox, fieldLeft, Me.ClearGameAppOptionsButton)
+	End Sub
+
 	Protected Overrides Sub Init()
 		Me.GameSetupComboBox.DisplayMember = "GameName"
 		Me.GameSetupComboBox.ValueMember = "GameName"
@@ -30,7 +39,7 @@ Public Class SetUpGamesUserControl
 		textColumn.DataPropertyName = "Macro"
 		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 0
-		textColumn.HeaderText = "Macro"
+		textColumn.HeaderText = "宏"
 		textColumn.Name = "Macro"
 		textColumn.ReadOnly = True
 		textColumn.SortMode = DataGridViewColumnSortMode.NotSortable
@@ -41,7 +50,7 @@ Public Class SetUpGamesUserControl
 		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 1
 		textColumn.FillWeight = 100
-		textColumn.HeaderText = "Library Path"
+		textColumn.HeaderText = "库路径"
 		textColumn.Name = "LibraryPath"
 		textColumn.SortMode = DataGridViewColumnSortMode.NotSortable
 		Me.SteamLibraryPathsDataGridView.Columns.Add(textColumn)
@@ -50,10 +59,10 @@ Public Class SetUpGamesUserControl
 		buttonColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		buttonColumn.DisplayIndex = 2
 		buttonColumn.DefaultCellStyle.BackColor = SystemColors.Control
-		buttonColumn.HeaderText = "Browse"
+		buttonColumn.HeaderText = "浏览"
 		buttonColumn.Name = "Browse"
 		buttonColumn.SortMode = DataGridViewColumnSortMode.NotSortable
-		buttonColumn.Text = "Browse..."
+		buttonColumn.Text = "浏览..."
 		buttonColumn.UseColumnTextForButtonValue = True
 		Me.SteamLibraryPathsDataGridView.Columns.Add(buttonColumn)
 
@@ -62,7 +71,7 @@ Public Class SetUpGamesUserControl
 		textColumn.DataPropertyName = "UseCount"
 		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 4
-		textColumn.HeaderText = "Use Count"
+		textColumn.HeaderText = "引用次数"
 		textColumn.Name = "UseCount"
 		textColumn.SortMode = DataGridViewColumnSortMode.NotSortable
 		Me.SteamLibraryPathsDataGridView.Columns.Add(textColumn)
@@ -144,20 +153,20 @@ Public Class SetUpGamesUserControl
 	Private Sub BrowseForGamePathFileNameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForGamePathFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 		If Me.theSelectedGameSetup.GameEngine = GameEngine.GoldSource Then
-			openFileWdw.Title = "Select GoldSource Engine LibList.gam File"
-			openFileWdw.Filter = "GoldSource Engine LibList.gam File|liblist.gam|GAM Files (*.gam)|*.txt|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 GoldSource 引擎 LibList.gam 文件"
+			openFileWdw.Filter = "GoldSource 引擎 LibList.gam 文件|liblist.gam|GAM 文件 (*.gam)|*.txt|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source Then
-			openFileWdw.Title = "Select Source Engine GameInfo.txt File"
-			openFileWdw.Filter = "Source Engine GameInfo.txt File|gameinfo.txt|Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 引擎 GameInfo.txt 文件"
+			openFileWdw.Filter = "Source 引擎 GameInfo.txt 文件|gameinfo.txt|文本文件 (*.txt)|*.txt|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source2 Then
-			openFileWdw.Title = "Select Source 2 Engine GameInfo.gi File"
-			openFileWdw.Filter = "Source 2 Engine GameInfo.gi File|gameinfo.gi|GI Files (*.gi)|*.txt|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 2 引擎 GameInfo.gi 文件"
+			openFileWdw.Filter = "Source 2 引擎 GameInfo.gi 文件|gameinfo.gi|GI 文件 (*.gi)|*.txt|所有文件 (*.*)|*.*"
 		End If
 		openFileWdw.AddExtension = True
 		openFileWdw.ValidateNames = True
 		openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(Me.theSelectedGameSetup.GamePathFileName)
 		openFileWdw.FileName = Path.GetFileName(Me.theSelectedGameSetup.GamePathFileName)
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -168,18 +177,18 @@ Public Class SetUpGamesUserControl
 	Private Sub BrowseForGameAppPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseForGameAppPathFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 		If Me.theSelectedGameSetup.GameEngine = GameEngine.GoldSource Then
-			openFileWdw.Title = "Select GoldSource Engine Game's Executable File"
+			openFileWdw.Title = "选择 GoldSource 引擎游戏的可执行文件"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source Then
-			openFileWdw.Title = "Select Source Engine Game's Executable File"
+			openFileWdw.Title = "选择 Source 引擎游戏的可执行文件"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source2 Then
-			openFileWdw.Title = "Select Source 2 Engine Game's Executable File"
+			openFileWdw.Title = "选择 Source 2 引擎游戏的可执行文件"
 		End If
-		openFileWdw.Filter = "Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+		openFileWdw.Filter = "可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		openFileWdw.AddExtension = True
 		openFileWdw.ValidateNames = True
 		openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(Me.theSelectedGameSetup.GameAppPathFileName)
 		openFileWdw.FileName = Path.GetFileName(Me.theSelectedGameSetup.GameAppPathFileName)
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -194,20 +203,20 @@ Public Class SetUpGamesUserControl
 	Private Sub BrowseForCompilerPathFileNameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForCompilerPathFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 		If Me.theSelectedGameSetup.GameEngine = GameEngine.GoldSource Then
-			openFileWdw.Title = "Select GoldSource Engine Model Compiler Tool"
-			openFileWdw.Filter = "GoldSource Engine Model Compiler Tool File|studiomdl.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 GoldSource 引擎模型编译器工具"
+			openFileWdw.Filter = "GoldSource 引擎模型编译器工具文件|studiomdl.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source Then
-			openFileWdw.Title = "Select Source Engine Model Compiler Tool"
-			openFileWdw.Filter = "Executable Files (*.exe)|*.exe|Source Engine Model Compiler Tool File|studiomdl.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 引擎模型编译器工具"
+			openFileWdw.Filter = "Source 引擎模型编译器工具文件|studiomdl.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source2 Then
-			openFileWdw.Title = "Select Source 2 Engine Model Compiler Tool"
-			openFileWdw.Filter = "Source 2 Engine Model Compiler Tool File|studiomdl.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 2 引擎模型编译器工具"
+			openFileWdw.Filter = "Source 2 引擎模型编译器工具文件|studiomdl.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		End If
 		openFileWdw.AddExtension = True
 		openFileWdw.ValidateNames = True
 		openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(Me.theSelectedGameSetup.CompilerPathFileName)
 		openFileWdw.FileName = Path.GetFileName(Me.theSelectedGameSetup.CompilerPathFileName)
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -218,20 +227,20 @@ Public Class SetUpGamesUserControl
 	Private Sub BrowseForViewerPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseForViewerPathFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 		If Me.theSelectedGameSetup.GameEngine = GameEngine.GoldSource Then
-			openFileWdw.Title = "Select GoldSource Engine Model Viewer Tool"
-			openFileWdw.Filter = "GoldSource Engine Model Viewer Tool File|hlmv.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 GoldSource 引擎模型查看器工具"
+			openFileWdw.Filter = "GoldSource 引擎模型查看器工具文件|hlmv.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source Then
-			openFileWdw.Title = "Select Source Engine Model Viewer Tool"
-			openFileWdw.Filter = "Source Engine Model Viewer Tool File|hlmv.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 引擎模型查看器工具"
+			openFileWdw.Filter = "Source 引擎模型查看器工具文件|hlmv.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source2 Then
-			openFileWdw.Title = "Select Source 2 Engine Model Viewer Tool"
-			openFileWdw.Filter = "Source 2 Engine Model Viewer Tool File|hlmv.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 2 引擎模型查看器工具"
+			openFileWdw.Filter = "Source 2 引擎模型查看器工具文件|hlmv.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		End If
 		openFileWdw.AddExtension = True
 		openFileWdw.ValidateNames = True
 		openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(Me.theSelectedGameSetup.ViewerPathFileName)
 		openFileWdw.FileName = Path.GetFileName(Me.theSelectedGameSetup.ViewerPathFileName)
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -242,20 +251,20 @@ Public Class SetUpGamesUserControl
 	Private Sub BrowseForMappingToolPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseForMappingToolPathFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 		If Me.theSelectedGameSetup.GameEngine = GameEngine.GoldSource Then
-			openFileWdw.Title = "Select GoldSource Engine Mapping Tool"
-			openFileWdw.Filter = "GoldSource Engine Mapping Tool Files|hammer.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 GoldSource 引擎地图工具"
+			openFileWdw.Filter = "GoldSource 引擎地图工具文件|hammer.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source Then
-			openFileWdw.Title = "Select Source Engine Mapping Tool"
-			openFileWdw.Filter = "Source Engine Mapping Tool Files|hammer.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 引擎地图工具"
+			openFileWdw.Filter = "Source 引擎地图工具文件|hammer.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source2 Then
-			openFileWdw.Title = "Select Source 2 Engine Mapping Tool"
-			openFileWdw.Filter = "Source 2 Engine Mapping Tool Files|hammer.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 2 引擎地图工具"
+			openFileWdw.Filter = "Source 2 引擎地图工具文件|hammer.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		End If
 		openFileWdw.AddExtension = True
 		openFileWdw.ValidateNames = True
 		openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(Me.theSelectedGameSetup.MappingToolPathFileName)
 		openFileWdw.FileName = Path.GetFileName(Me.theSelectedGameSetup.MappingToolPathFileName)
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -266,20 +275,20 @@ Public Class SetUpGamesUserControl
 	Private Sub BrowseForUnpackerPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseForUnpackerPathFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 		If Me.theSelectedGameSetup.GameEngine = GameEngine.GoldSource Then
-			openFileWdw.Title = "Select GoldSource Engine Packer/Unpacker Tool"
-			openFileWdw.Filter = "GoldSource Engine Packer/Unpacker Tool Files|vpk.exe;gmad.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 GoldSource 引擎打包/解包工具"
+			openFileWdw.Filter = "GoldSource 引擎打包/解包工具文件|vpk.exe;gmad.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source Then
-			openFileWdw.Title = "Select Source Engine Packer/Unpacker Tool"
-			openFileWdw.Filter = "Source Engine Packer/Unpacker Tool Files|vpk.exe;gmad.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 引擎打包/解包工具"
+			openFileWdw.Filter = "Source 引擎打包/解包工具文件|vpk.exe;gmad.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		ElseIf Me.theSelectedGameSetup.GameEngine = GameEngine.Source2 Then
-			openFileWdw.Title = "Select Source 2 Engine Packer/Unpacker Tool"
-			openFileWdw.Filter = "Source 2 Engine Packer/Unpacker Tool Files|vpk.exe;gmad.exe|Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
+			openFileWdw.Title = "选择 Source 2 引擎打包/解包工具"
+			openFileWdw.Filter = "Source 2 引擎打包/解包工具文件|vpk.exe;gmad.exe|可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*"
 		End If
 		openFileWdw.AddExtension = True
 		openFileWdw.ValidateNames = True
 		openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(Me.theSelectedGameSetup.PackerPathFileName)
 		openFileWdw.FileName = Path.GetFileName(Me.theSelectedGameSetup.PackerPathFileName)
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -290,7 +299,7 @@ Public Class SetUpGamesUserControl
 	Private Sub CloneGameSetupButton_Click(sender As Object, e As EventArgs) Handles CloneGameSetupButton.Click
 		Dim cloneGameSetup As GameSetup
 		cloneGameSetup = CType(Me.theSelectedGameSetup.Clone(), GameSetup)
-		cloneGameSetup.GameName = "Clone of " + Me.theSelectedGameSetup.GameName
+		cloneGameSetup.GameName = "克隆自 " + Me.theSelectedGameSetup.GameName
 		TheApp.Settings.GameSetups.Add(cloneGameSetup)
 
 		Me.GameSetupComboBox.SelectedIndex = TheApp.Settings.GameSetups.IndexOf(cloneGameSetup)
@@ -319,13 +328,13 @@ Public Class SetUpGamesUserControl
 
 	Private Sub BrowseForSteamAppPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseForSteamAppPathFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
-		openFileWdw.Title = "Select Steam Executable File"
+		openFileWdw.Title = "选择 Steam 可执行文件"
 		openFileWdw.AddExtension = True
 		openFileWdw.ValidateNames = True
-		openFileWdw.Filter = "Steam Executable File|steam.exe|All Files (*.*)|*.*"
+		openFileWdw.Filter = "Steam 可执行文件|steam.exe|所有文件 (*.*)|*.*"
 		openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(TheApp.Settings.SteamAppPathFileName)
 		openFileWdw.FileName = Path.GetFileName(TheApp.Settings.SteamAppPathFileName)
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -338,7 +347,7 @@ Public Class SetUpGamesUserControl
 
 		If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn AndAlso e.RowIndex >= 0 Then
 			Dim openFileWdw As New OpenFileDialog()
-			openFileWdw.Title = "Select a Steam Library Folder"
+			openFileWdw.Title = "选择 Steam 库文件夹"
 			openFileWdw.CheckFileExists = False
 			openFileWdw.Multiselect = False
 			openFileWdw.ValidateNames = True
@@ -350,14 +359,14 @@ Public Class SetUpGamesUserControl
 			'	openFileWdw.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 			'End If
 			openFileWdw.FileName = "[Folder Selection]"
-			If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+			If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 				' Allow dialog window to completely disappear.
 				Application.DoEvents()
 
 				Try
 					TheApp.Settings.SteamLibraryPaths(e.RowIndex).LibraryPath = FileManager.GetLongestExtantPath(openFileWdw.FileName)
 				Catch ex As IO.PathTooLongException
-					MessageBox.Show("The file or folder you tried to select has too many characters in it. Try shortening it by moving the model files somewhere else or by renaming folders or files." + vbCrLf + vbCrLf + "Error message generated by Windows: " + vbCrLf + ex.Message, "The File or Folder You Tried to Select Is Too Long", MessageBoxButtons.OK)
+					MessageBox.Show("所选路径过长。请缩短文件或文件夹名称，或将文件移到层级较浅的目录后重试。" + vbCrLf + vbCrLf + "Windows 错误消息：" + vbCrLf + ex.Message, "所选路径过长", MessageBoxButtons.OK)
 				Catch ex As Exception
 					Dim debug As Integer = 4242
 				End Try

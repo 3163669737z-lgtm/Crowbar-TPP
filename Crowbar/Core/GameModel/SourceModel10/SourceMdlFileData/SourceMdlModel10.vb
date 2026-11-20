@@ -52,5 +52,6 @@
 	Public theVertexes As List(Of SourceVector)
 	'Public theVertexes As List(Of SourceVectorSingle)
 	Public theVertexBoneInfos As List(Of Integer)
+	Friend theXashWeights As List(Of List(Of KeyValuePair(Of Integer, Double)))
 
 End Class

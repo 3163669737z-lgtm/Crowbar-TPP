@@ -117,7 +117,7 @@ Partial Class PublishUserControl
 		Me.RefreshGameItemsButton.Padding = New System.Windows.Forms.Padding(0, 0, 1, 2)
 		Me.RefreshGameItemsButton.Size = New System.Drawing.Size(23, 22)
 		Me.RefreshGameItemsButton.TabIndex = 36
-		Me.ToolTip1.SetToolTip(Me.RefreshGameItemsButton, "Refresh Game Items")
+		Me.ToolTip1.SetToolTip(Me.RefreshGameItemsButton, "刷新游戏项目")
 		Me.RefreshGameItemsButton.UseVisualStyleBackColor = True
 		'
 		'ItemOwnerLabel
@@ -126,8 +126,8 @@ Partial Class PublishUserControl
 		Me.ItemOwnerLabel.Name = "ItemOwnerLabel"
 		Me.ItemOwnerLabel.Size = New System.Drawing.Size(45, 13)
 		Me.ItemOwnerLabel.TabIndex = 35
-		Me.ItemOwnerLabel.Text = "Owner:"
-		Me.ToolTip1.SetToolTip(Me.ItemOwnerLabel, "Double-click to swap between Steam Name and Steam ID.")
+		Me.ItemOwnerLabel.Text = "所有者："
+		Me.ToolTip1.SetToolTip(Me.ItemOwnerLabel, "双击可在 Steam 名称与 Steam ID 之间切换。")
 		'
 		'ItemPostedTextBox
 		'
@@ -138,7 +138,7 @@ Partial Class PublishUserControl
 		Me.ItemPostedTextBox.ReadOnly = True
 		Me.ItemPostedTextBox.Size = New System.Drawing.Size(120, 22)
 		Me.ItemPostedTextBox.TabIndex = 2
-		Me.ToolTip1.SetToolTip(Me.ItemPostedTextBox, "Posted")
+		Me.ToolTip1.SetToolTip(Me.ItemPostedTextBox, "发布时间")
 		'
 		'ItemUpdatedTextBox
 		'
@@ -149,7 +149,7 @@ Partial Class PublishUserControl
 		Me.ItemUpdatedTextBox.ReadOnly = True
 		Me.ItemUpdatedTextBox.Size = New System.Drawing.Size(120, 22)
 		Me.ItemUpdatedTextBox.TabIndex = 3
-		Me.ToolTip1.SetToolTip(Me.ItemUpdatedTextBox, "Updated")
+		Me.ToolTip1.SetToolTip(Me.ItemUpdatedTextBox, "更新时间")
 		'
 		'QuotaProgressBar
 		'
@@ -159,7 +159,7 @@ Partial Class PublishUserControl
 		Me.QuotaProgressBar.Name = "QuotaProgressBar"
 		Me.QuotaProgressBar.Size = New System.Drawing.Size(125, 22)
 		Me.QuotaProgressBar.TabIndex = 37
-		Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota")
+		Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "配额")
 		'
 		'TopMiddleSplitContainer
 		'
@@ -204,6 +204,7 @@ Partial Class PublishUserControl
 		Me.ItemsDataGridView.AllowUserToResizeRows = False
 		Me.ItemsDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.ItemsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+		Me.ItemsDataGridView.ColumnHeadersDefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
 		DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
 		DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
 		DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -245,7 +246,7 @@ Partial Class PublishUserControl
 		Me.AddItemToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.AddItemToolStripButton.Name = "AddItemToolStripButton"
 		Me.AddItemToolStripButton.Size = New System.Drawing.Size(60, 22)
-		Me.AddItemToolStripButton.Text = "Add Item"
+		Me.AddItemToolStripButton.Text = "添加项目"
 		'
 		'ToolStripSeparator1
 		'
@@ -255,16 +256,16 @@ Partial Class PublishUserControl
 		'SearchItemsToolStripComboBox
 		'
 		Me.SearchItemsToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.SearchItemsToolStripComboBox.Items.AddRange(New Object() {"ID:", "Title:", "Description:", "Owner:", "[All fields]:"})
+		Me.SearchItemsToolStripComboBox.Items.AddRange(New Object() {"ID:", "标题：", "描述：", "所有者：", "全部字段："})
 		Me.SearchItemsToolStripComboBox.Name = "SearchItemsToolStripComboBox"
 		Me.SearchItemsToolStripComboBox.Size = New System.Drawing.Size(80, 25)
-		Me.SearchItemsToolStripComboBox.ToolTipText = "Field to search"
+		Me.SearchItemsToolStripComboBox.ToolTipText = "要搜索的字段"
 		'
 		'SearchItemsToolStripTextBox
 		'
 		Me.SearchItemsToolStripTextBox.Name = "SearchItemsToolStripTextBox"
 		Me.SearchItemsToolStripTextBox.Size = New System.Drawing.Size(100, 25)
-		Me.SearchItemsToolStripTextBox.ToolTipText = "Text to search for"
+		Me.SearchItemsToolStripTextBox.ToolTipText = "要搜索的文本"
 		'
 		'SearchItemsToolStripButton
 		'
@@ -273,8 +274,8 @@ Partial Class PublishUserControl
 		Me.SearchItemsToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.SearchItemsToolStripButton.Name = "SearchItemsToolStripButton"
 		Me.SearchItemsToolStripButton.Size = New System.Drawing.Size(23, 22)
-		Me.SearchItemsToolStripButton.Text = "Search"
-		Me.SearchItemsToolStripButton.ToolTipText = "Search"
+		Me.SearchItemsToolStripButton.Text = "搜索"
+		Me.SearchItemsToolStripButton.ToolTipText = "搜索"
 		'
 		'ToolStripSeparator2
 		'
@@ -285,13 +286,13 @@ Partial Class PublishUserControl
 		'
 		Me.ItemCountsToolStripLabel.Name = "ItemCountsToolStripLabel"
 		Me.ItemCountsToolStripLabel.Size = New System.Drawing.Size(168, 22)
-		Me.ItemCountsToolStripLabel.Text = "0 drafts + 0 published = 0 total"
+		Me.ItemCountsToolStripLabel.Text = "0 草稿 + 0 已发布 = 总计 0"
 		'
 		'FindItemToolStripTextBox
 		'
 		Me.FindItemToolStripTextBox.Name = "FindItemToolStripTextBox"
 		Me.FindItemToolStripTextBox.Size = New System.Drawing.Size(279, 25)
-		Me.FindItemToolStripTextBox.ToolTipText = "Title to find"
+		Me.FindItemToolStripTextBox.ToolTipText = "要查找的标题"
 		Me.FindItemToolStripTextBox.Visible = False
 		'
 		'GamePanel
@@ -309,11 +310,12 @@ Partial Class PublishUserControl
 		'
 		'GameLabel
 		'
+		Me.GameLabel.AutoSize = True
 		Me.GameLabel.Location = New System.Drawing.Point(0, 7)
 		Me.GameLabel.Name = "GameLabel"
 		Me.GameLabel.Size = New System.Drawing.Size(39, 13)
 		Me.GameLabel.TabIndex = 22
-		Me.GameLabel.Text = "Game:"
+		Me.GameLabel.Text = "游戏："
 		'
 		'AppIdComboBox
 		'
@@ -335,7 +337,7 @@ Partial Class PublishUserControl
 		Me.PublishRequiresSteamLabel.Name = "PublishRequiresSteamLabel"
 		Me.PublishRequiresSteamLabel.Size = New System.Drawing.Size(136, 21)
 		Me.PublishRequiresSteamLabel.TabIndex = 1
-		Me.PublishRequiresSteamLabel.Text = "Publish requires Steam"
+		Me.PublishRequiresSteamLabel.Text = "发布需要 Steam"
 		Me.PublishRequiresSteamLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
 		'
 		'OpenSteamSubscriberAgreementButton
@@ -345,7 +347,7 @@ Partial Class PublishUserControl
 		Me.OpenSteamSubscriberAgreementButton.Name = "OpenSteamSubscriberAgreementButton"
 		Me.OpenSteamSubscriberAgreementButton.Size = New System.Drawing.Size(199, 22)
 		Me.OpenSteamSubscriberAgreementButton.TabIndex = 2
-		Me.OpenSteamSubscriberAgreementButton.Text = "Open Steam Subscriber Agreement"
+		Me.OpenSteamSubscriberAgreementButton.Text = "打开 Steam 订户协议"
 		Me.OpenSteamSubscriberAgreementButton.UseVisualStyleBackColor = True
 		'
 		'MiddleBottomSplitContainer
@@ -385,7 +387,7 @@ Partial Class PublishUserControl
 		Me.ItemGroupBox.Size = New System.Drawing.Size(764, 316)
 		Me.ItemGroupBox.TabIndex = 31
 		Me.ItemGroupBox.TabStop = False
-		Me.ItemGroupBox.Text = "Item"
+		Me.ItemGroupBox.Text = "项目"
 		'
 		'ItemTagsSplitContainer
 		'
@@ -435,7 +437,7 @@ Partial Class PublishUserControl
 		'ItemDescriptionTextBox
 		'
 		Me.ItemDescriptionTextBox.AcceptsTab = True
-		Me.ItemDescriptionTextBox.CueBannerText = "required"
+		Me.ItemDescriptionTextBox.CueBannerText = "必填"
 		Me.ItemDescriptionTextBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ItemDescriptionTextBox.Location = New System.Drawing.Point(3, 19)
 		Me.ItemDescriptionTextBox.Name = "ItemDescriptionTextBox"
@@ -476,7 +478,7 @@ Partial Class PublishUserControl
 		Me.ItemDescriptionLabel.Name = "ItemDescriptionLabel"
 		Me.ItemDescriptionLabel.Size = New System.Drawing.Size(275, 13)
 		Me.ItemDescriptionLabel.TabIndex = 9
-		Me.ItemDescriptionLabel.Text = "Description (### / ### characters max):"
+		Me.ItemDescriptionLabel.Text = "描述（最多 ### / ### 字符）："
 		'
 		'ItemChangeNoteTextBox
 		'
@@ -530,7 +532,7 @@ Partial Class PublishUserControl
 		Me.ItemChangeNoteLabel.Name = "ItemChangeNoteLabel"
 		Me.ItemChangeNoteLabel.Size = New System.Drawing.Size(264, 13)
 		Me.ItemChangeNoteLabel.TabIndex = 11
-		Me.ItemChangeNoteLabel.Text = "Content Changes (### / ### characters max):"
+		Me.ItemChangeNoteLabel.Text = "内容更改（最多 ### / ### 字符）："
 		'
 		'ItemTopPanel
 		'
@@ -584,13 +586,13 @@ Partial Class PublishUserControl
 		Me.ItemTitleLabel.Name = "ItemTitleLabel"
 		Me.ItemTitleLabel.Size = New System.Drawing.Size(577, 12)
 		Me.ItemTitleLabel.TabIndex = 8
-		Me.ItemTitleLabel.Text = "Title (### / ### characters max):"
+		Me.ItemTitleLabel.Text = "标题（最多 ### / ### 字符）："
 		'
 		'ItemTitleTextBox
 		'
 		Me.ItemTitleTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ItemTitleTextBox.CueBannerText = "required"
+		Me.ItemTitleTextBox.CueBannerText = "必填"
 		Me.ItemTitleTextBox.Location = New System.Drawing.Point(3, 44)
 		Me.ItemTitleTextBox.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
 		Me.ItemTitleTextBox.Name = "ItemTitleTextBox"
@@ -629,13 +631,13 @@ Partial Class PublishUserControl
 		Me.ItemContentFolderOrFileLabel.Name = "ItemContentFolderOrFileLabel"
 		Me.ItemContentFolderOrFileLabel.Size = New System.Drawing.Size(415, 13)
 		Me.ItemContentFolderOrFileLabel.TabIndex = 18
-		Me.ItemContentFolderOrFileLabel.Text = "Content Folder or File (### / ### MB max):"
+		Me.ItemContentFolderOrFileLabel.Text = "内容文件夹或文件（最多 ### / ### MB）："
 		'
 		'ItemContentPathFileNameTextBox
 		'
 		Me.ItemContentPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ItemContentPathFileNameTextBox.CueBannerText = "required"
+		Me.ItemContentPathFileNameTextBox.CueBannerText = "必填"
 		Me.ItemContentPathFileNameTextBox.Location = New System.Drawing.Point(3, 19)
 		Me.ItemContentPathFileNameTextBox.Name = "ItemContentPathFileNameTextBox"
 		Me.ItemContentPathFileNameTextBox.Size = New System.Drawing.Size(415, 22)
@@ -650,7 +652,7 @@ Partial Class PublishUserControl
 		Me.BrowseItemContentPathFileNameButton.Name = "BrowseItemContentPathFileNameButton"
 		Me.BrowseItemContentPathFileNameButton.Size = New System.Drawing.Size(75, 22)
 		Me.BrowseItemContentPathFileNameButton.TabIndex = 8
-		Me.BrowseItemContentPathFileNameButton.Text = "Browse..."
+		Me.BrowseItemContentPathFileNameButton.Text = "浏览..."
 		Me.BrowseItemContentPathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'ItemPreviewImageLabel
@@ -661,13 +663,13 @@ Partial Class PublishUserControl
 		Me.ItemPreviewImageLabel.Name = "ItemPreviewImageLabel"
 		Me.ItemPreviewImageLabel.Size = New System.Drawing.Size(415, 13)
 		Me.ItemPreviewImageLabel.TabIndex = 13
-		Me.ItemPreviewImageLabel.Text = "Preview Image (### / ### MB max |  Required resolution: 512x512):"
+		Me.ItemPreviewImageLabel.Text = "预览图像（最多 ### / ### MB | 要求分辨率：512x512）："
 		'
 		'ItemPreviewImagePathFileNameTextBox
 		'
 		Me.ItemPreviewImagePathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ItemPreviewImagePathFileNameTextBox.CueBannerText = "required"
+		Me.ItemPreviewImagePathFileNameTextBox.CueBannerText = "必填"
 		Me.ItemPreviewImagePathFileNameTextBox.Location = New System.Drawing.Point(3, 60)
 		Me.ItemPreviewImagePathFileNameTextBox.Name = "ItemPreviewImagePathFileNameTextBox"
 		Me.ItemPreviewImagePathFileNameTextBox.Size = New System.Drawing.Size(415, 22)
@@ -681,7 +683,7 @@ Partial Class PublishUserControl
 		Me.BrowseItemPreviewImagePathFileNameButton.Name = "BrowseItemPreviewImagePathFileNameButton"
 		Me.BrowseItemPreviewImagePathFileNameButton.Size = New System.Drawing.Size(75, 22)
 		Me.BrowseItemPreviewImagePathFileNameButton.TabIndex = 10
-		Me.BrowseItemPreviewImagePathFileNameButton.Text = "Browse..."
+		Me.BrowseItemPreviewImagePathFileNameButton.Text = "浏览..."
 		Me.BrowseItemPreviewImagePathFileNameButton.UseVisualStyleBackColor = True
 		'
 		'ItemPreviewImagePictureBox
@@ -710,7 +712,7 @@ Partial Class PublishUserControl
 		Me.ItemVisibilityLabel.Name = "ItemVisibilityLabel"
 		Me.ItemVisibilityLabel.Size = New System.Drawing.Size(54, 13)
 		Me.ItemVisibilityLabel.TabIndex = 10
-		Me.ItemVisibilityLabel.Text = "Visibility:"
+		Me.ItemVisibilityLabel.Text = "可见性："
 		'
 		'SaveAsTemplateOrDraftItemButton
 		'
@@ -718,7 +720,7 @@ Partial Class PublishUserControl
 		Me.SaveAsTemplateOrDraftItemButton.Name = "SaveAsTemplateOrDraftItemButton"
 		Me.SaveAsTemplateOrDraftItemButton.Size = New System.Drawing.Size(111, 22)
 		Me.SaveAsTemplateOrDraftItemButton.TabIndex = 12
-		Me.SaveAsTemplateOrDraftItemButton.Text = "Save as Template"
+		Me.SaveAsTemplateOrDraftItemButton.Text = "保存为模板"
 		Me.SaveAsTemplateOrDraftItemButton.UseVisualStyleBackColor = True
 		'
 		'RefreshOrRevertItemButton
@@ -727,7 +729,7 @@ Partial Class PublishUserControl
 		Me.RefreshOrRevertItemButton.Name = "RefreshOrRevertItemButton"
 		Me.RefreshOrRevertItemButton.Size = New System.Drawing.Size(75, 22)
 		Me.RefreshOrRevertItemButton.TabIndex = 13
-		Me.RefreshOrRevertItemButton.Text = "Refresh"
+		Me.RefreshOrRevertItemButton.Text = "刷新"
 		Me.RefreshOrRevertItemButton.UseVisualStyleBackColor = True
 		'
 		'SaveTemplateButton
@@ -736,7 +738,7 @@ Partial Class PublishUserControl
 		Me.SaveTemplateButton.Name = "SaveTemplateButton"
 		Me.SaveTemplateButton.Size = New System.Drawing.Size(75, 22)
 		Me.SaveTemplateButton.TabIndex = 14
-		Me.SaveTemplateButton.Text = "Save"
+		Me.SaveTemplateButton.Text = "保存"
 		Me.SaveTemplateButton.UseVisualStyleBackColor = True
 		'
 		'OpenWorkshopPageButton
@@ -746,7 +748,7 @@ Partial Class PublishUserControl
 		Me.OpenWorkshopPageButton.Name = "OpenWorkshopPageButton"
 		Me.OpenWorkshopPageButton.Size = New System.Drawing.Size(132, 22)
 		Me.OpenWorkshopPageButton.TabIndex = 15
-		Me.OpenWorkshopPageButton.Text = "Open Workshop Page"
+		Me.OpenWorkshopPageButton.Text = "打开创意工坊页面"
 		Me.OpenWorkshopPageButton.UseVisualStyleBackColor = True
 		'
 		'DeleteItemButton
@@ -756,7 +758,7 @@ Partial Class PublishUserControl
 		Me.DeleteItemButton.Name = "DeleteItemButton"
 		Me.DeleteItemButton.Size = New System.Drawing.Size(75, 22)
 		Me.DeleteItemButton.TabIndex = 16
-		Me.DeleteItemButton.Text = "Delete..."
+		Me.DeleteItemButton.Text = "删除..."
 		Me.DeleteItemButton.UseVisualStyleBackColor = True
 		'
 		'ItemLeftMinScrollPanel
@@ -778,7 +780,7 @@ Partial Class PublishUserControl
 		Me.ItemTagsGroupBox.Size = New System.Drawing.Size(172, 289)
 		Me.ItemTagsGroupBox.TabIndex = 17
 		Me.ItemTagsGroupBox.TabStop = False
-		Me.ItemTagsGroupBox.Text = "Tags"
+		Me.ItemTagsGroupBox.Text = "标签"
 		'
 		'LogTextBox
 		'
@@ -803,7 +805,7 @@ Partial Class PublishUserControl
 		Me.PublishItemButton.Name = "PublishItemButton"
 		Me.PublishItemButton.Size = New System.Drawing.Size(125, 22)
 		Me.PublishItemButton.TabIndex = 18
-		Me.PublishItemButton.Text = "Publish"
+		Me.PublishItemButton.Text = "发布"
 		Me.PublishItemButton.UseVisualStyleBackColor = True
 		'
 		'QueueListView
@@ -833,8 +835,6 @@ Partial Class PublishUserControl
 		'
 		'PublishUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.TopMiddleSplitContainer)
 		Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
 		Me.Name = "PublishUserControl"

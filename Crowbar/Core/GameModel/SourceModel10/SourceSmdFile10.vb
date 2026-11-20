@@ -341,52 +341,28 @@ Public Class SourceSmdFile10
 	Private Function GetVertexLine(ByVal aBodyModel As SourceMdlModel10, ByVal aVertexInfo As SourceMdlVertexInfo10, ByVal aTexture As SourceMdlTexture10) As String
 		Dim line As String
 		Dim boneIndex As Integer
-		Dim vecin As New SourceVector
-		Dim position As SourceVector
-		Dim normal As SourceVector
+		Dim position As SourceVector = Nothing
+		Dim normal As SourceVector = Nothing
 		Dim texCoordX As Double
 		Dim texCoordY As Double
+		Dim links As List(Of KeyValuePair(Of Integer, Double)) = Nothing
 
 		line = ""
 		Try
-			boneIndex = aBodyModel.theVertexBoneInfos(aVertexInfo.vertexIndex)
-			Dim boneTransform As SourceBoneTransform10
-			boneTransform = Me.theMdlFileData.theBoneTransforms(boneIndex)
-
-			' Reverse these.
-			'FROM: [1999] HLStandardSDK\SourceCode\utils\studiomdl\studiomdl.c
-			'      void Grab_Triangles( s_model_t *pmodel )
-			'	// move vertex position to object space.
-			'	VectorSubtract( p.org, bonefixup[p.bone].worldorg, tmp );
-			'	VectorTransform(tmp, bonefixup[p.bone].im, p.org );
-			'------
-			'FROM: HL1Alpha model viewer gsmv_beta2a_bin_src\src\src\mdldec\smdfile.cpp
-			'      void WriteTriangles( FILE * pFile, mstudiomodel_t * pmodel )
-			'			// Transform vertex position
-			'			vec3_t vecin, vecpos, vecnorm;
-			'			VectorCopy( pvert[ ptrivert->vertindex ], vecin );
-			'			VectorTransform( vecin,
-			'				g_bonetransform[ pvertbone[ ptrivert->vertindex ] ], vecpos );
-			MathModule.VectorCopy(aBodyModel.theVertexes(aVertexInfo.vertexIndex), vecin)
-			position = MathModule.VectorTransform(vecin, boneTransform.matrixColumn0, boneTransform.matrixColumn1, boneTransform.matrixColumn2, boneTransform.matrixColumn3)
-
-			' Reverse these.
-			'FROM: [1999] HLStandardSDK\SourceCode\utils\studiomdl\studiomdl.c
-			'      void Grab_Triangles( s_model_t *pmodel )
-			'	// move normal to object space.
-			'	VectorCopy( normal.org, tmp );
-			'	VectorTransform(tmp, bonefixup[p.bone].im, normal.org );
-			'	VectorNormalize( normal.org );
-			'------
-			'FROM: HL1Alpha model viewer gsmv_beta2a_bin_src\src\src\mdldec\smdfile.cpp
-			'      void WriteTriangles( FILE * pFile, mstudiomodel_t * pmodel )
-			'			// Transform vertex normal
-			'			VectorCopy( pnorm[ ptrivert->normindex ], vecin );
-			'			VectorRotate( vecin,
-			'				g_bonetransform[ pnormbone[ ptrivert->normindex ] ], vecnorm );
-			'			VectorNormalize( vecnorm );
-			MathModule.VectorCopy(aBodyModel.theNormals(aVertexInfo.normalIndex), vecin)
-			normal = MathModule.VectorRotate(vecin, boneTransform.matrixColumn0, boneTransform.matrixColumn1, boneTransform.matrixColumn2, boneTransform.matrixColumn3)
+			Dim vertex As SourceVector = aBodyModel.theVertexes(aVertexInfo.vertexIndex)
+			Dim sourceNormal As SourceVector = aBodyModel.theNormals(aVertexInfo.normalIndex)
+			If aBodyModel.theXashWeights IsNot Nothing Then
+				links = aBodyModel.theXashWeights(aVertexInfo.vertexIndex)
+			End If
+			If links IsNot Nothing AndAlso links.Count > 0 Then
+				boneIndex = links(0).Key
+				Me.SkinXashVertex(vertex, sourceNormal, links, position, normal)
+			Else
+				boneIndex = aBodyModel.theVertexBoneInfos(aVertexInfo.vertexIndex)
+				Dim bone As SourceBoneTransform10 = Me.theMdlFileData.theBoneTransforms(boneIndex)
+				position = MathModule.VectorTransform(vertex, bone.matrixColumn0, bone.matrixColumn1, bone.matrixColumn2, bone.matrixColumn3)
+				normal = MathModule.VectorRotate(sourceNormal, bone.matrixColumn0, bone.matrixColumn1, bone.matrixColumn2, bone.matrixColumn3)
+			End If
 			MathModule.VectorNormalize(normal)
 
 			' Reverse these.
@@ -398,7 +374,12 @@ Public Class SourceSmdFile10
 			'      void TextureCoordRanges( s_mesh_t *pmesh, s_texture_t *ptexture  )
 			'			pmesh->triangle[i][j].s = adjust_texcoord(pmesh->triangle[i][j].u*(ptexture->srcwidth));
 			'			pmesh->triangle[i][j].t = adjust_texcoord(pmesh->triangle[i][j].v*(ptexture->srcheight));
-			If aTexture.width = 1 OrElse aTexture.height = 1 Then
+			If (aTexture.flags And SourceMdlTexture10.XashHalfFloatUvs) <> 0 Then
+				Dim u As New SourceFloat16bits With {.the16BitValue = CUShort(CInt(aVertexInfo.s) And &HFFFF)}
+				Dim v As New SourceFloat16bits With {.the16BitValue = CUShort(CInt(aVertexInfo.t) And &HFFFF)}
+				texCoordX = u.TheFloatValue
+				texCoordY = 1 + v.TheFloatValue
+			ElseIf aTexture.width = 1 OrElse aTexture.height = 1 Then
 				If aTexture.theFileName(0) = "#" Then
 					Dim width As UInteger
 					Dim height As UInteger
@@ -444,12 +425,42 @@ Public Class SourceSmdFile10
 			line += " "
 			'line += aVertex.texCoordY.ToString("0.000000", TheApp.InternalNumberFormat)
 			line += (1 - texCoordY).ToString("0.000000", TheApp.InternalNumberFormat)
+			If links IsNot Nothing AndAlso links.Count > 0 Then
+				Dim format As IFormatProvider = TheApp.InternalNumberFormat
+				line += " " + links.Count.ToString(format)
+				For Each link As KeyValuePair(Of Integer, Double) In links
+					line += " " + link.Key.ToString(format) + " " + link.Value.ToString("0.000000", format)
+				Next
+			End If
 		Catch ex As Exception
 			line = "// " + line
 		End Try
 
 		Return line
 	End Function
+
+	Private Sub SkinXashVertex(vertex As SourceVector, sourceNormal As SourceVector, links As List(Of KeyValuePair(Of Integer, Double)),
+							 ByRef position As SourceVector, ByRef normal As SourceVector)
+		Dim total As Double = 0
+		For Each link As KeyValuePair(Of Integer, Double) In links
+			total += link.Value
+		Next
+		position = New SourceVector()
+		normal = New SourceVector()
+		For index As Integer = 0 To links.Count - 1
+			Dim link As KeyValuePair(Of Integer, Double) = links(index)
+			Dim skin As SourceBoneTransform10 = Me.theMdlFileData.theXashSkinTransforms(link.Key)
+			Dim weight As Double = link.Value + If(index = 0, Math.Max(0, 1 - total), 0)
+			Dim moved As SourceVector = MathModule.VectorTransform(vertex, skin.matrixColumn0, skin.matrixColumn1, skin.matrixColumn2, skin.matrixColumn3)
+			Dim facing As SourceVector = MathModule.VectorRotate(sourceNormal, skin.matrixColumn0, skin.matrixColumn1, skin.matrixColumn2, skin.matrixColumn3)
+			position.x += weight * moved.x
+			position.y += weight * moved.y
+			position.z += weight * moved.z
+			normal.x += weight * facing.x
+			normal.y += weight * facing.y
+			normal.z += weight * facing.z
+		Next
+	End Sub
 
 	'static void CalcAnimation( const CStudioHdr *pStudioHdr,	Vector *pos, Quaternion *q, 
 	'	mstudioseqdesc_t &seqdesc,

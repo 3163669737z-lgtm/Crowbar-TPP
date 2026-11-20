@@ -1,4 +1,4 @@
-Public Class DataGridViewEx
+﻿Public Class DataGridViewEx
 	Inherits DataGridView
 
 #Region "Create and Destroy"
@@ -72,7 +72,7 @@ Public Class DataGridViewEx
 					For i As Integer = 0 To Me.RowCount - 1
 						Me(e.ColumnIndex, i).Value = String.Empty
 					Next
-					cell.Value = "Selected"
+					cell.Value = "已选择"
 				End If
 			End If
 		End If

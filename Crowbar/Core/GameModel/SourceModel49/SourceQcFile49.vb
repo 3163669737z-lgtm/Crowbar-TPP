@@ -44,6 +44,8 @@ Public Class SourceQcFile49
 
 #Region "Methods"
 
+	Friend Property GroupCommitted As Action(Of String)
+
 	Public Sub WriteGroup(ByVal qciGroupName As String, ByVal writeGroupAction As WriteGroupDelegate, ByVal includeLineIsCommented As Boolean, ByVal includeLineIsIndented As Boolean)
 		If TheApp.Settings.DecompileGroupIntoQciFilesIsChecked Then
 			Dim qciFileName As String
@@ -52,32 +54,23 @@ Public Class SourceQcFile49
 
 			mainOutputFileStream = Me.theOutputFileStreamWriter
 
+			qciFileName = Me.theOutputFileNameWithoutExtension + "_" + qciGroupName + ".qci"
+			qciPathFileName = Path.Combine(Me.theOutputPath, qciFileName)
 			Try
-				'qciPathFileName = Path.Combine(Me.theOutputPathName, Me.theOutputFileNameWithoutExtension + "_flexes.qci")
-				qciFileName = Me.theOutputFileNameWithoutExtension + "_" + qciGroupName + ".qci"
-				qciPathFileName = Path.Combine(Me.theOutputPath, qciFileName)
-
-				Me.theOutputFileStreamWriter = File.CreateText(qciPathFileName)
-
-				'Me.WriteFlexLines()
-				'Me.WriteFlexControllerLines()
-				'Me.WriteFlexRuleLines()
-				writeGroupAction.Invoke()
-			Catch ex As Exception
-				Throw
+				FileManager.WriteTextAtomically(qciPathFileName,
+					Sub(writer)
+						Me.theOutputFileStreamWriter = writer
+						writeGroupAction()
+					End Sub)
 			Finally
-				If Me.theOutputFileStreamWriter IsNot Nothing Then
-					Me.theOutputFileStreamWriter.Flush()
-					Me.theOutputFileStreamWriter.Close()
-
-					Me.theOutputFileStreamWriter = mainOutputFileStream
-				End If
+				Me.theOutputFileStreamWriter = mainOutputFileStream
 			End Try
 
 			Try
 				If File.Exists(qciPathFileName) Then
 					Dim qciFileInfo As New FileInfo(qciPathFileName)
 					If qciFileInfo.Length > 0 Then
+						Me.GroupCommitted?.Invoke(qciPathFileName)
 						Dim line As String = ""
 
 						Me.theOutputFileStreamWriter.WriteLine()
@@ -244,7 +237,7 @@ Public Class SourceQcFile49
 		aBodyModel = aBodyPart.theModels(0)
 		'aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), Me.theMdlFileData.theBodyPartIndexThatShouldUseModelCommand, 0, 0, Me.theModelName, aBodyPart.theModels(0).name)
 		bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(aBodyPart)
-		aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, 0, 0, Me.theModelName, aBodyPart.theModels(0).name)
+		aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, 0, 0, Me.theModelName, aBodyModel.name, bodyPartName:=aBodyPart.theName)
 
 		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 			line = "$Model "
@@ -269,7 +262,10 @@ Public Class SourceQcFile49
 		End If
 
 		Me.theBodyPartForFlexWriting = aBodyPart
-		Me.WriteGroup("flex", AddressOf WriteGroupFlex, False, True)
+		If HasFlexFrames(aBodyPart) Then
+			Dim groupName As String = If(Me.theMultipleFlexGroups, "flex_" + bodyPartIndex.ToString("00"), "flex")
+			Me.WriteGroup(groupName, AddressOf WriteGroupFlex, False, True)
+		End If
 
 		line = "}"
 		Me.theOutputFileStreamWriter.WriteLine(line)
@@ -402,7 +398,7 @@ Public Class SourceQcFile49
 				End If
 			End If
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		End Try
 
 		'Me.CreateListOfEyelidFlexFrameIndexes()
@@ -622,7 +618,7 @@ Public Class SourceQcFile49
 				End If
 			End If
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		End Try
 	End Sub
 
@@ -674,9 +670,14 @@ Public Class SourceQcFile49
 		End If
 	End Sub
 
+	Private Shared Function HasFlexFrames(part As SourceMdlBodyPart) As Boolean
+		Return part.theModelCommandIsUsed AndAlso Not part.theExportFlexVariantsAsDmx AndAlso part.theFlexFrames IsNot Nothing AndAlso part.theFlexFrames.Count > 1
+	End Function
+
 	Private Sub WriteGroupFlex()
-		If Me.theBodyPartForFlexWriting.theFlexFrames IsNot Nothing AndAlso Me.theBodyPartForFlexWriting.theFlexFrames.Count > 1 Then
-			Me.WriteFlexLines()
+		Me.WriteFlexLines()
+		' Rules can refer to flexes declared by other body parts. Emit them after every declaration.
+		If Me.theLastFlexBodyPart Is Nothing OrElse Me.theLastFlexBodyPart Is Me.theBodyPartForFlexWriting Then
 			Me.WriteFlexControllerLines()
 			Me.WriteFlexRuleLines()
 		End If
@@ -878,6 +879,19 @@ Public Class SourceQcFile49
 
 		If Me.theMdlFileData.theFlexRules IsNot Nothing AndAlso Me.theMdlFileData.theFlexRules.Count > 0 Then
 			Dim aFlexRule As SourceMdlFlexRule
+			Dim dmxFlexIndexes As New HashSet(Of Integer)()
+			For Each part As SourceMdlBodyPart In Me.theMdlFileData.theBodyParts
+				If Not part.theExportFlexVariantsAsDmx Then Continue For
+				For Each model As SourceMdlModel In part.theModels
+					If model.theMeshes Is Nothing Then Continue For
+					For Each mesh As SourceMdlMesh In model.theMeshes
+						If mesh.theFlexes Is Nothing Then Continue For
+						For Each flex As SourceMdlFlex In mesh.theFlexes
+							dmxFlexIndexes.Add(flex.flexDescIndex)
+						Next
+					Next
+				Next
+			Next
 
 			line = ""
 			Me.theOutputFileStreamWriter.WriteLine(line)
@@ -886,7 +900,7 @@ Public Class SourceQcFile49
 				Dim flexDesc As SourceMdlFlexDesc
 				flexDesc = Me.theMdlFileData.theFlexDescs(i)
 
-				If Not flexDesc.theDescIsUsedByFlex AndAlso flexDesc.theDescIsUsedByFlexRule Then
+				If flexDesc.theDescIsUsedByFlexRule AndAlso (Not flexDesc.theDescIsUsedByFlex OrElse dmxFlexIndexes.Contains(i)) Then
 					line = vbTab
 					line += "localvar "
 					line += flexDesc.theName
@@ -1221,10 +1235,13 @@ Public Class SourceQcFile49
 									aLodQcInfoList = aLodList(switchPoint)
 								End If
 
-								aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex).name)
-								aBodyModel.theSmdFileNames(lodIndex) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(lodIndex), bodyPartIndex, modelIndex, lodIndex, Me.theModelName, Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex).name)
+								Dim bodyPartName As String = Me.theMdlFileData.theBodyParts(bodyPartIndex).theName
+								aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, aBodyModel.name, bodyPartName:=bodyPartName)
+								aBodyModel.theSmdFileNames(lodIndex) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(lodIndex), bodyPartIndex, modelIndex, lodIndex, Me.theModelName, aBodyModel.name, bodyPartName:=bodyPartName)
 								aLodQcInfo = New LodQcInfo()
-								aLodQcInfo.referenceFileName = aBodyModel.theSmdFileNames(0)
+								Dim part As SourceMdlBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+								aLodQcInfo.referenceFileName = If(part.theExportFlexVariantsAsDmx AndAlso SourceDmxBodyModel49.HasFlexes(aBodyModel),
+																 Path.ChangeExtension(aBodyModel.theSmdFileNames(0), ".dmx"), aBodyModel.theSmdFileNames(0))
 								aLodQcInfo.lodFileName = aBodyModel.theSmdFileNames(lodIndex)
 								aLodQcInfoList.Add(aLodQcInfo)
 							Next
@@ -1331,7 +1348,7 @@ Public Class SourceQcFile49
 				Next
 			End If
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		End Try
 
 		For Each aBone As SourceMdlBone In Me.theMdlFileData.theBones
@@ -2104,12 +2121,12 @@ Public Class SourceQcFile49
 			Me.WriteCorrectiveAnimationBlock()
 			Me.WriteAnimationOrDeclareAnimationCommand()
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		End Try
 		Try
 			Me.WriteSequenceOrDeclareSequenceCommand()
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		End Try
 		Me.WriteIncludeModelCommands()
 	End Sub
@@ -2199,7 +2216,7 @@ Public Class SourceQcFile49
 						End If
 					End If
 				Catch ex As Exception
-					Dim debug As Integer = 4242
+					Throw
 				End Try
 			Next
 		End If
@@ -2349,11 +2366,10 @@ Public Class SourceQcFile49
 			Else
 				line = "$animation"
 			End If
-			anAnimationDesc.theSmdRelativePathFileName = SourceFileNamesModule.CreateAnimationSmdRelativePathFileName(anAnimationDesc.theSmdRelativePathFileName, Me.theModelName, anAnimationDesc.theName)
 			line += " """
 			line += anAnimationDesc.theName
 			line += """ """
-			line += anAnimationDesc.theSmdRelativePathFileName
+			line += anAnimationDesc.GetSmdRelativePathFileName(Me.theModelName)
 			line += """"
 			'NOTE: Opening brace must be on same line as the command.
 			line += " {"
@@ -2411,7 +2427,7 @@ Public Class SourceQcFile49
 				Try
 					Me.WriteSequenceOptions(aSequenceDesc)
 				Catch ex As Exception
-					Dim debug As Integer = 4242
+					Throw
 				End Try
 
 				line = "}"
@@ -2466,8 +2482,7 @@ Public Class SourceQcFile49
 			If name = "" OrElse name(0) = "@" Then
 				'NOTE: There should only be one implied anim desc.
 				impliedAnimDesc = anAnimationDesc
-				anAnimationDesc.theSmdRelativePathFileName = SourceFileNamesModule.CreateAnimationSmdRelativePathFileName(anAnimationDesc.theSmdRelativePathFileName, Me.theModelName, anAnimationDesc.theName)
-				line += anAnimationDesc.theSmdRelativePathFileName
+				line += anAnimationDesc.GetSmdRelativePathFileName(Me.theModelName)
 			Else
 				line += name
 			End If
@@ -3502,7 +3517,7 @@ Public Class SourceQcFile49
 				Next
 			End If
 		Catch ex As Exception
-
+			Throw
 		End Try
 	End Sub
 
@@ -3536,7 +3551,7 @@ Public Class SourceQcFile49
 				Next
 			End If
 		Catch ex As Exception
-
+			Throw
 		End Try
 	End Sub
 
@@ -3583,7 +3598,7 @@ Public Class SourceQcFile49
 				Next
 			End If
 		Catch ex As Exception
-
+			Throw
 		End Try
 	End Sub
 
@@ -3965,7 +3980,7 @@ Public Class SourceQcFile49
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 		Catch ex As Exception
-
+			Throw
 		End Try
 	End Sub
 
@@ -4785,13 +4800,16 @@ Public Class SourceQcFile49
 			line = ""
 			Me.theOutputFileStreamWriter.WriteLine(line)
 
+			Dim flexBodyParts As List(Of SourceMdlBodyPart) = Me.theMdlFileData.theBodyParts.FindAll(AddressOf HasFlexFrames)
+			Me.theMultipleFlexGroups = flexBodyParts.Count > 1
+			Me.theLastFlexBodyPart = If(flexBodyParts.Count > 0, flexBodyParts(flexBodyParts.Count - 1), Nothing)
 			For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
 				'If Me.theMdlFileData.theModelCommandIsUsed AndAlso bodyPartIndex = Me.theMdlFileData.theBodyPartIndexThatShouldUseModelCommand Then
 				'	Me.WriteModelCommand()
 				'	Continue For
 				'End If
 				aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
-				If aBodyPart.theModelCommandIsUsed Then
+				If aBodyPart.theModelCommandIsUsed AndAlso Not aBodyPart.theExportFlexVariantsAsDmx Then
 					Me.WriteModelCommand(aBodyPart)
 					Continue For
 				End If
@@ -4829,10 +4847,11 @@ Public Class SourceQcFile49
 						If aBodyModel.name(0) = ChrW(0) AndAlso (aVtxModel IsNot Nothing AndAlso aVtxModel.theVtxModelLods(0).theVtxMeshes Is Nothing) Then
 							line += "blank"
 						Else
-							aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, aBodyModel.name)
+							aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, aBodyModel.name, bodyPartName:=aBodyPart.theName)
 							line += "studio "
 							line += """"
-							line += aBodyModel.theSmdFileNames(0)
+							line += If(aBodyPart.theExportFlexVariantsAsDmx AndAlso SourceDmxBodyModel49.HasFlexes(aBodyModel),
+									   Path.ChangeExtension(aBodyModel.theSmdFileNames(0), ".dmx"), aBodyModel.theSmdFileNames(0))
 							line += """"
 						End If
 						Me.theOutputFileStreamWriter.WriteLine(line)
@@ -4845,8 +4864,9 @@ Public Class SourceQcFile49
 		End If
 	End Sub
 
-	Public Sub WriteBodyGroupPresetCommand()
+	Public Sub WriteBodyGroupPresetCommand(Optional commentLines As Boolean = False)
 		If Me.theMdlFileData.theBodygroupPresets IsNot Nothing AndAlso Me.theMdlFileData.theBodygroupPresets.Count > 0 Then
+			Dim prefix As String = If(commentLines, "// ", "")
 			Dim line As String = ""
 			Dim aBodyPart As SourceMdlBodyPart
 			Dim accumMask As Integer
@@ -4866,10 +4886,10 @@ Public Class SourceQcFile49
 				line += " """
 				line += aBodyGroupPreset.theName
 				line += """"
-				Me.theOutputFileStreamWriter.WriteLine(line)
+				Me.theOutputFileStreamWriter.WriteLine(prefix + line)
 
 				line = "{"
-				Me.theOutputFileStreamWriter.WriteLine(line)
+				Me.theOutputFileStreamWriter.WriteLine(prefix + line)
 
 				accumMask = aBodyGroupPreset.mask
 				accumValue = aBodyGroupPreset.value
@@ -4894,11 +4914,11 @@ Public Class SourceQcFile49
 				Next
 				For bodyGroupPresetLineIndex As Integer = bodyGroupPresetLines.Count - 1 To 0 Step -1
 					line = bodyGroupPresetLines(bodyGroupPresetLineIndex)
-					Me.theOutputFileStreamWriter.WriteLine(line)
+					Me.theOutputFileStreamWriter.WriteLine(prefix + line)
 				Next
 
 				line = "}"
-				Me.theOutputFileStreamWriter.WriteLine(line)
+				Me.theOutputFileStreamWriter.WriteLine(prefix + line)
 			Next
 		End If
 	End Sub
@@ -4936,7 +4956,7 @@ Public Class SourceQcFile49
 				Next
 			End If
 		Catch ex As Exception
-
+			Throw
 		End Try
 	End Sub
 
@@ -4985,7 +5005,7 @@ Public Class SourceQcFile49
 				Next
 			End If
 		Catch ex As Exception
-
+			Throw
 		End Try
 	End Sub
 
@@ -5048,7 +5068,7 @@ Public Class SourceQcFile49
 				Me.WriteTextLines(text, indentCount)
 			End If
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		End Try
 	End Sub
 
@@ -5219,6 +5239,8 @@ Public Class SourceQcFile49
 	Private theOutputFileNameWithoutExtension As String
 
 	Private theBodyPartForFlexWriting As SourceMdlBodyPart
+	Private theLastFlexBodyPart As SourceMdlBodyPart
+	Private theMultipleFlexGroups As Boolean
 
 #End Region
 

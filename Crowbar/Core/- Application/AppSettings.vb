@@ -142,6 +142,7 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	' Window dimensions are stored in 96-DPI logical pixels.
 	Public Property WindowSize() As Size
 		Get
 			Return theWindowSize
@@ -786,6 +787,8 @@ Public Class AppSettings
 			NotifyPropertyChanged("DecompileUseNonValveUvConversionIsChecked")
 		End Set
 	End Property
+
+	Public Property DecompileMeshResourceRoot As String = ""
 
 	Public Property DecompileOverrideMdlVersion() As SupportedMdlVersion
 		Get

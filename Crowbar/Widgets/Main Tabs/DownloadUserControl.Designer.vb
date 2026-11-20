@@ -48,7 +48,7 @@ Partial Class DownloadUserControl
 		Me.GotoDownloadedItemButton = New System.Windows.Forms.Button()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.DownloadUserControlFillPanel = New System.Windows.Forms.Panel()
-		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
+		Me.Options_LogSplitContainer = New Crowbar.SplitContainerEx()
 		Me.DownloadButtonsPanel = New System.Windows.Forms.Panel()
 		Me.PostDownloadPanel = New System.Windows.Forms.Panel()
 		Me.UseInUnpackButton = New System.Windows.Forms.Button()
@@ -80,7 +80,7 @@ Partial Class DownloadUserControl
 		Me.DownloadButton.Name = "DownloadButton"
 		Me.DownloadButton.Size = New System.Drawing.Size(120, 23)
 		Me.DownloadButton.TabIndex = 10
-		Me.DownloadButton.Text = "Download"
+		Me.DownloadButton.Text = "下载"
 		Me.DownloadButton.UseVisualStyleBackColor = True
 		'
 		'LogTextBox
@@ -102,7 +102,7 @@ Partial Class DownloadUserControl
 		Me.ItemIdOrLinkLabel.Name = "ItemIdOrLinkLabel"
 		Me.ItemIdOrLinkLabel.Size = New System.Drawing.Size(82, 13)
 		Me.ItemIdOrLinkLabel.TabIndex = 0
-		Me.ItemIdOrLinkLabel.Text = "Item ID or link:"
+		Me.ItemIdOrLinkLabel.Text = "项目 ID 或链接："
 		'
 		'OuputToLabel
 		'
@@ -111,7 +111,7 @@ Partial Class DownloadUserControl
 		Me.OuputToLabel.Name = "OuputToLabel"
 		Me.OuputToLabel.Size = New System.Drawing.Size(62, 13)
 		Me.OuputToLabel.TabIndex = 3
-		Me.OuputToLabel.Text = "Output to:"
+		Me.OuputToLabel.Text = "输出到："
 		'
 		'OutputPathComboBox
 		'
@@ -140,7 +140,7 @@ Partial Class DownloadUserControl
 		Me.GotoOutputPathButton.Name = "GotoOutputPathButton"
 		Me.GotoOutputPathButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoOutputPathButton.TabIndex = 8
-		Me.GotoOutputPathButton.Text = "Goto"
+		Me.GotoOutputPathButton.Text = "转到"
 		Me.GotoOutputPathButton.UseVisualStyleBackColor = True
 		'
 		'BrowseForOutputPathButton
@@ -150,7 +150,7 @@ Partial Class DownloadUserControl
 		Me.BrowseForOutputPathButton.Name = "BrowseForOutputPathButton"
 		Me.BrowseForOutputPathButton.Size = New System.Drawing.Size(64, 23)
 		Me.BrowseForOutputPathButton.TabIndex = 7
-		Me.BrowseForOutputPathButton.Text = "Browse..."
+		Me.BrowseForOutputPathButton.Text = "浏览..."
 		Me.BrowseForOutputPathButton.UseVisualStyleBackColor = True
 		'
 		'OptionsGroupBox
@@ -164,7 +164,7 @@ Partial Class DownloadUserControl
 		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 193)
 		Me.OptionsGroupBox.TabIndex = 9
 		Me.OptionsGroupBox.TabStop = False
-		Me.OptionsGroupBox.Text = "Output File Name Options"
+		Me.OptionsGroupBox.Text = "输出文件名选项"
 		'
 		'OptionsGroupBoxFillPanel
 		'
@@ -191,7 +191,7 @@ Partial Class DownloadUserControl
 		Me.UseIdCheckBox.Name = "UseIdCheckBox"
 		Me.UseIdCheckBox.Size = New System.Drawing.Size(201, 17)
 		Me.UseIdCheckBox.TabIndex = 0
-		Me.UseIdCheckBox.Text = "Use item ID instead of given name"
+		Me.UseIdCheckBox.Text = "使用项目 ID 而不是给定名称"
 		Me.UseIdCheckBox.UseVisualStyleBackColor = True
 		'
 		'PrependTitleCheckBox
@@ -202,7 +202,7 @@ Partial Class DownloadUserControl
 		Me.PrependTitleCheckBox.Name = "PrependTitleCheckBox"
 		Me.PrependTitleCheckBox.Size = New System.Drawing.Size(117, 17)
 		Me.PrependTitleCheckBox.TabIndex = 1
-		Me.PrependTitleCheckBox.Text = "Prepend item title"
+		Me.PrependTitleCheckBox.Text = "在项目标题前添加前缀"
 		Me.PrependTitleCheckBox.UseVisualStyleBackColor = True
 		'
 		'AppendDateTimeCheckBox
@@ -213,7 +213,7 @@ Partial Class DownloadUserControl
 		Me.AppendDateTimeCheckBox.Name = "AppendDateTimeCheckBox"
 		Me.AppendDateTimeCheckBox.Size = New System.Drawing.Size(204, 17)
 		Me.AppendDateTimeCheckBox.TabIndex = 2
-		Me.AppendDateTimeCheckBox.Text = "Append the item update date-time"
+		Me.AppendDateTimeCheckBox.Text = "附加项目更新时间"
 		Me.AppendDateTimeCheckBox.UseVisualStyleBackColor = True
 		'
 		'ReplaceSpacesWithUnderscoresCheckBox
@@ -224,7 +224,7 @@ Partial Class DownloadUserControl
 		Me.ReplaceSpacesWithUnderscoresCheckBox.Name = "ReplaceSpacesWithUnderscoresCheckBox"
 		Me.ReplaceSpacesWithUnderscoresCheckBox.Size = New System.Drawing.Size(195, 17)
 		Me.ReplaceSpacesWithUnderscoresCheckBox.TabIndex = 3
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Text = "Replace spaces with underscores"
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Text = "将空格替换为下划线"
 		Me.ReplaceSpacesWithUnderscoresCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsUseDefaultsButton
@@ -233,7 +233,7 @@ Partial Class DownloadUserControl
 		Me.OptionsUseDefaultsButton.Name = "OptionsUseDefaultsButton"
 		Me.OptionsUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
 		Me.OptionsUseDefaultsButton.TabIndex = 4
-		Me.OptionsUseDefaultsButton.Text = "Use Defaults"
+		Me.OptionsUseDefaultsButton.Text = "使用默认值"
 		Me.OptionsUseDefaultsButton.UseVisualStyleBackColor = True
 		'
 		'ConvertToExpectedFileOrFolderCheckBox
@@ -244,8 +244,8 @@ Partial Class DownloadUserControl
 		Me.ConvertToExpectedFileOrFolderCheckBox.Name = "ConvertToExpectedFileOrFolderCheckBox"
 		Me.ConvertToExpectedFileOrFolderCheckBox.Size = New System.Drawing.Size(196, 17)
 		Me.ConvertToExpectedFileOrFolderCheckBox.TabIndex = 7
-		Me.ConvertToExpectedFileOrFolderCheckBox.Text = "Convert to expected file or folder"
-		Me.ToolTip1.SetToolTip(Me.ConvertToExpectedFileOrFolderCheckBox, "Example: Garry's Mod uses compressed GMA (LZMA) instead of GMA.")
+		Me.ConvertToExpectedFileOrFolderCheckBox.Text = "转换为预期的文件或文件夹"
+		Me.ToolTip1.SetToolTip(Me.ConvertToExpectedFileOrFolderCheckBox, "示例：Garry's Mod 使用压缩的 GMA（LZMA）而不是 GMA。")
 		Me.ConvertToExpectedFileOrFolderCheckBox.UseVisualStyleBackColor = True
 		'
 		'ExampleOutputFileNameLabel
@@ -255,7 +255,7 @@ Partial Class DownloadUserControl
 		Me.ExampleOutputFileNameLabel.Name = "ExampleOutputFileNameLabel"
 		Me.ExampleOutputFileNameLabel.Size = New System.Drawing.Size(141, 13)
 		Me.ExampleOutputFileNameLabel.TabIndex = 5
-		Me.ExampleOutputFileNameLabel.Text = "Example output file name:"
+		Me.ExampleOutputFileNameLabel.Text = "示例输出文件名："
 		'
 		'ExampleOutputFileNameTextBox
 		'
@@ -275,7 +275,7 @@ Partial Class DownloadUserControl
 		Me.CancelDownloadButton.Name = "CancelDownloadButton"
 		Me.CancelDownloadButton.Size = New System.Drawing.Size(120, 23)
 		Me.CancelDownloadButton.TabIndex = 11
-		Me.CancelDownloadButton.Text = "Cancel Download"
+		Me.CancelDownloadButton.Text = "取消下载"
 		Me.CancelDownloadButton.UseVisualStyleBackColor = True
 		'
 		'DownloadProgressBar
@@ -296,7 +296,7 @@ Partial Class DownloadUserControl
 		Me.OpenWorkshopPageButton.Name = "OpenWorkshopPageButton"
 		Me.OpenWorkshopPageButton.Size = New System.Drawing.Size(64, 23)
 		Me.OpenWorkshopPageButton.TabIndex = 2
-		Me.OpenWorkshopPageButton.Text = "Open"
+		Me.OpenWorkshopPageButton.Text = "打开"
 		Me.OpenWorkshopPageButton.UseVisualStyleBackColor = True
 		'
 		'DocumentsOutputPathTextBox
@@ -328,7 +328,7 @@ Partial Class DownloadUserControl
 		Me.DownloadedLabel.Name = "DownloadedLabel"
 		Me.DownloadedLabel.Size = New System.Drawing.Size(77, 13)
 		Me.DownloadedLabel.TabIndex = 14
-		Me.DownloadedLabel.Text = "Downloaded:"
+		Me.DownloadedLabel.Text = "已下载："
 		'
 		'GotoDownloadedItemButton
 		'
@@ -337,7 +337,7 @@ Partial Class DownloadUserControl
 		Me.GotoDownloadedItemButton.Name = "GotoDownloadedItemButton"
 		Me.GotoDownloadedItemButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoDownloadedItemButton.TabIndex = 16
-		Me.GotoDownloadedItemButton.Text = "Goto"
+		Me.GotoDownloadedItemButton.Text = "转到"
 		Me.GotoDownloadedItemButton.UseVisualStyleBackColor = True
 		'
 		'DownloadUserControlFillPanel
@@ -411,7 +411,7 @@ Partial Class DownloadUserControl
 		Me.UseInUnpackButton.Name = "UseInUnpackButton"
 		Me.UseInUnpackButton.Size = New System.Drawing.Size(90, 23)
 		Me.UseInUnpackButton.TabIndex = 17
-		Me.UseInUnpackButton.Text = "Use In Unpack"
+		Me.UseInUnpackButton.Text = "在解包中使用"
 		Me.UseInUnpackButton.UseVisualStyleBackColor = True
 		'
 		'Timer1
@@ -420,8 +420,6 @@ Partial Class DownloadUserControl
 		'
 		'DownloadUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.DownloadUserControlFillPanel)
 		Me.Name = "DownloadUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)

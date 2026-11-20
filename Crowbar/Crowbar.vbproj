@@ -9,11 +9,11 @@
     <OutputType>WinExe</OutputType>
     <StartupObject>Sub Main</StartupObject>
     <RootNamespace>Crowbar</RootNamespace>
-    <AssemblyName>Crowbar-Starfelll</AssemblyName>
+    <AssemblyName>Crowbar-TPP</AssemblyName>
     <MyType>WindowsFormsWithCustomSubMain</MyType>
     <OptionStrict>On</OptionStrict>
     <ApplicationIcon>Resources\crowbar_icon.ico</ApplicationIcon>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -50,6 +50,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+    <AppConfig>App.config</AppConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -160,6 +161,7 @@
     <Compile Include="Core\- General\BindingListEx.vb" />
     <Compile Include="Core\- General\BindingListExAutoSort.vb" />
     <Compile Include="Core\- General\FileManager.vb" />
+    <Compile Include="Core\GameModel\SourceCommon\SourceVtfHeader.vb" />
     <Compile Include="Core\- General\IntermediateExpression.vb" />
     <Compile Include="Core\- General\MathModule.vb" />
     <Compile Include="Core\- General\PropertyComparer.vb" />
@@ -186,6 +188,7 @@
     <Compile Include="Core\GameModel\SourceModel14\SourceMdlFileData\SourceMdlWeightingHeader14.vb" />
     <Compile Include="Core\GameModel\SourceModel14\SourceMdlFileData\SourceMdlWeighting14.vb" />
     <Compile Include="Core\GameModel\SourceModel14\SourceModel14.vb" />
+    <Compile Include="Core\GameModel\SourceModel10\DreamcastStudioTexture.vb" />
     <Compile Include="Core\GameModel\SourceModel14\SourceQcFile14.vb" />
     <Compile Include="Core\GameModel\SourceModel14\SourceSmdFile14.vb" />
     <Compile Include="Core\GamePackage\- Base\SourcePackageFile.vb" />
@@ -439,9 +442,11 @@
     <Compile Include="Core\GameModel\SourceModel49\SourceModel49.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\AniFile\AniFile49\SourceAniFile49.vb" />
     <Compile Include="Core\GameModel\SourceModel49\SourceMdlFile49.vb" />
+    <Compile Include="Core\GameModel\SourceModel49\Source49ExternalMesh.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFile.vb" />
     <Compile Include="Core\GameModel\SourceModel49\SourceQcFile49.vb" />
     <Compile Include="Core\GameModel\SourceModel49\SourceSmdFile49.vb" />
+    <Compile Include="Core\GameModel\SourceModel49\SourceDmxBodyModel49.vb" />
     <Compile Include="Core\GameModel\SourceModel49\SourceVrdFile49.vb" />
     <Compile Include="Core\GameModel\SourceModel49\SourceVtaFile49.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VtxFile\VtxFile07\SourceVtxFile07.vb" />
@@ -677,6 +682,7 @@
     <Compile Include="Widgets\Main Tabs\HelpUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Widgets\- Application\UiAppearance.vb" />
     <Compile Include="Widgets\- Application\MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -1008,6 +1014,7 @@
     <None Include="Resources\crowbar_icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <Folder Include="Core\GameModel\UncompiledFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />

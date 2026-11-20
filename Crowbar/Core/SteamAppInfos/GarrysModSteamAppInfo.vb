@@ -13,7 +13,7 @@ Public Class GarrysModSteamAppInfo
 		Me.Name = "Garry's Mod"
 		Me.UsesSteamUGC = True
 		Me.CanUseContentFolderOrFile = True
-		Me.ContentFileExtensionsAndDescriptions.Add("gma", "Garry's Mod GMA Files")
+		Me.ContentFileExtensionsAndDescriptions.Add("gma", "Garry's Mod GMA 文件")
 		Me.TagsControlType = GetType(GarrysModTagsUserControl)
 	End Sub
 
@@ -45,15 +45,15 @@ Public Class GarrysModSteamAppInfo
 			Try
 				If File.Exists(givenPathFileName) Then
 					File.Move(givenPathFileName, processedGivenPathFileName)
-					bw.ReportProgress(0, "Renamed """ + Path.GetFileName(givenPathFileName) + """ to """ + Path.GetFileName(processedGivenPathFileName) + """" + vbCrLf)
+					bw.ReportProgress(0, "已重命名：""" + Path.GetFileName(givenPathFileName) + """ to """ + Path.GetFileName(processedGivenPathFileName) + """" + vbCrLf)
 				End If
 			Catch ex As Exception
-				bw.ReportProgress(0, "Crowbar tried to rename the file """ + Path.GetFileName(givenPathFileName) + """ to """ + Path.GetFileName(processedGivenPathFileName) + """ but Windows gave this message: " + ex.Message)
+				bw.ReportProgress(0, "Crowbar 尝试重命名文件 """ + Path.GetFileName(givenPathFileName) + """ to """ + Path.GetFileName(processedGivenPathFileName) + """，但 Windows 返回了此消息：" + ex.Message)
 			End Try
 
 			processedPathFileName = Path.ChangeExtension(processedGivenPathFileName, ".gma")
 
-			bw.ReportProgress(0, "Decompressing downloaded Garry's Mod workshop file into a GMA file." + vbCrLf)
+			bw.ReportProgress(0, "正在将下载的 Garry's Mod 创意工坊文件解压为 GMA 文件。" + vbCrLf + "")
 			Dim lzmaExeProcess As New Process()
 			Try
 				lzmaExeProcess.StartInfo.UseShellExecute = False
@@ -72,19 +72,19 @@ Public Class GarrysModSteamAppInfo
 				lzmaExeProcess.Start()
 				lzmaExeProcess.WaitForExit()
 			Catch ex As Exception
-				Throw New System.Exception("Crowbar tried to decompress the file """ + processedGivenPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
+				Throw New System.Exception("Crowbar 尝试解压文件 """ + processedGivenPathFileName + """ to """ + processedPathFileName + """，但 Windows 返回了此消息：" + ex.Message)
 			Finally
 				lzmaExeProcess.Close()
-				bw.ReportProgress(0, "Decompress done." + vbCrLf)
+				bw.ReportProgress(0, "解压完成。" + vbCrLf + "")
 			End Try
 
 			Try
 				If File.Exists(processedGivenPathFileName) Then
 					File.Delete(processedGivenPathFileName)
-					bw.ReportProgress(0, "Deleted: """ + processedGivenPathFileName + """" + vbCrLf)
+					bw.ReportProgress(0, "已删除：""" + processedGivenPathFileName + """" + vbCrLf)
 				End If
 			Catch ex As Exception
-				bw.ReportProgress(0, "Crowbar tried to delete the file """ + processedGivenPathFileName + """ but Windows gave this message: " + ex.Message)
+				bw.ReportProgress(0, "Crowbar 尝试删除文件 """ + processedGivenPathFileName + """，但 Windows 返回了此消息：" + ex.Message)
 			End Try
 		End If
 
@@ -105,7 +105,7 @@ Public Class GarrysModSteamAppInfo
 		Try
 			FileManager.CreatePath(Me.theTempCrowbarPath)
 		Catch ex As Exception
-			Throw New System.Exception("Crowbar tried to create folder path """ + Me.theTempCrowbarPath + """, but Windows gave this message: " + ex.Message)
+			Throw New System.Exception("Crowbar 尝试创建文件夹路径 """ + Me.theTempCrowbarPath + """，但 Windows 返回了此消息：" + ex.Message)
 		End Try
 
 		Dim gmaPathFileName As String
@@ -137,7 +137,7 @@ Public Class GarrysModSteamAppInfo
 					garrysModGmadExe = garrysModBinGmadExe
 				End If
 				If garrysModGmadExe <> "" Then
-					Me.theBackgroundWorker.ReportProgress(0, "Creating GMA file via """ + garrysModGmadExe + """." + vbCrLf)
+					Me.theBackgroundWorker.ReportProgress(0, "正在通过 ""..."" 创建 GMA 文件" + garrysModGmadExe + """." + vbCrLf)
 					Dim addonJsonPathFileName As String = Me.CreateAddonJsonFile(item.ContentPathFolderOrFileName, item.Title, item.Tags)
 					If File.Exists(addonJsonPathFileName) Then
 						Dim gmadExeProcess As New Process()
@@ -168,7 +168,7 @@ Public Class GarrysModSteamAppInfo
 							gmadExeProcess.WaitForExit()
 							'gmadExeProcess.Close()
 						Catch ex As Exception
-							Throw New System.Exception("Crowbar tried to create the file """ + gmaPathFileName + """ with Garry's Mod gmad.exe, but got this error message: " + ex.Message)
+							Throw New System.Exception("Crowbar 尝试创建文件 """ + gmaPathFileName + """ 使用 Garry's Mod gmad.exe，但收到此错误消息：" + ex.Message)
 						Finally
 							gmadExeProcess.Close()
 							RemoveHandler gmadExeProcess.OutputDataReceived, AddressOf Me.myProcess_OutputDataReceived
@@ -179,10 +179,10 @@ Public Class GarrysModSteamAppInfo
 							'End If
 						End Try
 					Else
-						Throw New System.Exception("Crowbar tried to create the file """ + addonJsonPathFileName + """, but the file was not created.")
+						Throw New System.Exception("Crowbar 尝试创建文件 """ + addonJsonPathFileName + """，但文件未创建。")
 					End If
 				Else
-					Throw New System.Exception("Crowbar tried to run """ + garrysModGmadExe + """, but the file was not found. Note that Garry's Mod must be installed for this to work.")
+					Throw New System.Exception("Crowbar 尝试运行 """ + garrysModGmadExe + """，但未找到文件。请注意，此功能需要安装 Garry's Mod。")
 				End If
 			End If
 		Else
@@ -198,7 +198,7 @@ Public Class GarrysModSteamAppInfo
 			Try
 				Directory.Delete(Me.theTempCrowbarPath, True)
 			Catch ex As Exception
-				bw.ReportProgress(0, "Crowbar tried to delete its temp folder """ + Me.theTempCrowbarPath + """ but Windows gave this message: " + ex.Message)
+				bw.ReportProgress(0, "Crowbar 尝试删除其临时文件夹 """ + Me.theTempCrowbarPath + """，但 Windows 返回了此消息：" + ex.Message)
 			End Try
 		End If
 		Me.theTempCrowbarPath = ""
@@ -237,7 +237,7 @@ Public Class GarrysModSteamAppInfo
 				File.Delete(addonJsonPathFileName)
 			End If
 		Catch ex As Exception
-			Throw New System.Exception("Crowbar tried to delete an old temp file """ + addonJsonPathFileName + """ but Windows gave this message: " + ex.Message)
+			Throw New System.Exception("Crowbar 尝试删除旧临时文件 """ + addonJsonPathFileName + """，但 Windows 返回了此消息：" + ex.Message)
 		End Try
 
 		' Remove the "Addon" tag because it should not go into the json file.

@@ -270,21 +270,13 @@ Public Class SourceModel48
 	Public Overrides Function WriteVrdFile(ByVal vrdPathFileName As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, vrdPathFileName)
-		Me.WriteTextFile(vrdPathFileName, AddressOf Me.WriteVrdFile)
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, vrdPathFileName)
-
-		Return status
+		Return Me.WriteTextOutput(vrdPathFileName, AddressOf Me.WriteVrdFile)
 	End Function
 
 	Public Overrides Function WriteDeclareSequenceQciFile(ByVal declareSequenceQciPathFileName As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, declareSequenceQciPathFileName)
-		Me.WriteTextFile(declareSequenceQciPathFileName, AddressOf Me.WriteDeclareSequenceQciFile)
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, declareSequenceQciPathFileName)
-
-		Return status
+		Return Me.WriteTextOutput(declareSequenceQciPathFileName, AddressOf Me.WriteDeclareSequenceQciFile)
 	End Function
 
 	Public Overrides Function WriteAccessedBytesDebugFiles(ByVal debugPath As String) As AppEnums.StatusMessage
@@ -615,7 +607,7 @@ Public Class SourceModel48
 			End If
 			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, command)
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		Finally
 		End Try
 	End Sub

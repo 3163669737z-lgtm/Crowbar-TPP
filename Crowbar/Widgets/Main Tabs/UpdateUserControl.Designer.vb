@@ -79,7 +79,7 @@ Partial Class UpdateUserControl
 		Me.CheckForUpdateGroupBox.Size = New System.Drawing.Size(776, 365)
 		Me.CheckForUpdateGroupBox.TabIndex = 14
 		Me.CheckForUpdateGroupBox.TabStop = False
-		Me.CheckForUpdateGroupBox.Text = "Check for Update - Check for latest version and get changelog"
+		Me.CheckForUpdateGroupBox.Text = "检查更新 - 检查最新版本并获取更新日志"
 		'
 		'Panel1
 		'
@@ -111,7 +111,7 @@ Partial Class UpdateUserControl
 		Me.CurrentVersionLabel.Name = "CurrentVersionLabel"
 		Me.CurrentVersionLabel.Size = New System.Drawing.Size(114, 13)
 		Me.CurrentVersionLabel.TabIndex = 14
-		Me.CurrentVersionLabel.Text = "Current Version: 0.00"
+		Me.CurrentVersionLabel.Text = "当前版本：0.00"
 		'
 		'CheckForUpdateTopPanel
 		'
@@ -131,7 +131,7 @@ Partial Class UpdateUserControl
 		Me.CheckForUpdateButton.Name = "CheckForUpdateButton"
 		Me.CheckForUpdateButton.Size = New System.Drawing.Size(69, 23)
 		Me.CheckForUpdateButton.TabIndex = 1
-		Me.CheckForUpdateButton.Text = "Check"
+		Me.CheckForUpdateButton.Text = "检查"
 		Me.CheckForUpdateButton.UseVisualStyleBackColor = True
 		'
 		'CheckForUpdateTextBox
@@ -164,7 +164,7 @@ Partial Class UpdateUserControl
 		Me.CancelCheckButton.Name = "CancelCheckButton"
 		Me.CancelCheckButton.Size = New System.Drawing.Size(69, 23)
 		Me.CancelCheckButton.TabIndex = 11
-		Me.CancelCheckButton.Text = "Cancel"
+		Me.CancelCheckButton.Text = "取消"
 		Me.CancelCheckButton.UseVisualStyleBackColor = True
 		'
 		'DownloadGroupBox
@@ -182,7 +182,7 @@ Partial Class UpdateUserControl
 		Me.DownloadGroupBox.Size = New System.Drawing.Size(776, 76)
 		Me.DownloadGroupBox.TabIndex = 8
 		Me.DownloadGroupBox.TabStop = False
-		Me.DownloadGroupBox.Text = "Download - Download the new version (compressed file) for manually updating"
+		Me.DownloadGroupBox.Text = "下载 - 下载新版本（压缩文件）以手动更新"
 		'
 		'DownloadFolderTextBox
 		'
@@ -211,7 +211,7 @@ Partial Class UpdateUserControl
 		Me.BrowseForDownloadFolderButton.Name = "BrowseForDownloadFolderButton"
 		Me.BrowseForDownloadFolderButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForDownloadFolderButton.TabIndex = 8
-		Me.BrowseForDownloadFolderButton.Text = "Browse..."
+		Me.BrowseForDownloadFolderButton.Text = "浏览..."
 		Me.BrowseForDownloadFolderButton.UseVisualStyleBackColor = True
 		'
 		'DownloadFolderLabel
@@ -221,7 +221,7 @@ Partial Class UpdateUserControl
 		Me.DownloadFolderLabel.Name = "DownloadFolderLabel"
 		Me.DownloadFolderLabel.Size = New System.Drawing.Size(98, 13)
 		Me.DownloadFolderLabel.TabIndex = 9
-		Me.DownloadFolderLabel.Text = "Download folder:"
+		Me.DownloadFolderLabel.Text = "下载文件夹："
 		'
 		'GotoDownloadFileButton
 		'
@@ -231,7 +231,7 @@ Partial Class UpdateUserControl
 		Me.GotoDownloadFileButton.Name = "GotoDownloadFileButton"
 		Me.GotoDownloadFileButton.Size = New System.Drawing.Size(75, 23)
 		Me.GotoDownloadFileButton.TabIndex = 13
-		Me.GotoDownloadFileButton.Text = "Goto"
+		Me.GotoDownloadFileButton.Text = "转到"
 		Me.GotoDownloadFileButton.UseVisualStyleBackColor = True
 		'
 		'CancelDownloadButton
@@ -242,7 +242,7 @@ Partial Class UpdateUserControl
 		Me.CancelDownloadButton.Name = "CancelDownloadButton"
 		Me.CancelDownloadButton.Size = New System.Drawing.Size(75, 23)
 		Me.CancelDownloadButton.TabIndex = 12
-		Me.CancelDownloadButton.Text = "Cancel"
+		Me.CancelDownloadButton.Text = "取消"
 		Me.CancelDownloadButton.UseVisualStyleBackColor = True
 		'
 		'DownloadButton
@@ -251,7 +251,7 @@ Partial Class UpdateUserControl
 		Me.DownloadButton.Name = "DownloadButton"
 		Me.DownloadButton.Size = New System.Drawing.Size(75, 23)
 		Me.DownloadButton.TabIndex = 2
-		Me.DownloadButton.Text = "Download"
+		Me.DownloadButton.Text = "下载"
 		Me.DownloadButton.UseVisualStyleBackColor = True
 		'
 		'UpdateGroupBox
@@ -269,7 +269,7 @@ Partial Class UpdateUserControl
 		Me.UpdateGroupBox.Size = New System.Drawing.Size(776, 95)
 		Me.UpdateGroupBox.TabIndex = 7
 		Me.UpdateGroupBox.TabStop = False
-		Me.UpdateGroupBox.Text = "Update - Update current version to latest version - Crowbar will close and reopen" &
+		Me.UpdateGroupBox.Text = "更新 - 将当前版本更新到最新版本 - Crowbar 将关闭并重新打开" &
 	""
 		'
 		'CancelUpdateButton
@@ -280,7 +280,7 @@ Partial Class UpdateUserControl
 		Me.CancelUpdateButton.Name = "CancelUpdateButton"
 		Me.CancelUpdateButton.Size = New System.Drawing.Size(75, 23)
 		Me.CancelUpdateButton.TabIndex = 13
-		Me.CancelUpdateButton.Text = "Cancel"
+		Me.CancelUpdateButton.Text = "取消"
 		Me.CancelUpdateButton.UseVisualStyleBackColor = True
 		'
 		'BrowseForUpdateFolderButton
@@ -290,7 +290,7 @@ Partial Class UpdateUserControl
 		Me.BrowseForUpdateFolderButton.Name = "BrowseForUpdateFolderButton"
 		Me.BrowseForUpdateFolderButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForUpdateFolderButton.TabIndex = 10
-		Me.BrowseForUpdateFolderButton.Text = "Browse..."
+		Me.BrowseForUpdateFolderButton.Text = "浏览..."
 		Me.BrowseForUpdateFolderButton.UseVisualStyleBackColor = True
 		'
 		'UpdateFolderTextBox
@@ -319,7 +319,7 @@ Partial Class UpdateUserControl
 		Me.UpdateButton.Name = "UpdateButton"
 		Me.UpdateButton.Size = New System.Drawing.Size(75, 23)
 		Me.UpdateButton.TabIndex = 0
-		Me.UpdateButton.Text = "Update"
+		Me.UpdateButton.Text = "更新"
 		Me.UpdateButton.UseVisualStyleBackColor = True
 		'
 		'UpdateToNewPathCheckBox
@@ -329,7 +329,7 @@ Partial Class UpdateUserControl
 		Me.UpdateToNewPathCheckBox.Name = "UpdateToNewPathCheckBox"
 		Me.UpdateToNewPathCheckBox.Size = New System.Drawing.Size(254, 17)
 		Me.UpdateToNewPathCheckBox.TabIndex = 4
-		Me.UpdateToNewPathCheckBox.Text = "Update to new folder (keep current version):"
+		Me.UpdateToNewPathCheckBox.Text = "更新到新文件夹（保留当前版本）："
 		Me.UpdateToNewPathCheckBox.UseVisualStyleBackColor = True
 		'
 		'UpdateCopySettingsCheckBox
@@ -341,13 +341,11 @@ Partial Class UpdateUserControl
 		Me.UpdateCopySettingsCheckBox.Name = "UpdateCopySettingsCheckBox"
 		Me.UpdateCopySettingsCheckBox.Size = New System.Drawing.Size(282, 17)
 		Me.UpdateCopySettingsCheckBox.TabIndex = 3
-		Me.UpdateCopySettingsCheckBox.Text = "Copy settings from current version to new version"
+		Me.UpdateCopySettingsCheckBox.Text = "将当前版本的设置复制到新版本"
 		Me.UpdateCopySettingsCheckBox.UseVisualStyleBackColor = True
 		'
 		'UpdateUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.UpdateUserControlFillPanel)
 		Me.Name = "UpdateUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)

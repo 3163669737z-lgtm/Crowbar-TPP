@@ -149,7 +149,7 @@ Partial Class CodenameCureTagsUserControl
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(43, 13)
 		Me.Label2.TabIndex = 11
-		Me.Label2.Text = "Levels: "
+		Me.Label2.Text = "关卡："
 		'
 		'Label3
 		'
@@ -158,12 +158,12 @@ Partial Class CodenameCureTagsUserControl
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(42, 13)
 		Me.Label3.TabIndex = 12
-		Me.Label3.Text = "Mods: "
+		Me.Label3.Text = "模组："
 		'
 		'CodenameCureTagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.Controls.Add(Me.Label3)
 		Me.Controls.Add(Me.Label2)
 		Me.Controls.Add(Me.MiscellaneousRadioButton)

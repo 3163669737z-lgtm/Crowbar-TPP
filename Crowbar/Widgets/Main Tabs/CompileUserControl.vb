@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Text
 
 Public Class CompileUserControl
@@ -170,7 +170,7 @@ Public Class CompileUserControl
 	Private Sub BrowseForQcPathFolderOrFileNameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForQcPathFolderOrFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 
-		openFileWdw.Title = "Open the file or folder you want to compile"
+		openFileWdw.Title = "打开要编译的文件或文件夹"
 		If File.Exists(TheApp.Settings.CompileQcPathFileName) Then
 			openFileWdw.InitialDirectory = FileManager.GetPath(TheApp.Settings.CompileQcPathFileName)
 			'ElseIf Directory.Exists(TheApp.Settings.CompileQcPathFileName) Then
@@ -183,14 +183,14 @@ Public Class CompileUserControl
 		End If
 		openFileWdw.FileName = "[Folder Selection]"
 		'openFileWdw.Filter = "Source Engine QC Files (*.qc)|*.qc|All Files (*.*)|*.*"
-		openFileWdw.Filter = "Source Engine QC Files (*.qc)|*.qc"
+		openFileWdw.Filter = "Source 引擎 QC 文件 (*.qc)|*.qc"
 		openFileWdw.AddExtension = True
 		openFileWdw.CheckFileExists = False
 		openFileWdw.Multiselect = False
 		'openFileWdw.Multiselect = True
 		openFileWdw.ValidateNames = True
 
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -257,7 +257,7 @@ Public Class CompileUserControl
 	'       outputPathWdw.Multiselect = False
 	'       outputPathWdw.ValidateNames = False
 
-	'       If outputPathWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+	'       If outputPathWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 	'           ' Allow dialog window to completely disappear.
 	'           Application.DoEvents()
 
@@ -449,14 +449,14 @@ Public Class CompileUserControl
 		Dim statusText As String
 
 		If e.Cancelled Then
-			statusText = "Compile canceled"
+			statusText = "编译已取消"
 		Else
 			Dim compileResultInfo As CompilerOutputInfo
 			compileResultInfo = CType(e.Result, CompilerOutputInfo)
 			If compileResultInfo.theStatus = StatusMessage.Error Then
-				statusText = "Compile failed; check the log"
+				statusText = "编译失败；请查看日志"
 			Else
-				statusText = "Compile succeeded"
+				statusText = "编译成功"
 			End If
 			Me.UpdateCompiledRelativePathFileNames(compileResultInfo.theCompiledRelativePathFileNames)
 		End If
@@ -532,7 +532,7 @@ Public Class CompileUserControl
 			'      does not show the path name bar nor does it scroll to the selected folder in the folder tree view.
 			Dim outputPathWdw As New OpenFileDialog()
 
-			outputPathWdw.Title = "Open the folder you want as Output Folder"
+			outputPathWdw.Title = "打开要用作输出文件夹的文件夹"
 			'If Directory.Exists(TheApp.Settings.CompileOutputFullPath) Then
 			'	outputPathWdw.InitialDirectory = TheApp.Settings.CompileOutputFullPath
 			'Else
@@ -553,7 +553,7 @@ Public Class CompileUserControl
 			outputPathWdw.Multiselect = False
 			outputPathWdw.ValidateNames = False
 
-			If outputPathWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+			If outputPathWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 				' Allow dialog window to completely disappear.
 				Application.DoEvents()
 
@@ -594,9 +594,9 @@ Public Class CompileUserControl
 		Dim gameSetup As GameSetup
 		gameSetup = TheApp.Settings.GameSetups(TheApp.Settings.CompileGameSetupSelectedIndex)
 		If Me.CompilerOptionDefineBonesCheckBox.Checked AndAlso gameSetup.GameEngine = GameEngine.Source Then
-			Me.CompileButton.Text = "&Compile DefineBones"
+			Me.CompileButton.Text = "编译 DefineBones"
 		Else
-			Me.CompileButton.Text = "&Compile"
+			Me.CompileButton.Text = "编译"
 		End If
 	End Sub
 

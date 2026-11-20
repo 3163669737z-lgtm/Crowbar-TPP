@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class PackUserControl
 	Inherits BaseUserControl
 
@@ -35,7 +35,7 @@ Partial Class PackUserControl
 		Me.Label6 = New System.Windows.Forms.Label()
 		Me.InputPathFileNameTextBox = New Crowbar.TextBoxEx()
 		Me.BrowseForInputFolderOrFileNameButton = New System.Windows.Forms.Button()
-		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
+		Me.Options_LogSplitContainer = New Crowbar.SplitContainerEx()
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
 		Me.PackerOptionsPanel = New System.Windows.Forms.Panel()
@@ -53,7 +53,7 @@ Partial Class PackUserControl
 		Me.DirectPackerOptionsLabel = New System.Windows.Forms.Label()
 		Me.DirectPackerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.PackerOptionsTextBox = New System.Windows.Forms.TextBox()
-		Me.PackerOptionsTextBoxMinScrollPanel = New System.Windows.Forms.Panel()
+		Me.PackerOptionsContentPanel = New System.Windows.Forms.Panel()
 		Me.LogRichTextBox = New Crowbar.RichTextBoxEx()
 		Me.PackButtonsPanel = New System.Windows.Forms.Panel()
 		Me.PackButton = New System.Windows.Forms.Button()
@@ -72,6 +72,7 @@ Partial Class PackUserControl
 		Me.Options_LogSplitContainer.SuspendLayout()
 		Me.OptionsGroupBox.SuspendLayout()
 		Me.OptionsGroupBoxFillPanel.SuspendLayout()
+		Me.PackerOptionsContentPanel.SuspendLayout()
 		Me.PackerOptionsPanel.SuspendLayout()
 		Me.GmaPanel.SuspendLayout()
 		Me.PackButtonsPanel.SuspendLayout()
@@ -105,7 +106,7 @@ Partial Class PackUserControl
 		Me.GotoOutputPathButton.Name = "GotoOutputPathButton"
 		Me.GotoOutputPathButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoOutputPathButton.TabIndex = 27
-		Me.GotoOutputPathButton.Text = "Goto"
+		Me.GotoOutputPathButton.Text = "转到"
 		Me.GotoOutputPathButton.UseVisualStyleBackColor = True
 		'
 		'BrowseForOutputPathButton
@@ -115,7 +116,7 @@ Partial Class PackUserControl
 		Me.BrowseForOutputPathButton.Name = "BrowseForOutputPathButton"
 		Me.BrowseForOutputPathButton.Size = New System.Drawing.Size(64, 23)
 		Me.BrowseForOutputPathButton.TabIndex = 26
-		Me.BrowseForOutputPathButton.Text = "Browse..."
+		Me.BrowseForOutputPathButton.Text = "浏览..."
 		Me.BrowseForOutputPathButton.UseVisualStyleBackColor = True
 		'
 		'OutputPathTextBox
@@ -166,7 +167,7 @@ Partial Class PackUserControl
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(62, 13)
 		Me.Label1.TabIndex = 22
-		Me.Label1.Text = "Output to:"
+		Me.Label1.Text = "输出到："
 		'
 		'GotoInputPathButton
 		'
@@ -175,7 +176,7 @@ Partial Class PackUserControl
 		Me.GotoInputPathButton.Name = "GotoInputPathButton"
 		Me.GotoInputPathButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoInputPathButton.TabIndex = 21
-		Me.GotoInputPathButton.Text = "Goto"
+		Me.GotoInputPathButton.Text = "转到"
 		Me.GotoInputPathButton.UseVisualStyleBackColor = True
 		'
 		'Label6
@@ -185,7 +186,7 @@ Partial Class PackUserControl
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(74, 13)
 		Me.Label6.TabIndex = 17
-		Me.Label6.Text = "Folder input:"
+		Me.Label6.Text = "文件夹输入："
 		'
 		'InputPathFileNameTextBox
 		'
@@ -204,7 +205,7 @@ Partial Class PackUserControl
 		Me.BrowseForInputFolderOrFileNameButton.Name = "BrowseForInputFolderOrFileNameButton"
 		Me.BrowseForInputFolderOrFileNameButton.Size = New System.Drawing.Size(64, 23)
 		Me.BrowseForInputFolderOrFileNameButton.TabIndex = 20
-		Me.BrowseForInputFolderOrFileNameButton.Text = "Browse..."
+		Me.BrowseForInputFolderOrFileNameButton.Text = "浏览..."
 		Me.BrowseForInputFolderOrFileNameButton.UseVisualStyleBackColor = True
 		'
 		'Options_LogSplitContainer
@@ -241,16 +242,16 @@ Partial Class PackUserControl
 		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 260)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
-		Me.OptionsGroupBox.Text = "Options"
+		Me.OptionsGroupBox.Text = "选项"
 		'
 		'OptionsGroupBoxFillPanel
 		'
 		Me.OptionsGroupBoxFillPanel.AutoScroll = True
-		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.PackerOptionsPanel)
-		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectPackerOptionsLabel)
-		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectPackerOptionsTextBox)
-		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.PackerOptionsTextBox)
-		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.PackerOptionsTextBoxMinScrollPanel)
+		Me.PackerOptionsContentPanel.Controls.Add(Me.PackerOptionsPanel)
+		Me.PackerOptionsContentPanel.Controls.Add(Me.DirectPackerOptionsLabel)
+		Me.PackerOptionsContentPanel.Controls.Add(Me.DirectPackerOptionsTextBox)
+		Me.PackerOptionsContentPanel.Controls.Add(Me.PackerOptionsTextBox)
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.PackerOptionsContentPanel)
 		Me.OptionsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
 		Me.OptionsGroupBoxFillPanel.Name = "OptionsGroupBoxFillPanel"
@@ -281,7 +282,7 @@ Partial Class PackUserControl
 		Me.IgnoreWhitelistWarningsCheckBox.Name = "IgnoreWhitelistWarningsCheckBox"
 		Me.IgnoreWhitelistWarningsCheckBox.Size = New System.Drawing.Size(158, 17)
 		Me.IgnoreWhitelistWarningsCheckBox.TabIndex = 16
-		Me.IgnoreWhitelistWarningsCheckBox.Text = "Ignore whitelist warnings"
+		Me.IgnoreWhitelistWarningsCheckBox.Text = "忽略白名单警告"
 		Me.IgnoreWhitelistWarningsCheckBox.UseVisualStyleBackColor = True
 		Me.IgnoreWhitelistWarningsCheckBox.Visible = False
 		'
@@ -292,7 +293,7 @@ Partial Class PackUserControl
 		Me.MultiFileVpkCheckBox.Name = "MultiFileVpkCheckBox"
 		Me.MultiFileVpkCheckBox.Size = New System.Drawing.Size(125, 17)
 		Me.MultiFileVpkCheckBox.TabIndex = 13
-		Me.MultiFileVpkCheckBox.Text = "Write multi-file VPK"
+		Me.MultiFileVpkCheckBox.Text = "写入多文件 VPK"
 		Me.MultiFileVpkCheckBox.UseVisualStyleBackColor = True
 		Me.MultiFileVpkCheckBox.Visible = False
 		'
@@ -303,7 +304,7 @@ Partial Class PackUserControl
 		Me.PackOptionsUseDefaultsButton.Name = "PackOptionsUseDefaultsButton"
 		Me.PackOptionsUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
 		Me.PackOptionsUseDefaultsButton.TabIndex = 12
-		Me.PackOptionsUseDefaultsButton.Text = "Use Defaults"
+		Me.PackOptionsUseDefaultsButton.Text = "使用默认值"
 		Me.PackOptionsUseDefaultsButton.UseVisualStyleBackColor = True
 		'
 		'LogFileCheckBox
@@ -313,7 +314,7 @@ Partial Class PackUserControl
 		Me.LogFileCheckBox.Name = "LogFileCheckBox"
 		Me.LogFileCheckBox.Size = New System.Drawing.Size(116, 17)
 		Me.LogFileCheckBox.TabIndex = 4
-		Me.LogFileCheckBox.Text = "Write log to a file"
+		Me.LogFileCheckBox.Text = "将日志写入文件"
 		Me.LogFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'Label3
@@ -323,7 +324,7 @@ Partial Class PackUserControl
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(165, 13)
 		Me.Label3.TabIndex = 0
-		Me.Label3.Text = "Game that has the packer tool:"
+		Me.Label3.Text = "包含打包工具的游戏："
 		'
 		'GameSetupComboBox
 		'
@@ -343,7 +344,7 @@ Partial Class PackUserControl
 		Me.SetUpGamesButton.Name = "SetUpGamesButton"
 		Me.SetUpGamesButton.Size = New System.Drawing.Size(90, 23)
 		Me.SetUpGamesButton.TabIndex = 2
-		Me.SetUpGamesButton.Text = "Set Up Games"
+		Me.SetUpGamesButton.Text = "设置游戏"
 		Me.SetUpGamesButton.UseVisualStyleBackColor = True
 		'
 		'GmaPanel
@@ -371,7 +372,7 @@ Partial Class PackUserControl
 		Me.GmaTitleLabel.Name = "GmaTitleLabel"
 		Me.GmaTitleLabel.Size = New System.Drawing.Size(32, 13)
 		Me.GmaTitleLabel.TabIndex = 4
-		Me.GmaTitleLabel.Text = "Title:"
+		Me.GmaTitleLabel.Text = "标题："
 		'
 		'GmaGarrysModTagsUserControl
 		'
@@ -388,7 +389,7 @@ Partial Class PackUserControl
 		Me.DirectPackerOptionsLabel.Name = "DirectPackerOptionsLabel"
 		Me.DirectPackerOptionsLabel.Size = New System.Drawing.Size(764, 13)
 		Me.DirectPackerOptionsLabel.TabIndex = 16
-		Me.DirectPackerOptionsLabel.Text = "Direct entry of command-line options (in case they are not included above):"
+		Me.DirectPackerOptionsLabel.Text = "直接输入命令行选项（如果上面未包含）："
 		'
 		'DirectPackerOptionsTextBox
 		'
@@ -411,12 +412,12 @@ Partial Class PackUserControl
 		Me.PackerOptionsTextBox.Size = New System.Drawing.Size(764, 37)
 		Me.PackerOptionsTextBox.TabIndex = 18
 		'
-		'PackerOptionsTextBoxMinScrollPanel
+		'PackerOptionsContentPanel
 		'
-		Me.PackerOptionsTextBoxMinScrollPanel.Location = New System.Drawing.Point(0, 198)
-		Me.PackerOptionsTextBoxMinScrollPanel.Name = "PackerOptionsTextBoxMinScrollPanel"
-		Me.PackerOptionsTextBoxMinScrollPanel.Size = New System.Drawing.Size(764, 37)
-		Me.PackerOptionsTextBoxMinScrollPanel.TabIndex = 42
+		Me.PackerOptionsContentPanel.Dock = System.Windows.Forms.DockStyle.Top
+		Me.PackerOptionsContentPanel.Name = "PackerOptionsContentPanel"
+		Me.PackerOptionsContentPanel.Size = New System.Drawing.Size(764, 235)
+		Me.PackerOptionsContentPanel.TabIndex = 42
 		'
 		'LogRichTextBox
 		'
@@ -450,7 +451,7 @@ Partial Class PackUserControl
 		Me.PackButton.Name = "PackButton"
 		Me.PackButton.Size = New System.Drawing.Size(120, 23)
 		Me.PackButton.TabIndex = 1
-		Me.PackButton.Text = "Pack"
+		Me.PackButton.Text = "打包"
 		Me.PackButton.UseVisualStyleBackColor = True
 		'
 		'SkipCurrentFolderButton
@@ -460,7 +461,7 @@ Partial Class PackUserControl
 		Me.SkipCurrentFolderButton.Name = "SkipCurrentFolderButton"
 		Me.SkipCurrentFolderButton.Size = New System.Drawing.Size(120, 23)
 		Me.SkipCurrentFolderButton.TabIndex = 2
-		Me.SkipCurrentFolderButton.Text = "Skip Current Folder"
+		Me.SkipCurrentFolderButton.Text = "跳过当前文件夹"
 		Me.SkipCurrentFolderButton.UseVisualStyleBackColor = True
 		'
 		'CancelPackButton
@@ -470,7 +471,7 @@ Partial Class PackUserControl
 		Me.CancelPackButton.Name = "CancelPackButton"
 		Me.CancelPackButton.Size = New System.Drawing.Size(120, 23)
 		Me.CancelPackButton.TabIndex = 3
-		Me.CancelPackButton.Text = "Cancel Pack"
+		Me.CancelPackButton.Text = "取消打包"
 		Me.CancelPackButton.UseVisualStyleBackColor = True
 		'
 		'UseAllInPublishButton
@@ -480,7 +481,7 @@ Partial Class PackUserControl
 		Me.UseAllInPublishButton.Name = "UseAllInPublishButton"
 		Me.UseAllInPublishButton.Size = New System.Drawing.Size(120, 23)
 		Me.UseAllInPublishButton.TabIndex = 4
-		Me.UseAllInPublishButton.Text = "Use All in Publish"
+		Me.UseAllInPublishButton.Text = "在发布中使用全部"
 		Me.UseAllInPublishButton.UseVisualStyleBackColor = True
 		Me.UseAllInPublishButton.Visible = False
 		'
@@ -513,7 +514,7 @@ Partial Class PackUserControl
 		Me.UseInPublishButton.Name = "UseInPublishButton"
 		Me.UseInPublishButton.Size = New System.Drawing.Size(89, 23)
 		Me.UseInPublishButton.TabIndex = 3
-		Me.UseInPublishButton.Text = "Use in Publish"
+		Me.UseInPublishButton.Text = "在发布中使用"
 		Me.UseInPublishButton.UseVisualStyleBackColor = True
 		Me.UseInPublishButton.Visible = False
 		'
@@ -524,13 +525,11 @@ Partial Class PackUserControl
 		Me.GotoPackedFileButton.Name = "GotoPackedFileButton"
 		Me.GotoPackedFileButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoPackedFileButton.TabIndex = 4
-		Me.GotoPackedFileButton.Text = "Goto"
+		Me.GotoPackedFileButton.Text = "转到"
 		Me.GotoPackedFileButton.UseVisualStyleBackColor = True
 		'
 		'PackUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.Panel1)
 		Me.Name = "PackUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)
@@ -541,6 +540,8 @@ Partial Class PackUserControl
 		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.Options_LogSplitContainer.ResumeLayout(False)
 		Me.OptionsGroupBox.ResumeLayout(False)
+		Me.PackerOptionsContentPanel.ResumeLayout(False)
+		Me.PackerOptionsContentPanel.PerformLayout()
 		Me.OptionsGroupBoxFillPanel.ResumeLayout(False)
 		Me.OptionsGroupBoxFillPanel.PerformLayout()
 		Me.PackerOptionsPanel.ResumeLayout(False)
@@ -588,7 +589,7 @@ Partial Class PackUserControl
 	Friend WithEvents PackButtonsPanel As Panel
 	Friend WithEvents PostPackPanel As Panel
 	Friend WithEvents OptionsGroupBoxFillPanel As Panel
-	Friend WithEvents PackerOptionsTextBoxMinScrollPanel As Panel
+	Friend WithEvents PackerOptionsContentPanel As Panel
 	Friend WithEvents GmaTitleLabel As Label
 	Friend WithEvents GmaTitleTextBox As TextBoxEx
 	Friend WithEvents GmaGarrysModTagsUserControl As GarrysModTagsUserControl

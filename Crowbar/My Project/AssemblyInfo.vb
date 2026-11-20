@@ -10,10 +10,10 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Crowbar-Starfelll")>
+<Assembly: AssemblyTitle("Crowbar-TPP")>
 <Assembly: AssemblyDescription("Source Engine Modding Tool")>
 <Assembly: AssemblyCompany("ZeqMacaw,Starfelll")>
-<Assembly: AssemblyProduct("Crowbar-Starfelll")>
+<Assembly: AssemblyProduct("Crowbar-TPP")>
 <Assembly: AssemblyCopyright("Copyright 2024")>
 <Assembly: AssemblyTrademark("")> 
 

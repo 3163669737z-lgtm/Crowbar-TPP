@@ -37,7 +37,7 @@ Public Class SourceMdlFile48
 
 		Me.theMdlFileData.checksum = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.name = Me.theInputFileReader.ReadChars(64)
+		Me.theMdlFileData.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 		Me.theMdlFileData.theModelName = CStr(Me.theMdlFileData.name).Trim(Chr(0))
 
 		Me.theMdlFileData.fileSize = Me.theInputFileReader.ReadInt32()
@@ -332,7 +332,7 @@ Public Class SourceMdlFile48
 					Dim aBone As New SourceMdlBone()
 
 					If Me.theMdlFileData.version = 10 Then
-						aBone.name = Me.theInputFileReader.ReadChars(32)
+						aBone.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 32)
 						aBone.theName = aBone.name
 						aBone.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(aBone.theName)
 						aBone.parentBoneIndex = Me.theInputFileReader.ReadInt32()
@@ -742,7 +742,7 @@ Public Class SourceMdlFile48
 				Dim anAttachment As New SourceMdlAttachment()
 
 				If Me.theMdlFileData.version = 10 Then
-					anAttachment.name = Me.theInputFileReader.ReadChars(32)
+					anAttachment.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 32)
 					anAttachment.theName = anAttachment.name
 					anAttachment.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(anAttachment.theName)
 					anAttachment.type = Me.theInputFileReader.ReadInt32()
@@ -2264,9 +2264,7 @@ Public Class SourceMdlFile48
 			anEvent.cycle = Me.theInputFileReader.ReadSingle()
 			anEvent.eventIndex = Me.theInputFileReader.ReadInt32()
 			anEvent.eventType = Me.theInputFileReader.ReadInt32()
-			For x As Integer = 0 To anEvent.options.Length - 1
-				anEvent.options(x) = Me.theInputFileReader.ReadChar()
-			Next
+			anEvent.options = FileManager.ReadFixedModelChars(Me.theInputFileReader, anEvent.options.Length)
 			anEvent.nameOffset = Me.theInputFileReader.ReadInt32()
 			aSeqDesc.theEvents.Add(anEvent)
 
@@ -2694,7 +2692,7 @@ Public Class SourceMdlFile48
 
 				Dim aModel As New SourceMdlModel()
 
-				aModel.name = Me.theInputFileReader.ReadChars(64)
+				aModel.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 				aModel.type = Me.theInputFileReader.ReadInt32()
 				aModel.boundingRadius = Me.theInputFileReader.ReadSingle()
 				aModel.meshCount = Me.theInputFileReader.ReadInt32()
@@ -2858,7 +2856,7 @@ Public Class SourceMdlFile48
 				anEyeball.eyeballIsNonFacs = Me.theInputFileReader.ReadByte()
 
 				For x As Integer = 0 To anEyeball.unused3.Length - 1
-					anEyeball.unused3(x) = Me.theInputFileReader.ReadChar()
+					anEyeball.unused3(x) = ChrW(Me.theInputFileReader.ReadByte())
 				Next
 				For x As Integer = 0 To anEyeball.unused4.Length - 1
 					anEyeball.unused4(x) = Me.theInputFileReader.ReadInt32()
@@ -2947,7 +2945,7 @@ Public Class SourceMdlFile48
 			aFlex.flexDescPartnerIndex = Me.theInputFileReader.ReadInt32()
 			aFlex.vertAnimType = Me.theInputFileReader.ReadByte()
 			For x As Integer = 0 To aFlex.unusedChar.Length - 1
-				aFlex.unusedChar(x) = Me.theInputFileReader.ReadChar()
+				aFlex.unusedChar(x) = ChrW(Me.theInputFileReader.ReadByte())
 			Next
 			For x As Integer = 0 To aFlex.unused.Length - 1
 				aFlex.unused(x) = Me.theInputFileReader.ReadInt32()
@@ -3697,15 +3695,14 @@ Public Class SourceMdlFile48
 		If Me.theMdlFileData.keyValueSize > 0 Then
 			Dim fileOffsetStart As Long
 			Dim fileOffsetEnd As Long
-			Dim nullChar As Char
 
 			Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.keyValueOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 			'NOTE: Use -1 to drop the null terminator character.
-			Me.theMdlFileData.theKeyValuesText = Me.theInputFileReader.ReadChars(Me.theMdlFileData.keyValueSize - 1)
-			'NOTE: Read the null terminator character.
-			nullChar = Me.theInputFileReader.ReadChar()
+			Me.theMdlFileData.theKeyValuesText = FileManager.ReadModelString(Me.theInputFileReader, Me.theMdlFileData.keyValueSize - 1)
+			'NOTE: Read the null terminator byte.
+			Me.theInputFileReader.ReadByte()
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theKeyValuesText = " + Me.theMdlFileData.theKeyValuesText)

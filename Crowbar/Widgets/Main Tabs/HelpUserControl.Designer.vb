@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class HelpUserControl
 	Inherits BaseUserControl
 
@@ -48,7 +48,7 @@ Partial Class HelpUserControl
 		Me.TutorialLinkLabel.Size = New System.Drawing.Size(84, 25)
 		Me.TutorialLinkLabel.TabIndex = 1
 		Me.TutorialLinkLabel.TabStop = True
-		Me.TutorialLinkLabel.Text = "Tutorial"
+		Me.TutorialLinkLabel.Text = "教程"
 		Me.TutorialLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
 		'
 		'ContentsLinkLabel
@@ -62,7 +62,7 @@ Partial Class HelpUserControl
 		Me.ContentsLinkLabel.Size = New System.Drawing.Size(98, 25)
 		Me.ContentsLinkLabel.TabIndex = 2
 		Me.ContentsLinkLabel.TabStop = True
-		Me.ContentsLinkLabel.Text = "Contents"
+		Me.ContentsLinkLabel.Text = "内容"
 		Me.ContentsLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
 		'
 		'IndexLinkLabel
@@ -76,7 +76,7 @@ Partial Class HelpUserControl
 		Me.IndexLinkLabel.Size = New System.Drawing.Size(64, 25)
 		Me.IndexLinkLabel.TabIndex = 3
 		Me.IndexLinkLabel.TabStop = True
-		Me.IndexLinkLabel.Text = "Index"
+		Me.IndexLinkLabel.Text = "索引"
 		Me.IndexLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
 		'
 		'TipsLinkLabel
@@ -90,7 +90,7 @@ Partial Class HelpUserControl
 		Me.TipsLinkLabel.Size = New System.Drawing.Size(53, 25)
 		Me.TipsLinkLabel.TabIndex = 4
 		Me.TipsLinkLabel.TabStop = True
-		Me.TipsLinkLabel.Text = "Tips"
+		Me.TipsLinkLabel.Text = "使用技巧"
 		Me.TipsLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
 		'
 		'GroupBox1
@@ -118,7 +118,7 @@ Partial Class HelpUserControl
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(407, 24)
 		Me.Label4.TabIndex = 8
-		Me.Label4.Text = "Ways to use Crowbar that might not be obvious."
+		Me.Label4.Text = "一些可能不太明显的 Crowbar 用法。"
 		'
 		'Label3
 		'
@@ -128,7 +128,7 @@ Partial Class HelpUserControl
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(462, 24)
 		Me.Label3.TabIndex = 7
-		Me.Label3.Text = "Links to where important words and phrases are used."
+		Me.Label3.Text = "指向重要词语和短语使用位置的链接。"
 		'
 		'Label2
 		'
@@ -138,7 +138,7 @@ Partial Class HelpUserControl
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(317, 24)
 		Me.Label2.TabIndex = 6
-		Me.Label2.Text = "Documentation arranged in sections."
+		Me.Label2.Text = "按章节组织的文档。"
 		'
 		'Label1
 		'
@@ -148,7 +148,7 @@ Partial Class HelpUserControl
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(464, 24)
 		Me.Label1.TabIndex = 5
-		Me.Label1.Text = "Step-by-step guide on how to use most of the features."
+		Me.Label1.Text = "关于如何使用大部分功能的分步指南。"
 		'
 		'Label5
 		'
@@ -158,8 +158,7 @@ Partial Class HelpUserControl
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(577, 16)
 		Me.Label5.TabIndex = 7
-		Me.Label5.Text = "Crowbar allows you to quickly access many tools for modding models for Source-eng" & _
-	"ine games."
+		Me.Label5.Text = "Crowbar 让您可以快速访问许多用于 Source 引擎游戏模型模组制作的工具。"
 		Me.Label5.Visible = False
 		'
 		'Label6
@@ -170,7 +169,7 @@ Partial Class HelpUserControl
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(419, 16)
 		Me.Label6.TabIndex = 8
-		Me.Label6.Text = "(The links below will open as web pages in your default web browser.)"
+		Me.Label6.Text = "（下方链接将在您的默认网页浏览器中以网页形式打开。）"
 		Me.Label6.Visible = False
 		'
 		'CrowbarGuideButton
@@ -185,8 +184,6 @@ Partial Class HelpUserControl
 		'
 		'HelpUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.CrowbarGuideButton)
 		Me.Controls.Add(Me.Label6)
 		Me.Controls.Add(Me.Label5)

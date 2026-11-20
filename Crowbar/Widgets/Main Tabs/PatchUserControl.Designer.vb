@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class PatchUserControl
 	Inherits BaseUserControl
 
@@ -136,7 +136,7 @@ Partial Class PatchUserControl
 		Me.ViewButton.Name = "ViewButton"
 		Me.ViewButton.Size = New System.Drawing.Size(50, 23)
 		Me.ViewButton.TabIndex = 8
-		Me.ViewButton.Text = "Patch"
+		Me.ViewButton.Text = "补丁"
 		Me.ViewButton.UseVisualStyleBackColor = True
 		'
 		'MdlPathFileNameTextBox
@@ -155,7 +155,7 @@ Partial Class PatchUserControl
 		Me.BrowseForMdlFileButton.Name = "BrowseForMdlFileButton"
 		Me.BrowseForMdlFileButton.Size = New System.Drawing.Size(64, 23)
 		Me.BrowseForMdlFileButton.TabIndex = 2
-		Me.BrowseForMdlFileButton.Text = "Browse..."
+		Me.BrowseForMdlFileButton.Text = "浏览..."
 		Me.BrowseForMdlFileButton.UseVisualStyleBackColor = True
 		'
 		'Label1
@@ -165,7 +165,7 @@ Partial Class PatchUserControl
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(58, 13)
 		Me.Label1.TabIndex = 0
-		Me.Label1.Text = "MDL input:"
+		Me.Label1.Text = "MDL 输入："
 		'
 		'Panel2
 		'
@@ -198,7 +198,7 @@ Partial Class PatchUserControl
 		Me.GotoMdlFileButton.Name = "GotoMdlFileButton"
 		Me.GotoMdlFileButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoMdlFileButton.TabIndex = 3
-		Me.GotoMdlFileButton.Text = "Goto"
+		Me.GotoMdlFileButton.Text = "转到"
 		Me.GotoMdlFileButton.UseVisualStyleBackColor = True
 		'
 		'SplitContainer1
@@ -260,7 +260,7 @@ Partial Class PatchUserControl
 		Me.PatchableValuesForSingleMDLGroupBox.Size = New System.Drawing.Size(770, 384)
 		Me.PatchableValuesForSingleMDLGroupBox.TabIndex = 4
 		Me.PatchableValuesForSingleMDLGroupBox.TabStop = False
-		Me.PatchableValuesForSingleMDLGroupBox.Text = "Patchable Values (for single MDL)"
+		Me.PatchableValuesForSingleMDLGroupBox.Text = "可补丁值（单个 MDL）"
 		'
 		'GroupBox5
 		'
@@ -325,7 +325,7 @@ Partial Class PatchUserControl
 		Me.Label8.Name = "Label8"
 		Me.Label8.Size = New System.Drawing.Size(73, 13)
 		Me.Label8.TabIndex = 22
-		Me.Label8.Text = "Illum Position:"
+		Me.Label8.Text = "光照位置："
 		'
 		'GroupBox4
 		'
@@ -337,7 +337,7 @@ Partial Class PatchUserControl
 		Me.GroupBox4.Size = New System.Drawing.Size(280, 100)
 		Me.GroupBox4.TabIndex = 18
 		Me.GroupBox4.TabStop = False
-		Me.GroupBox4.Text = "Body Group Names"
+		Me.GroupBox4.Text = "身体组名称"
 		'
 		'DataGridView3
 		'
@@ -364,7 +364,7 @@ Partial Class PatchUserControl
 		Me.Button11.Name = "Button11"
 		Me.Button11.Size = New System.Drawing.Size(25, 23)
 		Me.Button11.TabIndex = 15
-		Me.Button11.Text = "Up"
+		Me.Button11.Text = "向上"
 		Me.Button11.UseVisualStyleBackColor = True
 		'
 		'Label6
@@ -406,7 +406,7 @@ Partial Class PatchUserControl
 		Me.GroupBox3.Size = New System.Drawing.Size(311, 100)
 		Me.GroupBox3.TabIndex = 18
 		Me.GroupBox3.TabStop = False
-		Me.GroupBox3.Text = "Include Models"
+		Me.GroupBox3.Text = "包含模型"
 		'
 		'DataGridView2
 		'
@@ -433,7 +433,7 @@ Partial Class PatchUserControl
 		Me.Button6.Name = "Button6"
 		Me.Button6.Size = New System.Drawing.Size(56, 23)
 		Me.Button6.TabIndex = 13
-		Me.Button6.Text = "Add"
+		Me.Button6.Text = "添加"
 		Me.Button6.UseVisualStyleBackColor = True
 		'
 		'Button7
@@ -442,7 +442,7 @@ Partial Class PatchUserControl
 		Me.Button7.Name = "Button7"
 		Me.Button7.Size = New System.Drawing.Size(25, 23)
 		Me.Button7.TabIndex = 15
-		Me.Button7.Text = "Up"
+		Me.Button7.Text = "向上"
 		Me.Button7.UseVisualStyleBackColor = True
 		'
 		'Button8
@@ -451,7 +451,7 @@ Partial Class PatchUserControl
 		Me.Button8.Name = "Button8"
 		Me.Button8.Size = New System.Drawing.Size(56, 23)
 		Me.Button8.TabIndex = 14
-		Me.Button8.Text = "Delete"
+		Me.Button8.Text = "删除"
 		Me.Button8.UseVisualStyleBackColor = True
 		'
 		'GroupBox2
@@ -466,7 +466,7 @@ Partial Class PatchUserControl
 		Me.GroupBox2.Size = New System.Drawing.Size(311, 100)
 		Me.GroupBox2.TabIndex = 17
 		Me.GroupBox2.TabStop = False
-		Me.GroupBox2.Text = "CD Materials"
+		Me.GroupBox2.Text = "CD 材质"
 		'
 		'DataGridView1
 		'
@@ -493,7 +493,7 @@ Partial Class PatchUserControl
 		Me.Button1.Name = "Button1"
 		Me.Button1.Size = New System.Drawing.Size(56, 23)
 		Me.Button1.TabIndex = 13
-		Me.Button1.Text = "Add"
+		Me.Button1.Text = "添加"
 		Me.Button1.UseVisualStyleBackColor = True
 		'
 		'Button3
@@ -502,7 +502,7 @@ Partial Class PatchUserControl
 		Me.Button3.Name = "Button3"
 		Me.Button3.Size = New System.Drawing.Size(25, 23)
 		Me.Button3.TabIndex = 15
-		Me.Button3.Text = "Up"
+		Me.Button3.Text = "向上"
 		Me.Button3.UseVisualStyleBackColor = True
 		'
 		'Button2
@@ -511,7 +511,7 @@ Partial Class PatchUserControl
 		Me.Button2.Name = "Button2"
 		Me.Button2.Size = New System.Drawing.Size(56, 23)
 		Me.Button2.TabIndex = 14
-		Me.Button2.Text = "Delete"
+		Me.Button2.Text = "删除"
 		Me.Button2.UseVisualStyleBackColor = True
 		'
 		'CheckBox3
@@ -560,7 +560,7 @@ Partial Class PatchUserControl
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(110, 13)
 		Me.Label5.TabIndex = 6
-		Me.Label5.Text = "Internal MDL name 2:"
+		Me.Label5.Text = "内部 MDL 名称 2："
 		'
 		'TextBoxEx2
 		'
@@ -587,7 +587,7 @@ Partial Class PatchUserControl
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(101, 13)
 		Me.Label2.TabIndex = 3
-		Me.Label2.Text = "Internal MDL name:"
+		Me.Label2.Text = "内部 MDL 名称："
 		'
 		'TextBoxEx1
 		'
@@ -606,7 +606,7 @@ Partial Class PatchUserControl
 		Me.CancelDecompileButton.Name = "CancelDecompileButton"
 		Me.CancelDecompileButton.Size = New System.Drawing.Size(80, 23)
 		Me.CancelDecompileButton.TabIndex = 14
-		Me.CancelDecompileButton.Text = "Cancel Patch"
+		Me.CancelDecompileButton.Text = "取消补丁"
 		Me.CancelDecompileButton.UseVisualStyleBackColor = True
 		'
 		'SkipCurrentModelButton
@@ -617,7 +617,7 @@ Partial Class PatchUserControl
 		Me.SkipCurrentModelButton.Name = "SkipCurrentModelButton"
 		Me.SkipCurrentModelButton.Size = New System.Drawing.Size(120, 23)
 		Me.SkipCurrentModelButton.TabIndex = 13
-		Me.SkipCurrentModelButton.Text = "Skip Current Model"
+		Me.SkipCurrentModelButton.Text = "跳过当前模型"
 		Me.SkipCurrentModelButton.UseVisualStyleBackColor = True
 		'
 		'MessageTextBox
@@ -658,7 +658,7 @@ Partial Class PatchUserControl
 		Me.RefreshOrRevertButton.Name = "RefreshOrRevertButton"
 		Me.RefreshOrRevertButton.Size = New System.Drawing.Size(92, 23)
 		Me.RefreshOrRevertButton.TabIndex = 15
-		Me.RefreshOrRevertButton.Text = "Refresh/Revert"
+		Me.RefreshOrRevertButton.Text = "刷新/还原"
 		Me.RefreshOrRevertButton.UseVisualStyleBackColor = True
 		'
 		'PatchableValuesForMultipleMDLsGroupBox
@@ -685,7 +685,7 @@ Partial Class PatchUserControl
 		Me.PatchableValuesForMultipleMDLsGroupBox.Size = New System.Drawing.Size(770, 384)
 		Me.PatchableValuesForMultipleMDLsGroupBox.TabIndex = 29
 		Me.PatchableValuesForMultipleMDLsGroupBox.TabStop = False
-		Me.PatchableValuesForMultipleMDLsGroupBox.Text = "Patchable Values (for multiple MDLs)"
+		Me.PatchableValuesForMultipleMDLsGroupBox.Text = "可补丁值（多个 MDL）"
 		'
 		'Button10
 		'
@@ -694,7 +694,7 @@ Partial Class PatchUserControl
 		Me.Button10.Name = "Button10"
 		Me.Button10.Size = New System.Drawing.Size(92, 23)
 		Me.Button10.TabIndex = 15
-		Me.Button10.Text = "Refresh/Revert"
+		Me.Button10.Text = "刷新/还原"
 		Me.Button10.UseVisualStyleBackColor = True
 		'
 		'GroupBox6
@@ -760,7 +760,7 @@ Partial Class PatchUserControl
 		Me.Label15.Name = "Label15"
 		Me.Label15.Size = New System.Drawing.Size(73, 13)
 		Me.Label15.TabIndex = 22
-		Me.Label15.Text = "Illum Position:"
+		Me.Label15.Text = "光照位置："
 		'
 		'GroupBox7
 		'
@@ -772,7 +772,7 @@ Partial Class PatchUserControl
 		Me.GroupBox7.Size = New System.Drawing.Size(280, 100)
 		Me.GroupBox7.TabIndex = 18
 		Me.GroupBox7.TabStop = False
-		Me.GroupBox7.Text = "Body Group Names"
+		Me.GroupBox7.Text = "身体组名称"
 		'
 		'DataGridView6
 		'
@@ -799,7 +799,7 @@ Partial Class PatchUserControl
 		Me.Button13.Name = "Button13"
 		Me.Button13.Size = New System.Drawing.Size(25, 23)
 		Me.Button13.TabIndex = 15
-		Me.Button13.Text = "Up"
+		Me.Button13.Text = "向上"
 		Me.Button13.UseVisualStyleBackColor = True
 		'
 		'Label16
@@ -841,7 +841,7 @@ Partial Class PatchUserControl
 		Me.GroupBox8.Size = New System.Drawing.Size(311, 100)
 		Me.GroupBox8.TabIndex = 18
 		Me.GroupBox8.TabStop = False
-		Me.GroupBox8.Text = "Include Models"
+		Me.GroupBox8.Text = "包含模型"
 		'
 		'DataGridView7
 		'
@@ -868,7 +868,7 @@ Partial Class PatchUserControl
 		Me.Button15.Name = "Button15"
 		Me.Button15.Size = New System.Drawing.Size(56, 23)
 		Me.Button15.TabIndex = 13
-		Me.Button15.Text = "Add"
+		Me.Button15.Text = "添加"
 		Me.Button15.UseVisualStyleBackColor = True
 		'
 		'Button16
@@ -877,7 +877,7 @@ Partial Class PatchUserControl
 		Me.Button16.Name = "Button16"
 		Me.Button16.Size = New System.Drawing.Size(25, 23)
 		Me.Button16.TabIndex = 15
-		Me.Button16.Text = "Up"
+		Me.Button16.Text = "向上"
 		Me.Button16.UseVisualStyleBackColor = True
 		'
 		'Button17
@@ -886,7 +886,7 @@ Partial Class PatchUserControl
 		Me.Button17.Name = "Button17"
 		Me.Button17.Size = New System.Drawing.Size(56, 23)
 		Me.Button17.TabIndex = 14
-		Me.Button17.Text = "Delete"
+		Me.Button17.Text = "删除"
 		Me.Button17.UseVisualStyleBackColor = True
 		'
 		'GroupBox9
@@ -901,7 +901,7 @@ Partial Class PatchUserControl
 		Me.GroupBox9.Size = New System.Drawing.Size(311, 100)
 		Me.GroupBox9.TabIndex = 17
 		Me.GroupBox9.TabStop = False
-		Me.GroupBox9.Text = "CD Materials"
+		Me.GroupBox9.Text = "CD 材质"
 		'
 		'DataGridView8
 		'
@@ -928,7 +928,7 @@ Partial Class PatchUserControl
 		Me.Button19.Name = "Button19"
 		Me.Button19.Size = New System.Drawing.Size(56, 23)
 		Me.Button19.TabIndex = 13
-		Me.Button19.Text = "Add"
+		Me.Button19.Text = "添加"
 		Me.Button19.UseVisualStyleBackColor = True
 		'
 		'Button20
@@ -937,7 +937,7 @@ Partial Class PatchUserControl
 		Me.Button20.Name = "Button20"
 		Me.Button20.Size = New System.Drawing.Size(25, 23)
 		Me.Button20.TabIndex = 15
-		Me.Button20.Text = "Up"
+		Me.Button20.Text = "向上"
 		Me.Button20.UseVisualStyleBackColor = True
 		'
 		'Button21
@@ -946,7 +946,7 @@ Partial Class PatchUserControl
 		Me.Button21.Name = "Button21"
 		Me.Button21.Size = New System.Drawing.Size(56, 23)
 		Me.Button21.TabIndex = 14
-		Me.Button21.Text = "Delete"
+		Me.Button21.Text = "删除"
 		Me.Button21.UseVisualStyleBackColor = True
 		'
 		'CheckBox4
@@ -990,8 +990,6 @@ Partial Class PatchUserControl
 		'
 		'PatchUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.Panel2)
 		Me.Name = "PatchUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)

@@ -33,7 +33,7 @@ Public Class SourceMdlFile31
 
 		Me.theMdlFileData.checksum = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.name = Me.theInputFileReader.ReadChars(Me.theMdlFileData.name.Length)
+		Me.theMdlFileData.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, Me.theMdlFileData.name.Length)
 		Me.theMdlFileData.theModelName = CStr(Me.theMdlFileData.name).Trim(Chr(0))
 
 		Me.theMdlFileData.fileSize = Me.theInputFileReader.ReadInt32()
@@ -2605,7 +2605,7 @@ Public Class SourceMdlFile31
 					modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aModel As New SourceMdlModel31()
 
-					aModel.name = Me.theInputFileReader.ReadChars(aModel.name.Length)
+					aModel.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, aModel.name.Length)
 					aModel.theName = CStr(aModel.name).Trim(Chr(0))
 					aModel.type = Me.theInputFileReader.ReadInt32()
 					aModel.boundingRadius = Me.theInputFileReader.ReadSingle()

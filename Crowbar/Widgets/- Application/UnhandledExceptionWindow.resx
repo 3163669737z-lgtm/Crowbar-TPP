@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="LinkLabel1.Text" xml:space="preserve">
-    <value>An internal error occurred. Crowbar will now exit to prevent corruption to user data. Apologies for the inconvenience.
+    <value>发生了内部错误。Crowbar 现在将退出，以防止用户数据损坏。给您带来不便，敬请谅解。
 
-To report this bug:
-Please copy the text in the "Error Report" box below.
-Go to Crowbar's Bug Report forum and click "Start a New Discussion" button.
-Paste the text into the body of the post and enter a useful title for the post, such as "[BUG] Error after pressing Decompile button".
-At the designated sections in the pasted text, write what you tried to do and what you expected to happen.
-Click "Post Discussion" button to finish the bug report.
+报告此错误：
+请复制下方“错误报告”框中的文本。
+前往 Crowbar 的错误报告论坛，点击“发起新讨论”按钮。
+将文本粘贴到帖子正文中，并为帖子输入一个有用的标题，例如“[BUG] 按下反编译按钮后出现错误”。
+在粘贴文本的指定位置，写下您尝试执行的操作以及您期望发生的结果。
+点击“发布讨论”按钮以完成错误报告。
 
-You can also find the error report (and older ones) in the file, "decompile error.txt", of the output folder.</value>
+您也可以在输出文件夹中的 &quot;decompile error.txt&quot; 文件里找到错误报告（以及较早的报告）。</value>
   </data>
 </root>

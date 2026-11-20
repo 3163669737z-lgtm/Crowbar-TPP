@@ -6,7 +6,64 @@ Imports System.Xml.Serialization
 
 Public Class FileManager
 
+	Friend Shared Sub WriteTextAtomically(pathFileName As String, write As Action(Of StreamWriter))
+		Dim target As String = Path.GetFullPath(pathFileName)
+		Dim temporary As String = Path.Combine(Path.GetDirectoryName(target), ".crowbar-" + Guid.NewGuid().ToString("N") + ".tmp")
+		Try
+			Using stream As New FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None)
+				Using writer As New StreamWriter(stream)
+					write(writer)
+				End Using
+			End Using
+			If File.Exists(target) Then
+				File.Replace(temporary, target, Nothing)
+			Else
+				File.Move(temporary, target)
+			End If
+		Catch ex As Exception
+			Try
+				File.Delete(temporary)
+			Catch cleanupError As IOException
+			Catch cleanupError As UnauthorizedAccessException
+			End Try
+			Throw New IOException("""" + target + """ — " + ex.Message, ex)
+		End Try
+	End Sub
+
 #Region "Read Methods"
+
+	Private Shared ReadOnly theStrictUtf8 As New UTF8Encoding(False, True)
+	Private Shared ReadOnly theStrictGb18030 As Encoding = Encoding.GetEncoding(54936, EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback)
+
+	Private Shared Function DecodeModelString(ByVal bytes As Byte(), ByVal byteCount As Integer) As String
+		Try
+			Return theStrictUtf8.GetString(bytes, 0, byteCount)
+		Catch ex As DecoderFallbackException
+			' Older Chinese tools may store GBK text, which GB18030 can decode.
+		End Try
+
+		Try
+			Return theStrictGb18030.GetString(bytes, 0, byteCount)
+		Catch ex As DecoderFallbackException
+			Return Encoding.Default.GetString(bytes, 0, byteCount)
+		End Try
+	End Function
+
+	Public Shared Function ReadModelString(ByVal inputFileReader As BinaryReader, ByVal byteCount As Integer) As String
+		Dim bytes As Byte() = inputFileReader.ReadBytes(byteCount)
+		Return DecodeModelString(bytes, bytes.Length)
+	End Function
+
+	Public Shared Function ReadFixedModelChars(ByVal inputFileReader As BinaryReader, ByVal byteCount As Integer) As Char()
+		' Consume the entire fixed-width field. Bytes after its terminator are padding.
+		Dim bytes As Byte() = inputFileReader.ReadBytes(byteCount)
+		Dim terminatorIndex As Integer = Array.IndexOf(bytes, CByte(0))
+		If terminatorIndex < 0 Then
+			terminatorIndex = bytes.Length
+		End If
+
+		Return DecodeModelString(bytes, terminatorIndex).PadRight(bytes.Length, ChrW(0)).ToCharArray()
+	End Function
 
 	Public Shared Function ReadString(ByVal bytes As Byte()) As String
 
@@ -24,7 +81,17 @@ Public Class FileManager
 			bytes.Add(b)
 		End While
 
-		Return ReadString(bytes.ToArray())
+		Return DecodeModelString(bytes.ToArray(), bytes.Count)
+	End Function
+
+	Friend Shared Function ReadNullTerminatedString(inputFileReader As BinaryReader, endOffset As Long) As String
+		Dim bytes As New List(Of Byte)
+		While inputFileReader.BaseStream.Position < endOffset
+			Dim value As Byte = inputFileReader.ReadByte()
+			If value = 0 Then Return DecodeModelString(bytes.ToArray(), bytes.Count)
+			bytes.Add(value)
+		End While
+		Throw New InvalidDataException("在允许的字节区间内缺少字符串终止符。")
 	End Function
 
 	Public Shared Function ReadNullTerminatedString(ByVal inputFileReader As BufferedBinaryReader) As String
@@ -706,7 +773,7 @@ Public Class FileManager
 
 		Try
 			For Each reservedWord As String In ReservedWords
-				If fileName.ToLower() = reservedWord Then
+				If String.Equals(fileName.Split("."c)(0).TrimEnd(" "c), reservedWord, StringComparison.OrdinalIgnoreCase) Then
 					fileName = "temp"
 				End If
 			Next

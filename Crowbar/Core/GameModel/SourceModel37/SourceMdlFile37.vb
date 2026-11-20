@@ -33,7 +33,7 @@ Public Class SourceMdlFile37
 
 		Me.theMdlFileData.checksum = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.name = Me.theInputFileReader.ReadChars(Me.theMdlFileData.name.Length)
+		Me.theMdlFileData.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, Me.theMdlFileData.name.Length)
 		Me.theMdlFileData.theModelName = CStr(Me.theMdlFileData.name).Trim(Chr(0))
 
 		Me.theMdlFileData.fileSize = Me.theInputFileReader.ReadInt32()
@@ -1545,15 +1545,14 @@ Public Class SourceMdlFile37
 		If Me.theMdlFileData.keyValueSize > 0 Then
 			Dim fileOffsetStart As Long
 			Dim fileOffsetEnd As Long
-			Dim nullChar As Char
 
 			Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.keyValueOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 			'NOTE: Use -1 to drop the null terminator character.
-			Me.theMdlFileData.theKeyValuesText = Me.theInputFileReader.ReadChars(Me.theMdlFileData.keyValueSize - 1)
-			'NOTE: Read the null terminator character.
-			nullChar = Me.theInputFileReader.ReadChar()
+			Me.theMdlFileData.theKeyValuesText = FileManager.ReadModelString(Me.theInputFileReader, Me.theMdlFileData.keyValueSize - 1)
+			'NOTE: Read the null terminator byte.
+			Me.theInputFileReader.ReadByte()
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theKeyValuesText = " + Me.theMdlFileData.theKeyValuesText)
@@ -2018,9 +2017,7 @@ Public Class SourceMdlFile37
 					anEvent.cycle = Me.theInputFileReader.ReadSingle()
 					anEvent.eventIndex = Me.theInputFileReader.ReadInt32()
 					anEvent.eventType = Me.theInputFileReader.ReadInt32()
-					For x As Integer = 0 To anEvent.options.Length - 1
-						anEvent.options(x) = Me.theInputFileReader.ReadChar()
-					Next
+					anEvent.options = FileManager.ReadFixedModelChars(Me.theInputFileReader, anEvent.options.Length)
 
 					aSeqDesc.theEvents.Add(anEvent)
 
@@ -2645,7 +2642,7 @@ Public Class SourceMdlFile37
 					modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aModel As New SourceMdlModel37()
 
-					aModel.name = Me.theInputFileReader.ReadChars(aModel.name.Length)
+					aModel.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, aModel.name.Length)
 					aModel.theName = CStr(aModel.name).Trim(Chr(0))
 					aModel.type = Me.theInputFileReader.ReadInt32()
 					aModel.boundingRadius = Me.theInputFileReader.ReadSingle()

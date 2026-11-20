@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class DecompileUserControl
 	Inherits BaseUserControl
 
@@ -47,7 +47,7 @@ Partial Class DecompileUserControl
         Me.OutputPathComboBox = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.UseDefaultOutputSubfolderButton = New System.Windows.Forms.Button()
-        Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
+        Me.Options_LogSplitContainer = New Crowbar.SplitContainerEx()
         Me.DecompileOptionsPanel = New System.Windows.Forms.Panel()
         Me.ReCreateFilesGroupBox = New System.Windows.Forms.GroupBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -76,6 +76,8 @@ Partial Class DecompileUserControl
         Me.SkipCurrentModelButton = New System.Windows.Forms.Button()
         Me.CancelDecompileButton = New System.Windows.Forms.Button()
         Me.UseAllInCompileButton = New System.Windows.Forms.Button()
+        Me.MeshResourceFolderButton = New System.Windows.Forms.Button()
+        Me.VtfHeaderButton = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.DecompiledFilesComboBox = New System.Windows.Forms.ComboBox()
         Me.UseInEditButton = New System.Windows.Forms.Button()
@@ -103,8 +105,8 @@ Partial Class DecompileUserControl
         Me.DebugInfoCheckBox.Name = "DebugInfoCheckBox"
         Me.DebugInfoCheckBox.Size = New System.Drawing.Size(213, 20)
         Me.DebugInfoCheckBox.TabIndex = 14
-        Me.DebugInfoCheckBox.Text = "Decompile-info comments and files"
-        Me.ToolTip1.SetToolTip(Me.DebugInfoCheckBox, "Write comments and extra files that include decompile info useful in debugging.")
+        Me.DebugInfoCheckBox.Text = "反编译信息注释和文件"
+        Me.ToolTip1.SetToolTip(Me.DebugInfoCheckBox, "写入包含反编译信息的注释和附加文件，便于调试。")
         Me.DebugInfoCheckBox.UseVisualStyleBackColor = True
         '
         'LogFileCheckBox
@@ -115,8 +117,8 @@ Partial Class DecompileUserControl
         Me.LogFileCheckBox.Name = "LogFileCheckBox"
         Me.LogFileCheckBox.Size = New System.Drawing.Size(116, 20)
         Me.LogFileCheckBox.TabIndex = 13
-        Me.LogFileCheckBox.Text = "Write log to a file"
-        Me.ToolTip1.SetToolTip(Me.LogFileCheckBox, "Write the decompile log to a file.")
+        Me.LogFileCheckBox.Text = "将日志写入文件"
+        Me.ToolTip1.SetToolTip(Me.LogFileCheckBox, "将反编译日志写入文件。")
         Me.LogFileCheckBox.UseVisualStyleBackColor = True
         '
         'DeclareSequenceQciCheckBox
@@ -128,8 +130,7 @@ Partial Class DecompileUserControl
         Me.DeclareSequenceQciCheckBox.Size = New System.Drawing.Size(163, 20)
         Me.DeclareSequenceQciCheckBox.TabIndex = 40
         Me.DeclareSequenceQciCheckBox.Text = "$DeclareSequence QCI file"
-        Me.ToolTip1.SetToolTip(Me.DeclareSequenceQciCheckBox, "Write a QCI file with a $DeclareSequence line for each sequence in the MDL file. " &
-        "Useful for getting sequences in correct order for multiplayer.")
+        Me.ToolTip1.SetToolTip(Me.DeclareSequenceQciCheckBox, "为 MDL 文件中的每个序列写入包含 $DeclareSequence 行的 QCI 文件。有助于让多人游戏中的序列保持正确顺序。")
         Me.DeclareSequenceQciCheckBox.UseVisualStyleBackColor = True
         '
         'FormatForStricterImportersCheckBox
@@ -140,9 +141,8 @@ Partial Class DecompileUserControl
         Me.FormatForStricterImportersCheckBox.Name = "FormatForStricterImportersCheckBox"
         Me.FormatForStricterImportersCheckBox.Size = New System.Drawing.Size(173, 20)
         Me.FormatForStricterImportersCheckBox.TabIndex = 12
-        Me.FormatForStricterImportersCheckBox.Text = "Format for stricter importers"
-        Me.ToolTip1.SetToolTip(Me.FormatForStricterImportersCheckBox, "Write decompiled files in a format that some importers expect, but is not as easy" &
-        " to read.")
+        Me.FormatForStricterImportersCheckBox.Text = "面向更严格导入器的格式"
+        Me.ToolTip1.SetToolTip(Me.FormatForStricterImportersCheckBox, "以某些导入器所期望的格式写入反编译文件，但这种格式不太易读。")
         Me.FormatForStricterImportersCheckBox.UseVisualStyleBackColor = True
         '
         'UseMixedCaseForKeywordsCheckBox
@@ -153,7 +153,7 @@ Partial Class DecompileUserControl
         Me.UseMixedCaseForKeywordsCheckBox.Name = "UseMixedCaseForKeywordsCheckBox"
         Me.UseMixedCaseForKeywordsCheckBox.Size = New System.Drawing.Size(223, 20)
         Me.UseMixedCaseForKeywordsCheckBox.TabIndex = 42
-        Me.UseMixedCaseForKeywordsCheckBox.Text = "Use MixedCase for keywords (Source)"
+        Me.UseMixedCaseForKeywordsCheckBox.Text = "关键字使用混合大小写（Source）"
         Me.ToolTip1.SetToolTip(Me.UseMixedCaseForKeywordsCheckBox, "$CommandLikeThis instead of $commandlikethis")
         Me.UseMixedCaseForKeywordsCheckBox.UseVisualStyleBackColor = True
         '
@@ -165,9 +165,8 @@ Partial Class DecompileUserControl
         Me.RemovePathFromMaterialFileNamesCheckBox.Name = "RemovePathFromMaterialFileNamesCheckBox"
         Me.RemovePathFromMaterialFileNamesCheckBox.Size = New System.Drawing.Size(224, 20)
         Me.RemovePathFromMaterialFileNamesCheckBox.TabIndex = 41
-        Me.RemovePathFromMaterialFileNamesCheckBox.Text = "Remove path from material file names"
-        Me.ToolTip1.SetToolTip(Me.RemovePathFromMaterialFileNamesCheckBox, "Write only the file name in the SMD, even if a path was stored. This might cause " &
-        "problem with $CDMaterials in QC file.")
+        Me.RemovePathFromMaterialFileNamesCheckBox.Text = "从材质文件名中移除路径"
+        Me.ToolTip1.SetToolTip(Me.RemovePathFromMaterialFileNamesCheckBox, "即使在 SMD 中存储了路径，也只写入文件名。这可能会与 QC 文件中的 $CDMaterials 产生问题。")
         Me.RemovePathFromMaterialFileNamesCheckBox.UseVisualStyleBackColor = True
         '
         'UseNonValveUvConversionCheckBox
@@ -178,7 +177,7 @@ Partial Class DecompileUserControl
         Me.UseNonValveUvConversionCheckBox.Name = "UseNonValveUvConversionCheckBox"
         Me.UseNonValveUvConversionCheckBox.Size = New System.Drawing.Size(253, 20)
         Me.UseNonValveUvConversionCheckBox.TabIndex = 44
-        Me.UseNonValveUvConversionCheckBox.Text = "Use non-Valve UV conversion (GoldSource)"
+        Me.UseNonValveUvConversionCheckBox.Text = "使用非 Valve UV 转换（GoldSource）"
         Me.ToolTip1.SetToolTip(Me.UseNonValveUvConversionCheckBox, "[ u=s/width ] and [ v=1-(t/height) ] instead of Valve's [ u=s/(width-1) ] and [ v" &
         "=1-(t/(height-1)) ]")
         Me.UseNonValveUvConversionCheckBox.UseVisualStyleBackColor = True
@@ -191,8 +190,8 @@ Partial Class DecompileUserControl
         Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
         Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(124, 16)
         Me.OverrideMdlVersionLabel.TabIndex = 46
-        Me.OverrideMdlVersionLabel.Text = "Override MDL version:"
-        Me.ToolTip1.SetToolTip(Me.OverrideMdlVersionLabel, "Decompile based on this selected version instead of what is stored in MDL file.")
+        Me.OverrideMdlVersionLabel.Text = "覆盖 MDL 版本："
+        Me.ToolTip1.SetToolTip(Me.OverrideMdlVersionLabel, "基于此所选版本反编译，而不是 MDL 文件中存储的版本。")
         '
         'OverrideMdlVersionComboBox
         '
@@ -203,7 +202,7 @@ Partial Class DecompileUserControl
         Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
         Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(128, 24)
         Me.OverrideMdlVersionComboBox.TabIndex = 45
-        Me.ToolTip1.SetToolTip(Me.OverrideMdlVersionComboBox, "Decompile based on this selected version instead of what is stored in MDL file.")
+        Me.ToolTip1.SetToolTip(Me.OverrideMdlVersionComboBox, "基于此所选版本反编译，而不是 MDL 文件中存储的版本。")
         '
         'PrefixMeshFileNamesWithModelNameCheckBox
         '
@@ -213,8 +212,8 @@ Partial Class DecompileUserControl
         Me.PrefixMeshFileNamesWithModelNameCheckBox.Name = "PrefixMeshFileNamesWithModelNameCheckBox"
         Me.PrefixMeshFileNamesWithModelNameCheckBox.Size = New System.Drawing.Size(237, 20)
         Me.PrefixMeshFileNamesWithModelNameCheckBox.TabIndex = 47
-        Me.PrefixMeshFileNamesWithModelNameCheckBox.Text = "Prefix mesh file names with model name"
-        Me.ToolTip1.SetToolTip(Me.PrefixMeshFileNamesWithModelNameCheckBox, "Avoid file name conflicts.")
+        Me.PrefixMeshFileNamesWithModelNameCheckBox.Text = "在网格文件名前加模型名前缀"
+        Me.ToolTip1.SetToolTip(Me.PrefixMeshFileNamesWithModelNameCheckBox, "避免文件名冲突。")
         Me.PrefixMeshFileNamesWithModelNameCheckBox.UseVisualStyleBackColor = True
         '
         'Panel2
@@ -246,7 +245,7 @@ Partial Class DecompileUserControl
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(75, 16)
         Me.Label1.TabIndex = 0
-        Me.Label1.Text = "MDL input:"
+        Me.Label1.Text = "MDL 输入："
         '
         'DecompileComboBox
         '
@@ -277,7 +276,7 @@ Partial Class DecompileUserControl
         Me.BrowseForMdlPathFolderOrFileNameButton.Name = "BrowseForMdlPathFolderOrFileNameButton"
         Me.BrowseForMdlPathFolderOrFileNameButton.Size = New System.Drawing.Size(75, 28)
         Me.BrowseForMdlPathFolderOrFileNameButton.TabIndex = 2
-        Me.BrowseForMdlPathFolderOrFileNameButton.Text = "Browse..."
+        Me.BrowseForMdlPathFolderOrFileNameButton.Text = "浏览..."
         Me.BrowseForMdlPathFolderOrFileNameButton.UseVisualStyleBackColor = True
         '
         'GotoMdlButton
@@ -288,7 +287,7 @@ Partial Class DecompileUserControl
         Me.GotoMdlButton.Name = "GotoMdlButton"
         Me.GotoMdlButton.Size = New System.Drawing.Size(50, 28)
         Me.GotoMdlButton.TabIndex = 3
-        Me.GotoMdlButton.Text = "Goto"
+        Me.GotoMdlButton.Text = "转到"
         Me.GotoMdlButton.UseVisualStyleBackColor = True
         '
         'GotoOutputPathButton
@@ -299,7 +298,7 @@ Partial Class DecompileUserControl
         Me.GotoOutputPathButton.Name = "GotoOutputPathButton"
         Me.GotoOutputPathButton.Size = New System.Drawing.Size(50, 28)
         Me.GotoOutputPathButton.TabIndex = 18
-        Me.GotoOutputPathButton.Text = "Goto"
+        Me.GotoOutputPathButton.Text = "转到"
         Me.GotoOutputPathButton.UseVisualStyleBackColor = True
         '
         'BrowseForOutputPathButton
@@ -311,7 +310,7 @@ Partial Class DecompileUserControl
         Me.BrowseForOutputPathButton.Name = "BrowseForOutputPathButton"
         Me.BrowseForOutputPathButton.Size = New System.Drawing.Size(75, 28)
         Me.BrowseForOutputPathButton.TabIndex = 17
-        Me.BrowseForOutputPathButton.Text = "Browse..."
+        Me.BrowseForOutputPathButton.Text = "浏览..."
         Me.BrowseForOutputPathButton.UseVisualStyleBackColor = True
         '
         'OutputPathTextBox
@@ -355,7 +354,7 @@ Partial Class DecompileUserControl
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(72, 16)
         Me.Label3.TabIndex = 13
-        Me.Label3.Text = "Output to:"
+        Me.Label3.Text = "输出到："
         '
         'UseDefaultOutputSubfolderButton
         '
@@ -365,7 +364,7 @@ Partial Class DecompileUserControl
         Me.UseDefaultOutputSubfolderButton.Name = "UseDefaultOutputSubfolderButton"
         Me.UseDefaultOutputSubfolderButton.Size = New System.Drawing.Size(132, 28)
         Me.UseDefaultOutputSubfolderButton.TabIndex = 19
-        Me.UseDefaultOutputSubfolderButton.Text = "Use Default"
+        Me.UseDefaultOutputSubfolderButton.Text = "使用默认值"
         Me.UseDefaultOutputSubfolderButton.UseVisualStyleBackColor = True
         '
         'Options_LogSplitContainer
@@ -418,7 +417,7 @@ Partial Class DecompileUserControl
         Me.ReCreateFilesGroupBox.Size = New System.Drawing.Size(609, 246)
         Me.ReCreateFilesGroupBox.TabIndex = 0
         Me.ReCreateFilesGroupBox.TabStop = False
-        Me.ReCreateFilesGroupBox.Text = "Re-Create Files"
+        Me.ReCreateFilesGroupBox.Text = "重新创建文件"
         '
         'Panel1
         '
@@ -457,7 +456,7 @@ Partial Class DecompileUserControl
         Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Name = "OnlyChangedMaterialsInTextureGroupLinesCheckBox"
         Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Size = New System.Drawing.Size(268, 20)
         Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.TabIndex = 43
-        Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Text = "Only changed materials in $texturegroup lines"
+        Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Text = "仅 $texturegroup 行中已更改的材质"
         Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.UseVisualStyleBackColor = True
         '
         'SkinFamilyOnSingleLineCheckBox
@@ -468,7 +467,7 @@ Partial Class DecompileUserControl
         Me.SkinFamilyOnSingleLineCheckBox.Name = "SkinFamilyOnSingleLineCheckBox"
         Me.SkinFamilyOnSingleLineCheckBox.Size = New System.Drawing.Size(263, 20)
         Me.SkinFamilyOnSingleLineCheckBox.TabIndex = 39
-        Me.SkinFamilyOnSingleLineCheckBox.Text = "Each $texturegroup skin-family on single line"
+        Me.SkinFamilyOnSingleLineCheckBox.Text = "每个 $texturegroup 皮肤族占一行"
         Me.SkinFamilyOnSingleLineCheckBox.UseVisualStyleBackColor = True
         '
         'TextureBmpFilesCheckBox
@@ -479,7 +478,7 @@ Partial Class DecompileUserControl
         Me.TextureBmpFilesCheckBox.Name = "TextureBmpFilesCheckBox"
         Me.TextureBmpFilesCheckBox.Size = New System.Drawing.Size(189, 20)
         Me.TextureBmpFilesCheckBox.TabIndex = 38
-        Me.TextureBmpFilesCheckBox.Text = "Texture BMP files (GoldSource)"
+        Me.TextureBmpFilesCheckBox.Text = "纹理 BMP 文件（GoldSource）"
         Me.TextureBmpFilesCheckBox.UseVisualStyleBackColor = True
         '
         'DecompileOptionsUseDefaultsButton
@@ -489,7 +488,7 @@ Partial Class DecompileUserControl
         Me.DecompileOptionsUseDefaultsButton.Name = "DecompileOptionsUseDefaultsButton"
         Me.DecompileOptionsUseDefaultsButton.Size = New System.Drawing.Size(105, 28)
         Me.DecompileOptionsUseDefaultsButton.TabIndex = 37
-        Me.DecompileOptionsUseDefaultsButton.Text = "Use Defaults"
+        Me.DecompileOptionsUseDefaultsButton.Text = "使用默认值"
         Me.DecompileOptionsUseDefaultsButton.UseVisualStyleBackColor = True
         '
         'ComboBox2
@@ -510,7 +509,7 @@ Partial Class DecompileUserControl
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(82, 16)
         Me.Label2.TabIndex = 23
-        Me.Label2.Text = "Model format:"
+        Me.Label2.Text = "模型格式："
         Me.Label2.Visible = False
         '
         'IncludeDefineBoneLinesCheckBox
@@ -521,7 +520,7 @@ Partial Class DecompileUserControl
         Me.IncludeDefineBoneLinesCheckBox.Name = "IncludeDefineBoneLinesCheckBox"
         Me.IncludeDefineBoneLinesCheckBox.Size = New System.Drawing.Size(293, 20)
         Me.IncludeDefineBoneLinesCheckBox.TabIndex = 2
-        Me.IncludeDefineBoneLinesCheckBox.Text = "Include $definebone lines (typical for view models)"
+        Me.IncludeDefineBoneLinesCheckBox.Text = "包含 $definebone 行（视图模型常用）"
         Me.IncludeDefineBoneLinesCheckBox.UseVisualStyleBackColor = True
         '
         'GroupIntoQciFilesCheckBox
@@ -532,7 +531,7 @@ Partial Class DecompileUserControl
         Me.GroupIntoQciFilesCheckBox.Name = "GroupIntoQciFilesCheckBox"
         Me.GroupIntoQciFilesCheckBox.Size = New System.Drawing.Size(129, 20)
         Me.GroupIntoQciFilesCheckBox.TabIndex = 1
-        Me.GroupIntoQciFilesCheckBox.Text = "Group into QCI files"
+        Me.GroupIntoQciFilesCheckBox.Text = "分组到 QCI 文件中"
         Me.GroupIntoQciFilesCheckBox.UseVisualStyleBackColor = True
         '
         'PlaceInAnimsSubfolderCheckBox
@@ -543,7 +542,7 @@ Partial Class DecompileUserControl
         Me.PlaceInAnimsSubfolderCheckBox.Name = "PlaceInAnimsSubfolderCheckBox"
         Me.PlaceInAnimsSubfolderCheckBox.Size = New System.Drawing.Size(164, 20)
         Me.PlaceInAnimsSubfolderCheckBox.TabIndex = 9
-        Me.PlaceInAnimsSubfolderCheckBox.Text = "Place in ""anims"" subfolder"
+        Me.PlaceInAnimsSubfolderCheckBox.Text = "放入 ""anims"" 子文件夹"
         Me.PlaceInAnimsSubfolderCheckBox.UseVisualStyleBackColor = True
         '
         'LodMeshSmdFilesCheckBox
@@ -554,7 +553,7 @@ Partial Class DecompileUserControl
         Me.LodMeshSmdFilesCheckBox.Name = "LodMeshSmdFilesCheckBox"
         Me.LodMeshSmdFilesCheckBox.Size = New System.Drawing.Size(132, 20)
         Me.LodMeshSmdFilesCheckBox.TabIndex = 5
-        Me.LodMeshSmdFilesCheckBox.Text = "LOD mesh SMD files"
+        Me.LodMeshSmdFilesCheckBox.Text = "LOD 网格 SMD 文件"
         Me.LodMeshSmdFilesCheckBox.UseVisualStyleBackColor = True
         '
         'ProceduralBonesVrdFileCheckBox
@@ -565,7 +564,7 @@ Partial Class DecompileUserControl
         Me.ProceduralBonesVrdFileCheckBox.Name = "ProceduralBonesVrdFileCheckBox"
         Me.ProceduralBonesVrdFileCheckBox.Size = New System.Drawing.Size(162, 20)
         Me.ProceduralBonesVrdFileCheckBox.TabIndex = 10
-        Me.ProceduralBonesVrdFileCheckBox.Text = "Procedural bones VRD file"
+        Me.ProceduralBonesVrdFileCheckBox.Text = "程序化骨骼 VRD 文件"
         Me.ProceduralBonesVrdFileCheckBox.UseVisualStyleBackColor = True
         '
         'BoneAnimationSmdFilesCheckBox
@@ -576,7 +575,7 @@ Partial Class DecompileUserControl
         Me.BoneAnimationSmdFilesCheckBox.Name = "BoneAnimationSmdFilesCheckBox"
         Me.BoneAnimationSmdFilesCheckBox.Size = New System.Drawing.Size(161, 20)
         Me.BoneAnimationSmdFilesCheckBox.TabIndex = 8
-        Me.BoneAnimationSmdFilesCheckBox.Text = "Bone animation SMD files"
+        Me.BoneAnimationSmdFilesCheckBox.Text = "骨骼动画 SMD 文件"
         Me.BoneAnimationSmdFilesCheckBox.UseVisualStyleBackColor = True
         '
         'VertexAnimationVtaFileCheckBox
@@ -587,7 +586,7 @@ Partial Class DecompileUserControl
         Me.VertexAnimationVtaFileCheckBox.Name = "VertexAnimationVtaFileCheckBox"
         Me.VertexAnimationVtaFileCheckBox.Size = New System.Drawing.Size(199, 20)
         Me.VertexAnimationVtaFileCheckBox.TabIndex = 7
-        Me.VertexAnimationVtaFileCheckBox.Text = "Vertex animation VTA file (flexes)"
+        Me.VertexAnimationVtaFileCheckBox.Text = "顶点动画 VTA 文件（表情）"
         Me.VertexAnimationVtaFileCheckBox.UseVisualStyleBackColor = True
         '
         'PhysicsMeshSmdFileCheckBox
@@ -598,7 +597,7 @@ Partial Class DecompileUserControl
         Me.PhysicsMeshSmdFileCheckBox.Name = "PhysicsMeshSmdFileCheckBox"
         Me.PhysicsMeshSmdFileCheckBox.Size = New System.Drawing.Size(143, 20)
         Me.PhysicsMeshSmdFileCheckBox.TabIndex = 6
-        Me.PhysicsMeshSmdFileCheckBox.Text = "Physics mesh SMD file"
+        Me.PhysicsMeshSmdFileCheckBox.Text = "物理网格 SMD 文件"
         Me.PhysicsMeshSmdFileCheckBox.UseVisualStyleBackColor = True
         '
         'ReferenceMeshSmdFileCheckBox
@@ -609,7 +608,7 @@ Partial Class DecompileUserControl
         Me.ReferenceMeshSmdFileCheckBox.Name = "ReferenceMeshSmdFileCheckBox"
         Me.ReferenceMeshSmdFileCheckBox.Size = New System.Drawing.Size(156, 20)
         Me.ReferenceMeshSmdFileCheckBox.TabIndex = 3
-        Me.ReferenceMeshSmdFileCheckBox.Text = "Reference mesh SMD file"
+        Me.ReferenceMeshSmdFileCheckBox.Text = "参考网格 SMD 文件"
         Me.ReferenceMeshSmdFileCheckBox.UseVisualStyleBackColor = True
         '
         'QcFileCheckBox
@@ -620,7 +619,7 @@ Partial Class DecompileUserControl
         Me.QcFileCheckBox.Name = "QcFileCheckBox"
         Me.QcFileCheckBox.Size = New System.Drawing.Size(61, 20)
         Me.QcFileCheckBox.TabIndex = 0
-        Me.QcFileCheckBox.Text = "QC file"
+        Me.QcFileCheckBox.Text = "QC 文件"
         Me.QcFileCheckBox.UseVisualStyleBackColor = True
         '
         'OptionsGroupBox
@@ -636,7 +635,7 @@ Partial Class DecompileUserControl
         Me.OptionsGroupBox.Size = New System.Drawing.Size(282, 246)
         Me.OptionsGroupBox.TabIndex = 6
         Me.OptionsGroupBox.TabStop = False
-        Me.OptionsGroupBox.Text = "Options"
+        Me.OptionsGroupBox.Text = "选项"
         '
         'Panel3
         '
@@ -664,7 +663,7 @@ Partial Class DecompileUserControl
         Me.FolderForEachModelCheckBox.Name = "FolderForEachModelCheckBox"
         Me.FolderForEachModelCheckBox.Size = New System.Drawing.Size(141, 20)
         Me.FolderForEachModelCheckBox.TabIndex = 11
-        Me.FolderForEachModelCheckBox.Text = "Folder for each model"
+        Me.FolderForEachModelCheckBox.Text = "每个模型一个文件夹"
         Me.FolderForEachModelCheckBox.UseVisualStyleBackColor = True
         '
         'DecompilerLogTextBox
@@ -689,6 +688,8 @@ Partial Class DecompileUserControl
         Me.DecompileButtonsPanel.Controls.Add(Me.SkipCurrentModelButton)
         Me.DecompileButtonsPanel.Controls.Add(Me.CancelDecompileButton)
         Me.DecompileButtonsPanel.Controls.Add(Me.UseAllInCompileButton)
+        Me.DecompileButtonsPanel.Controls.Add(Me.MeshResourceFolderButton)
+        Me.DecompileButtonsPanel.Controls.Add(Me.VtfHeaderButton)
         Me.DecompileButtonsPanel.Dock = System.Windows.Forms.DockStyle.Top
         Me.DecompileButtonsPanel.Location = New System.Drawing.Point(0, 0)
         Me.DecompileButtonsPanel.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
@@ -703,7 +704,7 @@ Partial Class DecompileUserControl
         Me.DecompileButton.Name = "DecompileButton"
         Me.DecompileButton.Size = New System.Drawing.Size(140, 28)
         Me.DecompileButton.TabIndex = 2
-        Me.DecompileButton.Text = "&Decompile"
+        Me.DecompileButton.Text = "反编译"
         Me.DecompileButton.UseVisualStyleBackColor = True
         '
         'SkipCurrentModelButton
@@ -714,7 +715,7 @@ Partial Class DecompileUserControl
         Me.SkipCurrentModelButton.Name = "SkipCurrentModelButton"
         Me.SkipCurrentModelButton.Size = New System.Drawing.Size(140, 28)
         Me.SkipCurrentModelButton.TabIndex = 3
-        Me.SkipCurrentModelButton.Text = "Skip Current Model"
+        Me.SkipCurrentModelButton.Text = "跳过当前模型"
         Me.SkipCurrentModelButton.UseVisualStyleBackColor = True
         '
         'CancelDecompileButton
@@ -725,7 +726,7 @@ Partial Class DecompileUserControl
         Me.CancelDecompileButton.Name = "CancelDecompileButton"
         Me.CancelDecompileButton.Size = New System.Drawing.Size(140, 28)
         Me.CancelDecompileButton.TabIndex = 4
-        Me.CancelDecompileButton.Text = "Cancel Decompile"
+        Me.CancelDecompileButton.Text = "取消反编译"
         Me.CancelDecompileButton.UseVisualStyleBackColor = True
         '
         'UseAllInCompileButton
@@ -736,8 +737,27 @@ Partial Class DecompileUserControl
         Me.UseAllInCompileButton.Name = "UseAllInCompileButton"
         Me.UseAllInCompileButton.Size = New System.Drawing.Size(140, 28)
         Me.UseAllInCompileButton.TabIndex = 5
-        Me.UseAllInCompileButton.Text = "Use All in Compile"
+        Me.UseAllInCompileButton.Text = "在编译中使用全部"
         Me.UseAllInCompileButton.UseVisualStyleBackColor = True
+        '
+        'MeshResourceFolderButton
+        '
+        Me.MeshResourceFolderButton.Location = New System.Drawing.Point(588, 0)
+        Me.MeshResourceFolderButton.Name = "MeshResourceFolderButton"
+        Me.MeshResourceFolderButton.Size = New System.Drawing.Size(128, 28)
+        Me.MeshResourceFolderButton.TabIndex = 6
+        Me.MeshResourceFolderButton.Text = "配套资源目录"
+        Me.MeshResourceFolderButton.UseVisualStyleBackColor = True
+        '
+        'VtfHeaderButton
+        '
+        Me.VtfHeaderButton.Location = New System.Drawing.Point(724, 0)
+        Me.VtfHeaderButton.Name = "VtfHeaderButton"
+        Me.VtfHeaderButton.Size = New System.Drawing.Size(128, 28)
+        Me.VtfHeaderButton.TabIndex = 7
+        Me.VtfHeaderButton.Text = "修复 VTF 文件头…"
+        Me.ToolTip1.SetToolTip(Me.VtfHeaderButton, "检查 PC VTF 7.0–7.2 二维纹理，并另存头长度修复副本。")
+        Me.VtfHeaderButton.UseVisualStyleBackColor = True
         '
         'Panel4
         '
@@ -773,7 +793,7 @@ Partial Class DecompileUserControl
         Me.UseInEditButton.Name = "UseInEditButton"
         Me.UseInEditButton.Size = New System.Drawing.Size(84, 28)
         Me.UseInEditButton.TabIndex = 2
-        Me.UseInEditButton.Text = "Use in Edit"
+        Me.UseInEditButton.Text = "在编辑中使用"
         Me.UseInEditButton.UseVisualStyleBackColor = True
         Me.UseInEditButton.Visible = False
         '
@@ -786,7 +806,7 @@ Partial Class DecompileUserControl
         Me.UseInCompileButton.Name = "UseInCompileButton"
         Me.UseInCompileButton.Size = New System.Drawing.Size(110, 28)
         Me.UseInCompileButton.TabIndex = 3
-        Me.UseInCompileButton.Text = "Use in Compile"
+        Me.UseInCompileButton.Text = "在编译中使用"
         Me.UseInCompileButton.UseVisualStyleBackColor = True
         '
         'GotoDecompiledFileButton
@@ -797,13 +817,11 @@ Partial Class DecompileUserControl
         Me.GotoDecompiledFileButton.Name = "GotoDecompiledFileButton"
         Me.GotoDecompiledFileButton.Size = New System.Drawing.Size(50, 28)
         Me.GotoDecompiledFileButton.TabIndex = 4
-        Me.GotoDecompiledFileButton.Text = "Goto"
+        Me.GotoDecompiledFileButton.Text = "转到"
         Me.GotoDecompiledFileButton.UseVisualStyleBackColor = True
         '
         'DecompileUserControl
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.Panel2)
         Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Name = "DecompileUserControl"
@@ -860,6 +878,8 @@ Partial Class DecompileUserControl
 	Friend WithEvents UseInEditButton As System.Windows.Forms.Button
 	Friend WithEvents UseInCompileButton As System.Windows.Forms.Button
 	Friend WithEvents UseAllInCompileButton As System.Windows.Forms.Button
+	Friend WithEvents MeshResourceFolderButton As System.Windows.Forms.Button
+	Friend WithEvents VtfHeaderButton As System.Windows.Forms.Button
 	Friend WithEvents DecompileOptionsUseDefaultsButton As System.Windows.Forms.Button
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
 	Friend WithEvents TextureBmpFilesCheckBox As System.Windows.Forms.CheckBox

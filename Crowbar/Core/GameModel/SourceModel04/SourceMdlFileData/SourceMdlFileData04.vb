@@ -1,6 +1,9 @@
 Public Class SourceMdlFileData04
 	Inherits SourceMdlFileDataBase
 
+	Public theReferencePose As List(Of SourceMdlSequenceValue04)
+	Public theBoneTransforms As List(Of SourceBoneTransform10)
+
 	Public Sub New()
 		MyBase.New()
 

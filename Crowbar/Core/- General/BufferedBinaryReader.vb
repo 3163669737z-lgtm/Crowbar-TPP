@@ -147,7 +147,7 @@ Public Class BufferedBinaryReader
 					If Me.thePositionInBuffer + byteCountToRead <= Me.theBinaryReader.BaseStream.Position Then
 						Exit Do
 					Else
-						Throw New EndOfStreamException("Read beyond EOF.")
+						Throw New EndOfStreamException("读取超出文件结尾。")
 					End If
 				End If
 				targetOffsetInBuffer += byteCountActuallyRead

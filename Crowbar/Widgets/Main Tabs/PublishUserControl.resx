@@ -121,11 +121,7 @@
     <value>161, 17</value>
   </metadata>
   <data name="ExplanationTextBox.Text" xml:space="preserve">
-    <value>Click the Refresh Game Items button (the little green-and-white button above this text) to begin.
-
-Why this text instead of an automatic refresh?
-If you want to publish to a game's workshop other than the selected one, this prevents an unwanted and potentially slow request
-for the list of workshop items from Steam.</value>
+    <value>选择游戏后，点击游戏名称旁的刷新按钮，从 Steam 加载该游戏的创意工坊项目。</value>
   </data>
   <metadata name="ItemListToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>

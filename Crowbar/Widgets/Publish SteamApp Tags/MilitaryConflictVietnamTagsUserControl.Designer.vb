@@ -59,7 +59,7 @@ Partial Class MilitaryConflictVietnamTagsUserControl
 		Me.ModelTagsGroupBox.Size = New System.Drawing.Size(161, 253)
 		Me.ModelTagsGroupBox.TabIndex = 3
 		Me.ModelTagsGroupBox.TabStop = False
-		Me.ModelTagsGroupBox.Text = "Game Modes"
+		Me.ModelTagsGroupBox.Text = "游戏模式"
 		'
 		'WeaponsCheckBox
 		'
@@ -126,7 +126,7 @@ Partial Class MilitaryConflictVietnamTagsUserControl
 		Me.MapTagsGroupBox.Size = New System.Drawing.Size(114, 253)
 		Me.MapTagsGroupBox.TabIndex = 2
 		Me.MapTagsGroupBox.TabStop = False
-		Me.MapTagsGroupBox.Text = "Game Content"
+		Me.MapTagsGroupBox.Text = "游戏内容"
 		'
 		'ItemsCheckBox
 		'
@@ -286,8 +286,8 @@ Partial Class MilitaryConflictVietnamTagsUserControl
 		'
 		'MilitaryConflictVietnamTagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.Controls.Add(Me.ModelTagsGroupBox)
 		Me.Controls.Add(Me.MapTagsGroupBox)
 		Me.Name = "MilitaryConflictVietnamTagsUserControl"

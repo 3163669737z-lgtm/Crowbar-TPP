@@ -171,11 +171,7 @@ Public Class SourceModel2531
 		'physicsMeshPathFileName = Path.Combine(modelOutputPath, Me.thePhysicsMeshSmdFileName)
 		Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName = SourceFileNamesModule.CreatePhysicsSmdFileName(Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName, Me.theName)
 		physicsMeshPathFileName = Path.Combine(modelOutputPath, Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName)
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, physicsMeshPathFileName)
-		Me.WriteTextFile(physicsMeshPathFileName, AddressOf Me.WritePhysicsMeshSmdFile)
-		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, physicsMeshPathFileName)
-
-		Return status
+		Return Me.WriteTextOutput(physicsMeshPathFileName, AddressOf Me.WritePhysicsMeshSmdFile)
 	End Function
 
 	Public Overrides Function WriteReferenceMeshFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
@@ -497,7 +493,7 @@ Public Class SourceModel2531
 			qcFile.WriteCollisionModelOrCollisionJointsCommand()
 			qcFile.WriteCollisionTextCommand()
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		Finally
 		End Try
 	End Sub

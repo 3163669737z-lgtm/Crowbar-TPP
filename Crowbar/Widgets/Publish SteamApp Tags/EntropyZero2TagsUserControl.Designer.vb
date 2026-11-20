@@ -66,7 +66,7 @@ Partial Class EntropyZero2TagsUserControl
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(36, 13)
 		Me.Label5.TabIndex = 38
-		Me.Label5.Text = "MAPS"
+		Me.Label5.Text = "地图"
 		'
 		'Label6
 		'
@@ -75,7 +75,7 @@ Partial Class EntropyZero2TagsUserControl
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(44, 13)
 		Me.Label6.TabIndex = 49
-		Me.Label6.Text = "ASSETS"
+		Me.Label6.Text = "资源"
 		'
 		'CampaignAddonModCheckBox
 		'
@@ -163,8 +163,8 @@ Partial Class EntropyZero2TagsUserControl
 		'
 		'EntropyZero2TagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.AutoScroll = True
 		Me.Controls.Add(Me.MiscAssetCheckBox)
 		Me.Controls.Add(Me.ScriptCheckBox)

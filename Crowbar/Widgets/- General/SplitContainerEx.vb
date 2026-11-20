@@ -5,6 +5,31 @@ Imports System.Drawing
 Public Class SplitContainerEx
     Inherits SplitContainer
 
+	Protected Overrides Sub ScaleControl(ByVal factor As SizeF, ByVal specified As BoundsSpecified)
+		Dim horizontal As Boolean = Me.Orientation = Orientation.Horizontal
+		Dim dimension As BoundsSpecified = If(horizontal, BoundsSpecified.Height, BoundsSpecified.Width)
+		Dim scaleFactor As Single = If(horizontal, factor.Height, factor.Width)
+		Dim fixedPane As FixedPanel = Me.FixedPanel
+		Dim distance As Integer = Me.SplitterDistance
+		Dim span As Integer = If(horizontal, Me.ClientSize.Height, Me.ClientSize.Width)
+		Dim trailingSize As Integer = span - distance - Me.SplitterWidth
+
+		MyBase.ScaleControl(factor, specified)
+
+		If (specified And dimension) = 0 OrElse scaleFactor = 1.0F OrElse fixedPane = FixedPanel.None OrElse
+				Me.Panel1Collapsed OrElse Me.Panel2Collapsed Then Return
+
+		span = If(horizontal, Me.ClientSize.Height, Me.ClientSize.Width)
+		Dim maxDistance As Integer = span - Me.Panel2MinSize - Me.SplitterWidth
+		If maxDistance < Me.Panel1MinSize Then Return
+
+		' WinForms preserves the size of a fixed panel when resizing its container.
+		' Scale that size explicitly when the resize is a DPI change.
+		Dim scaledDistance As Integer = If(fixedPane = FixedPanel.Panel1, CInt(distance * scaleFactor),
+			span - Me.SplitterWidth - CInt(trailingSize * scaleFactor))
+		Me.SplitterDistance = Math.Min(maxDistance, Math.Max(Me.Panel1MinSize, scaledDistance))
+	End Sub
+
 	''''' <summary>Determines the thickness of the splitter.</summary>
 	''<DefaultValue(GetType(Integer), "5"), Description("Determines the thickness of the splitter.")>
 	''Public Overridable Shadows Property SplitterWidth() As Integer
@@ -81,7 +106,7 @@ Public Class SplitContainerEx
 	'	'    Dim points(2) As Point
 	'	'    Dim pointRect = Rectangle.Empty
 
-	'	'    If Orientation = Windows.Forms.Orientation.Horizontal Then
+	'	'    If Orientation = System.Windows.Forms.Orientation.Horizontal Then
 	'	'        points(0) = New Point((MyBase.Width \ 2), SplitterDistance + (SplitterWidth \ 2))
 	'	'        points(1) = New Point(points(0).X - 10, points(0).Y)
 	'	'        points(2) = New Point(points(2).X + 10, points(0).Y)
@@ -108,7 +133,7 @@ Public Class SplitContainerEx
 	'	'    'Dim facePoints(1) As Point
 	'	'    'Dim shadowPoints(1) As Point
 
-	'	'    'If Me.Orientation = Windows.Forms.Orientation.Horizontal Then
+	'	'    'If Me.Orientation = System.Windows.Forms.Orientation.Horizontal Then
 	'	'    '    facePoints(0) = New Point((Me.Width \ 2) - 10, Me.SplitterDistance + (Me.SplitterWidth \ 2))
 	'	'    '    facePoints(1) = New Point(facePoints(0).X + 10 * 2, facePoints(0).Y)
 	'	'    '    shadowPoints(0) = New Point(facePoints(0).X, facePoints(0).Y + 1)

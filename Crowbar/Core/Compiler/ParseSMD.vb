@@ -49,7 +49,7 @@ Module ParseSMD
 
 				If command.ToLower() = "version" Then
 					If commandOption <> 1 Then
-						info.messages.Add("ERROR: Incorrect version on line " + info.lineCount.ToString() + ". Must be: version 1")
+						info.messages.Add("错误：第 ... 行的版本不正确 " + info.lineCount.ToString() + ". Must be: version 1")
 						Exit While
 					End If
 					commandsRemaining.Remove("version")
@@ -72,13 +72,13 @@ Module ParseSMD
 				Else
 					Dim commandsRemainingText As String
 					commandsRemainingText = String.Join(" ", commandsRemaining)
-					info.messages.Add("ERROR: Unknown command on line " + info.lineCount.ToString() + ": " + command)
+					info.messages.Add("错误：第 ... 行的命令未知 " + info.lineCount.ToString() + ": " + command)
 					info.messages.Add("       Expected one of these commands: " + commandsRemainingText)
 					Exit While
 				End If
 			End While
 		Catch ex As Exception
-			info.messages.Add("WARNING: Exception raised on line " + info.lineCount.ToString() + ": " + ex.Message)
+			info.messages.Add("警告：第 ... 行出现异常 " + info.lineCount.ToString() + ": " + ex.Message)
 		Finally
 			outputFileStream.Close()
 		End Try
@@ -133,7 +133,7 @@ Module ParseSMD
 				'	char name[1024];
 
 				If info.boneNames.Contains(boneName) Then
-					info.messages.Add("WARNING: Duplicate bone name of """ + boneName + """ at line " + info.lineCount.ToString())
+					info.messages.Add("警告：骨骼名称重复：""" + boneName + """ at line " + info.lineCount.ToString())
 				Else
 					info.boneNames.Add(boneName)
 					If boneIndex > boneCount Then
@@ -145,7 +145,7 @@ Module ParseSMD
 			End If
 		End While
 
-		info.messages.Add("ERROR: Unexpected end of file at line " + info.lineCount.ToString())
+		info.messages.Add("错误：第 ... 行意外遇到文件结尾 " + info.lineCount.ToString())
 		Return 0
 	End Function
 

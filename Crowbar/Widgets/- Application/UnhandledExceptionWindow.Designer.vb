@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class UnhandledExceptionWindow
 	Inherits BaseForm
 
@@ -34,7 +34,7 @@ Partial Class UnhandledExceptionWindow
 		Me.ExitButton.Name = "ExitButton"
 		Me.ExitButton.Size = New System.Drawing.Size(90, 23)
 		Me.ExitButton.TabIndex = 4
-		Me.ExitButton.Text = "Exit Crowbar"
+		Me.ExitButton.Text = "退出 Crowbar"
 		'
 		'CopyErrorReportButton
 		'
@@ -43,7 +43,7 @@ Partial Class UnhandledExceptionWindow
 		Me.CopyErrorReportButton.Name = "CopyErrorReportButton"
 		Me.CopyErrorReportButton.Size = New System.Drawing.Size(101, 23)
 		Me.CopyErrorReportButton.TabIndex = 3
-		Me.CopyErrorReportButton.Text = "Copy Error Report"
+		Me.CopyErrorReportButton.Text = "复制错误报告"
 		'
 		'LinkLabel1
 		'
@@ -63,7 +63,7 @@ Partial Class UnhandledExceptionWindow
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(71, 13)
 		Me.Label1.TabIndex = 1
-		Me.Label1.Text = "Error Report:"
+		Me.Label1.Text = "错误报告："
 		'
 		'ErrorReportTextBox
 		'
@@ -78,8 +78,8 @@ Partial Class UnhandledExceptionWindow
 		'UnhandledExceptionWindow
 		'
 		Me.AcceptButton = Me.ExitButton
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.CancelButton = Me.CopyErrorReportButton
 		Me.ClientSize = New System.Drawing.Size(716, 418)
 		Me.ControlBox = False
@@ -94,7 +94,7 @@ Partial Class UnhandledExceptionWindow
 		Me.Name = "UnhandledExceptionWindow"
 		Me.ShowInTaskbar = False
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-		Me.Text = "Crowbar Internal Error"
+		Me.Text = "Crowbar 内部错误"
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 

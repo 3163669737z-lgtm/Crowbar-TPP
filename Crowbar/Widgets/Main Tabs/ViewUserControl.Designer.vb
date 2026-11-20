@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class ViewUserControl
 	Inherits BaseUserControl
 
@@ -58,7 +58,7 @@ Partial Class ViewUserControl
 		Me.ViewButton.Name = "ViewButton"
 		Me.ViewButton.Size = New System.Drawing.Size(40, 23)
 		Me.ViewButton.TabIndex = 8
-		Me.ViewButton.Text = "View"
+		Me.ViewButton.Text = "查看"
 		Me.ViewButton.UseVisualStyleBackColor = True
 		'
 		'MdlPathFileNameTextBox
@@ -78,7 +78,7 @@ Partial Class ViewUserControl
 		Me.BrowseForMdlFileButton.Name = "BrowseForMdlFileButton"
 		Me.BrowseForMdlFileButton.Size = New System.Drawing.Size(64, 23)
 		Me.BrowseForMdlFileButton.TabIndex = 2
-		Me.BrowseForMdlFileButton.Text = "Browse..."
+		Me.BrowseForMdlFileButton.Text = "浏览..."
 		Me.BrowseForMdlFileButton.UseVisualStyleBackColor = True
 		'
 		'Label1
@@ -88,7 +88,7 @@ Partial Class ViewUserControl
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(52, 13)
 		Me.Label1.TabIndex = 0
-		Me.Label1.Text = "MDL file:"
+		Me.Label1.Text = "MDL 文件："
 		'
 		'Panel2
 		'
@@ -113,7 +113,7 @@ Partial Class ViewUserControl
 		Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
 		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(120, 13)
 		Me.OverrideMdlVersionLabel.TabIndex = 48
-		Me.OverrideMdlVersionLabel.Text = "Override MDL version:"
+		Me.OverrideMdlVersionLabel.Text = "覆盖 MDL 版本："
 		'
 		'OverrideMdlVersionComboBox
 		'
@@ -131,7 +131,7 @@ Partial Class ViewUserControl
 		Me.GotoMdlFileButton.Name = "GotoMdlFileButton"
 		Me.GotoMdlFileButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoMdlFileButton.TabIndex = 3
-		Me.GotoMdlFileButton.Text = "Goto"
+		Me.GotoMdlFileButton.Text = "转到"
 		Me.GotoMdlFileButton.UseVisualStyleBackColor = True
 		'
 		'SplitContainer1
@@ -174,7 +174,7 @@ Partial Class ViewUserControl
 		Me.GroupBox1.Size = New System.Drawing.Size(770, 363)
 		Me.GroupBox1.TabIndex = 4
 		Me.GroupBox1.TabStop = False
-		Me.GroupBox1.Text = "Info"
+		Me.GroupBox1.Text = "信息"
 		'
 		'InfoRichTextBox
 		'
@@ -195,7 +195,7 @@ Partial Class ViewUserControl
 		Me.GameLabel.Name = "GameLabel"
 		Me.GameLabel.Size = New System.Drawing.Size(175, 13)
 		Me.GameLabel.TabIndex = 5
-		Me.GameLabel.Text = "Game that has the model viewer:"
+		Me.GameLabel.Text = "包含模型查看器的游戏："
 		'
 		'GameSetupComboBox
 		'
@@ -215,7 +215,7 @@ Partial Class ViewUserControl
 		Me.SetUpGameButton.Name = "SetUpGameButton"
 		Me.SetUpGameButton.Size = New System.Drawing.Size(90, 23)
 		Me.SetUpGameButton.TabIndex = 7
-		Me.SetUpGameButton.Text = "Set Up Games"
+		Me.SetUpGameButton.Text = "设置游戏"
 		Me.SetUpGameButton.UseVisualStyleBackColor = True
 		'
 		'ViewAsReplacementButton
@@ -225,7 +225,7 @@ Partial Class ViewUserControl
 		Me.ViewAsReplacementButton.Name = "ViewAsReplacementButton"
 		Me.ViewAsReplacementButton.Size = New System.Drawing.Size(125, 23)
 		Me.ViewAsReplacementButton.TabIndex = 9
-		Me.ViewAsReplacementButton.Text = "View as Replacement"
+		Me.ViewAsReplacementButton.Text = "作为替换查看"
 		Me.ViewAsReplacementButton.UseVisualStyleBackColor = True
 		'
 		'UseInDecompileButton
@@ -235,7 +235,7 @@ Partial Class ViewUserControl
 		Me.UseInDecompileButton.Name = "UseInDecompileButton"
 		Me.UseInDecompileButton.Size = New System.Drawing.Size(120, 23)
 		Me.UseInDecompileButton.TabIndex = 10
-		Me.UseInDecompileButton.Text = "Use in Decompile"
+		Me.UseInDecompileButton.Text = "在反编译中使用"
 		Me.UseInDecompileButton.UseVisualStyleBackColor = True
 		'
 		'OpenViewerButton
@@ -245,7 +245,7 @@ Partial Class ViewUserControl
 		Me.OpenViewerButton.Name = "OpenViewerButton"
 		Me.OpenViewerButton.Size = New System.Drawing.Size(90, 23)
 		Me.OpenViewerButton.TabIndex = 11
-		Me.OpenViewerButton.Text = "Open Viewer"
+		Me.OpenViewerButton.Text = "打开查看器"
 		Me.OpenViewerButton.UseVisualStyleBackColor = True
 		'
 		'OpenMappingToolButton
@@ -255,7 +255,7 @@ Partial Class ViewUserControl
 		Me.OpenMappingToolButton.Name = "OpenMappingToolButton"
 		Me.OpenMappingToolButton.Size = New System.Drawing.Size(90, 23)
 		Me.OpenMappingToolButton.TabIndex = 14
-		Me.OpenMappingToolButton.Text = "Open Mapper"
+		Me.OpenMappingToolButton.Text = "打开地图工具"
 		Me.OpenMappingToolButton.UseVisualStyleBackColor = True
 		'
 		'RunGameButton
@@ -265,7 +265,7 @@ Partial Class ViewUserControl
 		Me.RunGameButton.Name = "RunGameButton"
 		Me.RunGameButton.Size = New System.Drawing.Size(90, 23)
 		Me.RunGameButton.TabIndex = 13
-		Me.RunGameButton.Text = "Run Game"
+		Me.RunGameButton.Text = "运行游戏"
 		Me.RunGameButton.UseVisualStyleBackColor = True
 		'
 		'MessageTextBox
@@ -283,8 +283,6 @@ Partial Class ViewUserControl
 		'
 		'ViewUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.Panel2)
 		Me.Name = "ViewUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)

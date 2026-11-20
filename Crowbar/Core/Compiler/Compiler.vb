@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
 Imports Microsoft.VisualBasic.FileIO
@@ -176,22 +176,22 @@ Public Class Compiler
 
 		If Not File.Exists(gameCompilerPathFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "The model compiler, """ + gameCompilerPathFileName + """, does not exist.")
+			Me.WriteErrorMessage(1, "模型编译器 """ + gameCompilerPathFileName + """ 不存在。")
 			Me.UpdateProgress(1, My.Resources.ErrorMessageSDKMissingCause)
 		End If
 		'TODO: [CompilerInputsAreValid] If GoldSource, then only check for liblist.gam if output is for game's "models" folder.
 		'TODO: [CompilerInputsAreValid] Change error message to include "liblist.gam" or "gameinfo.txt" as appropriate.
 		If Not File.Exists(gamePathFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "The game's """ + gamePathFileName + """ file does not exist.")
+			Me.WriteErrorMessage(1, "游戏的 """ + gamePathFileName + """ 文件不存在。")
 			Me.UpdateProgress(1, My.Resources.ErrorMessageSDKMissingCause)
 		End If
 		If String.IsNullOrEmpty(TheApp.Settings.CompileQcPathFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "QC file or folder has not been selected.")
+			Me.WriteErrorMessage(1, "尚未选择 QC 文件或文件夹。")
 		ElseIf TheApp.Settings.CompileMode = InputOptions.File AndAlso Not File.Exists(TheApp.Settings.CompileQcPathFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "The QC file, """ + TheApp.Settings.CompileQcPathFileName + """, does not exist.")
+			Me.WriteErrorMessage(1, "QC 文件 """ + TheApp.Settings.CompileQcPathFileName + """ 不存在。")
 		End If
 		If gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
 			If TheApp.Settings.CompileOptionDefineBonesCreateFileIsChecked Then
@@ -199,7 +199,7 @@ Public Class Compiler
 				defineBonesPathFileName = Me.GetDefineBonesPathFileName()
 				If File.Exists(defineBonesPathFileName) AndAlso Not TheApp.Settings.CompileOptionDefineBonesOverwriteQciFileIsChecked Then
 					inputsAreValid = False
-					Me.WriteErrorMessage(1, "The DefineBones file, """ + defineBonesPathFileName + """, already exists.")
+					Me.WriteErrorMessage(1, "DefineBones 文件 """ + defineBonesPathFileName + """ 已存在。")
 				End If
 			End If
 		End If
@@ -207,7 +207,7 @@ Public Class Compiler
 		If TheApp.Settings.CompileOutputFolderOption <> CompileOutputPathOptions.GameModelsFolder Then
 			If Not FileManager.PathExistsAfterTryToCreate(Me.theOutputPath) Then
 				inputsAreValid = False
-				Me.WriteErrorMessage(1, "The Output Folder, """ + Me.theOutputPath + """ could not be created.")
+				Me.WriteErrorMessage(1, "输出文件夹 """ + Me.theOutputPath + """ 无法创建。")
 			End If
 		End If
 
@@ -262,11 +262,11 @@ Public Class Compiler
 
 		Dim defineBonesText As String = ""
 		If gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
-			defineBonesText = "Define Bones "
+			defineBonesText = "定义骨骼 "
 		End If
 
 		Dim progressDescriptionText As String
-		progressDescriptionText = "Compiling " + defineBonesText + "with " + TheApp.GetProductNameAndVersion() + ": "
+		progressDescriptionText = "正在编译 " + defineBonesText + "with " + TheApp.GetProductNameAndVersion() + ": "
 
 		Try
 			If TheApp.Settings.CompileMode = InputOptions.FolderRecursion Then
@@ -304,7 +304,7 @@ Public Class Compiler
 			End If
 		End Try
 
-		Me.UpdateProgressStop("... " + progressDescriptionText + " finished.")
+		Me.UpdateProgressStop("... " + progressDescriptionText + " 已完成。")
 
 		Return status
 	End Function
@@ -434,11 +434,11 @@ Public Class Compiler
 
 			Dim defineBonesText As String = ""
 			If gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
-				defineBonesText = "Define Bones of "
+				defineBonesText = "定义骨骼："
 			End If
 
 			Me.UpdateProgress()
-			Me.UpdateProgress(1, "Compiling " + defineBonesText + """" + qcRelativePathFileName + """ ...")
+			Me.UpdateProgress(1, "正在编译 " + defineBonesText + """" + qcRelativePathFileName + """ ...")
 
 			Dim result As String
 			result = Me.CheckFiles()
@@ -447,13 +447,13 @@ Public Class Compiler
 					Me.OpenDefineBonesFile()
 				End If
 
-				Me.UpdateProgress(2, "Output from compiler """ + Me.GetGameCompilerPathFileName() + """: ")
+				Me.UpdateProgress(2, "编译器的输出 """ + Me.GetGameCompilerPathFileName() + """: ")
 				Me.RunStudioMdlApp(qcPath, qcFileName)
 
 				If Not Me.theProcessHasOutputData AndAlso Not Me.CompilerOptionQuietIsEnabled() Then
-					Me.UpdateProgress(2, "ERROR: The compiler did not return any status messages.")
-					Me.UpdateProgress(2, "CAUSE: The compiler is not the correct one for the selected game.")
-					Me.UpdateProgress(2, "SOLUTION: Verify integrity of game files via Steam so that the correct compiler is installed.")
+					Me.UpdateProgress(2, "错误：编译器未返回任何状态消息。")
+					Me.UpdateProgress(2, "原因：该编译器不适用于所选游戏。")
+					Me.UpdateProgress(2, "解决方法：通过 Steam 验证游戏文件完整性，以安装正确的编译器。")
 				ElseIf gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
 					If Me.theDefineBonesFileStream IsNot Nothing Then
 						Dim qciPathFileName As String = CType(Me.theDefineBonesFileStream.BaseStream, FileStream).Name
@@ -464,23 +464,23 @@ Public Class Compiler
 						If File.Exists(qciPathFileName) Then
 							Dim qciFileInfo As New FileInfo(qciPathFileName)
 							If qciFileInfo.Length = 0 Then
-								Me.UpdateProgress(2, "CROWBAR WARNING: No define bones were written to QCI file.")
+								Me.UpdateProgress(2, "CROWBAR 警告：没有 define bones 被写入 QCI 文件。")
 
 								Try
 									File.Delete(qciPathFileName)
 								Catch ex As Exception
-									Me.UpdateProgress(2, "CROWBAR WARNING: Failed to delete empty QCI file: """ + qciPathFileName + """")
+									Me.UpdateProgress(2, "CROWBAR 警告：删除空 QCI 文件失败：""" + qciPathFileName + """")
 								End Try
 							Else
-								Me.UpdateProgress(2, "CROWBAR: Wrote define bones into QCI file: """ + qciPathFileName + """")
+								Me.UpdateProgress(2, "CROWBAR：已将 define bones 写入 QCI 文件：""" + qciPathFileName + """")
 
 								If TheApp.Settings.CompileOptionDefineBonesModifyQcFileIsChecked Then
 									Dim line As String = Me.InsertAnIncludeDefineBonesFileCommandIntoQcFile(qciPathFileName)
-									Me.UpdateProgress(2, "CROWBAR: Wrote in the QC file this line: " + line)
+									Me.UpdateProgress(2, "CROWBAR：已在 QC 文件中写入此行：" + line)
 								End If
 							End If
 						Else
-							Me.UpdateProgress(2, "CROWBAR WARNING: Failed to write QCI file: """ + qciPathFileName + """")
+							Me.UpdateProgress(2, "CROWBAR 警告：写入 QCI 文件失败：""" + qciPathFileName + """")
 						End If
 					End If
 				Else
@@ -502,12 +502,12 @@ Public Class Compiler
 					Dim fullPathDeleted As String
 					fullPathDeleted = FileManager.DeleteEmptySubpath(qcModelTopNonextantPath)
 					If fullPathDeleted <> "" Then
-						Me.UpdateProgress(2, "CROWBAR: Deleted empty temporary compile folder """ + fullPathDeleted + """.")
+						Me.UpdateProgress(2, "CROWBAR：已删除空的临时编译文件夹 """ + fullPathDeleted + """.")
 					End If
 				End If
 			End If
 
-			Me.UpdateProgress(1, "... Compiling " + defineBonesText + """" + qcRelativePathFileName + """ finished. Check above for any errors.")
+			Me.UpdateProgress(1, "... 正在编译 " + defineBonesText + """" + qcRelativePathFileName + """ 已完成。请查看上方的错误信息。")
 		Catch ex As Exception
 			'TODO: [CompileOneModel] Should at least give an error message to let user know something prevented the compile.
 			Dim debug As Integer = 4242
@@ -684,11 +684,11 @@ Public Class Compiler
 				End Try
 				Try
 					File.Move(sourcePathFileName, targetPathFileName)
-					Me.UpdateProgress(2, "CROWBAR: Moved compiled model file """ + sourcePathFileName + """ to """ + targetPath + """")
+					Me.UpdateProgress(2, "CROWBAR：已移动编译后的模型文件 """ + sourcePathFileName + """ to """ + targetPath + """")
 				Catch ex As Exception
 					Me.UpdateProgress()
-					Me.UpdateProgress(2, "WARNING: Crowbar tried to move the file, """ + sourcePathFileName + """, to the output folder, but Windows complained with this message: " + ex.Message.Trim())
-					Me.UpdateProgress(2, "SOLUTION: Compile the model again (and hope Windows does not complain again) or move the file yourself.")
+					Me.UpdateProgress(2, "警告：Crowbar 尝试移动文件，""" + sourcePathFileName + """ 到输出文件夹，但 Windows 返回了此消息：" + ex.Message.Trim())
+					Me.UpdateProgress(2, "解决方法：重新编译模型（并希望 Windows 不再报错），或自行移动文件。")
 					Me.UpdateProgress()
 				End Try
 				'End If
@@ -816,7 +816,7 @@ Public Class Compiler
 		End If
 
 		If processIsCanceled Then
-			Me.theLastLine = "...Compiling canceled."
+			Me.theLastLine = "...编译已取消。"
 		End If
 	End Sub
 
@@ -854,7 +854,7 @@ Public Class Compiler
 				Me.theLogFileStream.Flush()
 			Catch ex As Exception
 				Me.UpdateProgress()
-				Me.UpdateProgress(2, "ERROR: Crowbar tried to write the compile log file but the system gave this message: " + ex.Message)
+				Me.UpdateProgress(2, "错误：Crowbar 尝试写入编译日志文件，但系统返回了此消息：" + ex.Message)
 				status = StatusMessage.Error
 			End Try
 		Else
@@ -877,7 +877,7 @@ Public Class Compiler
 	End Sub
 
 	Private Sub WriteErrorMessage(ByVal indentLevel As Integer, ByVal line As String)
-		Me.UpdateProgress(indentLevel, "Crowbar ERROR: " + line)
+		Me.UpdateProgress(indentLevel, "Crowbar 错误：" + line)
 	End Sub
 
 	Private Sub UpdateProgress(ByVal indentLevel As Integer, ByVal line As String)

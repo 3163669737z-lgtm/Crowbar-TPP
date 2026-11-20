@@ -33,7 +33,7 @@ Public Class SourceMdlFile06
 		Me.theMdlFileData.theID = Me.theMdlFileData.id
 		Me.theMdlFileData.version = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.name = Me.theInputFileReader.ReadChars(64)
+		Me.theMdlFileData.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 		Me.theMdlFileData.theModelName = CStr(Me.theMdlFileData.name).Trim(Chr(0))
 
 		Me.theMdlFileData.fileSize = Me.theInputFileReader.ReadInt32()
@@ -85,7 +85,7 @@ Public Class SourceMdlFile06
 					'boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aBone As New SourceMdlBone06()
 
-					aBone.name = Me.theInputFileReader.ReadChars(32)
+					aBone.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 32)
 					aBone.theName = aBone.name
 					aBone.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(aBone.theName)
 					If aBone.theName = "" Then
@@ -173,7 +173,7 @@ Public Class SourceMdlFile06
 
 					fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-					aSequence.name = Me.theInputFileReader.ReadChars(32)
+					aSequence.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 32)
 					aSequence.theName = aSequence.name
 					aSequence.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(aSequence.theName)
 
@@ -302,7 +302,7 @@ Public Class SourceMdlFile06
 					bodyPartInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aBodyPart As New SourceMdlBodyPart06()
 
-					aBodyPart.name = Me.theInputFileReader.ReadChars(64)
+					aBodyPart.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 					aBodyPart.theName = CStr(aBodyPart.name).Trim(Chr(0))
 					aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
 					aBodyPart.base = Me.theInputFileReader.ReadInt32()
@@ -357,7 +357,7 @@ Public Class SourceMdlFile06
 					'boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aTexture As New SourceMdlTexture06()
 
-					aTexture.fileName = Me.theInputFileReader.ReadChars(64)
+					aTexture.fileName = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 					aTexture.theFileName = CStr(aTexture.fileName).Trim(Chr(0))
 					aTexture.flags = Me.theInputFileReader.ReadInt32()
 					aTexture.width = Me.theInputFileReader.ReadUInt32()
@@ -602,7 +602,7 @@ Public Class SourceMdlFile06
 				'modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aModel As New SourceMdlModel06()
 
-				aModel.name = Me.theInputFileReader.ReadChars(64)
+				aModel.name = FileManager.ReadFixedModelChars(Me.theInputFileReader, 64)
 				aModel.theName = CStr(aModel.name).Trim(Chr(0))
 				aModel.type = Me.theInputFileReader.ReadInt32()
 

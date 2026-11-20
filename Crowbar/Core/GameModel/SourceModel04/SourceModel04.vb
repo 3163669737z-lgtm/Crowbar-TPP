@@ -38,7 +38,7 @@ Public Class SourceModel04
 
 	Public Overrides ReadOnly Property HasTextureFileData As Boolean
 		Get
-			Return True
+			Return Me.theMdlFileData.theBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts.Count > 0
 		End Get
 	End Property
 
@@ -231,11 +231,83 @@ Public Class SourceModel04
 		mdlFile.ReadBones()
 		mdlFile.ReadSequenceDescs()
 		mdlFile.ReadBodyParts()
+		Me.BuildReferencePose()
 
 		mdlFile.ReadUnreadBytes()
 
 		' Post-processing.
 		'mdlFile.GetBoneDataFromFirstSequenceFirstFrame()
+	End Sub
+
+	Private Sub BuildReferencePose()
+		Dim data As SourceMdlFileData04 = Me.theMdlFileData
+		If data.theBones Is Nothing Then
+			Return
+		End If
+		Dim firstFrame As SourceMdlSequence04 = Nothing
+		If data.theSequenceDescs IsNot Nothing Then
+			For Each sequence As SourceMdlSequenceDesc04 In data.theSequenceDescs
+				If sequence.theSequences IsNot Nothing AndAlso sequence.theSequences.Count > 0 Then
+					firstFrame = sequence.theSequences(0)
+					Exit For
+				End If
+			Next
+		End If
+
+		data.theReferencePose = New List(Of SourceMdlSequenceValue04)(data.theBones.Count)
+		data.theBoneTransforms = New List(Of SourceBoneTransform10)(data.theBones.Count)
+		For boneIndex As Integer = 0 To data.theBones.Count - 1
+			Dim bone As SourceMdlBone04 = data.theBones(boneIndex)
+			Dim position As SourceVector = bone.position
+			Dim rotation As New SourceVector()
+			If firstFrame IsNot Nothing Then
+				position = firstFrame.thePositionsAndRotations(boneIndex).position
+				rotation = firstFrame.thePositionsAndRotations(boneIndex).rotation
+			End If
+			If bone.parentBoneIndex = -1 Then
+				position = New SourceVector With {.x = position.y, .y = -position.x, .z = position.z}
+				rotation = New SourceVector With {.x = rotation.x, .y = rotation.y, .z = rotation.z - Math.PI / 2}
+			End If
+			data.theReferencePose.Add(New SourceMdlSequenceValue04 With {.position = position, .rotation = rotation})
+
+			Dim local As New SourceBoneTransform10()
+			MathModule.AngleMatrix(rotation.y, rotation.z, rotation.x, local.matrixColumn0, local.matrixColumn1, local.matrixColumn2, local.matrixColumn3)
+			local.matrixColumn3 = position
+			If bone.parentBoneIndex = -1 Then
+				data.theBoneTransforms.Add(local)
+			Else
+				Dim parent As SourceBoneTransform10 = data.theBoneTransforms(bone.parentBoneIndex)
+				Dim world As New SourceBoneTransform10()
+				MathModule.R_ConcatTransforms(parent.matrixColumn0, parent.matrixColumn1, parent.matrixColumn2, parent.matrixColumn3,
+					local.matrixColumn0, local.matrixColumn1, local.matrixColumn2, local.matrixColumn3,
+					world.matrixColumn0, world.matrixColumn1, world.matrixColumn2, world.matrixColumn3)
+				data.theBoneTransforms.Add(world)
+			End If
+		Next
+	End Sub
+
+	Protected Overrides Sub WriteQcFile()
+		Dim output As StreamWriter = Me.theOutputFileTextWriter
+		output.WriteLine("$modelname ""{0}.mdl""", Me.theName)
+		If Me.theMdlFileData.theBodyParts IsNot Nothing Then
+			For bodyIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
+				Dim part As SourceMdlBodyPart04 = Me.theMdlFileData.theBodyParts(bodyIndex)
+				output.WriteLine("$bodygroup ""bodypart{0}""", bodyIndex)
+				output.WriteLine("{")
+				For modelIndex As Integer = 0 To part.theModels.Count - 1
+					Dim model As SourceMdlModel04 = part.theModels(modelIndex)
+					model.theSmdFileName = SourceFileNamesModule.CreateBodyGroupSmdFileName(model.theSmdFileName, bodyIndex, modelIndex, 0, Me.theName, "")
+					output.WriteLine("    studio ""{0}""", model.theSmdFileName)
+				Next
+				output.WriteLine("}")
+			Next
+		End If
+		If Me.theMdlFileData.theSequenceDescs IsNot Nothing Then
+			For Each sequence As SourceMdlSequenceDesc04 In Me.theMdlFileData.theSequenceDescs
+				sequence.theSmdRelativePathFileName = SourceFileNamesModule.CreateAnimationSmdRelativePathFileName(sequence.theSmdRelativePathFileName, Me.theName, sequence.theName, -1)
+				output.WriteLine("$sequence ""{0}"" ""{1}""", sequence.theName, sequence.theSmdRelativePathFileName)
+			Next
+		End If
 	End Sub
 
 	Protected Overloads Function WriteMeshSmdFile(ByVal smdPathFileName As String, ByVal aModel As SourceMdlModel04) As AppEnums.StatusMessage

@@ -1,4 +1,4 @@
-Imports System.Runtime.InteropServices
+﻿Imports System.Runtime.InteropServices
 Imports System.Text
 
 Public Class Win32Api
@@ -532,7 +532,7 @@ Public Class Win32Api
 			defaultIconKey.SetValue("", exeProgram + ",0")
 
 			shellKey = classesKey.CreateSubKey(className + "\Shell")
-			shellKey.SetValue("", "Open")
+			shellKey.SetValue("", "打开")
 
 			shellOpenCommandKey = classesKey.CreateSubKey(className + "\Shell\Open\Command")
 			shellOpenCommandKey.SetValue("", exeProgram + " ""%1""")

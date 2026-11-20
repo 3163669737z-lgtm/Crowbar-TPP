@@ -1,5 +1,6 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.IO
+Imports System.Linq
 
 Public Class Decompiler
 	Inherits BackgroundWorker
@@ -141,7 +142,14 @@ Public Class Decompiler
 			decompileResultInfo.theDecompiledRelativePathFileNames = Me.theDecompiledFirstDebugFiles
 		End If
 
-		If decompileResultInfo.theDecompiledRelativePathFileNames.Count <= 0 OrElse Me.theDecompiledQcFiles.Count <= 0 Then
+		If decompileResultInfo.theDecompiledRelativePathFileNames.Count = 0 Then
+			Dim alternatives As BindingListEx(Of String)() = {Me.theDecompiledFirstRefSmdFiles, Me.theDecompiledFirstLodSmdFiles,
+				Me.theDecompiledPhysicsFiles, Me.theDecompiledVtaFiles, Me.theDecompiledFirstBoneAnimSmdFiles, Me.theDecompiledVrdFiles,
+				Me.theDecompiledDeclareSequenceQciFiles, Me.theDecompiledFirstTextureBmpFiles, Me.theDecompiledLogFiles, Me.theDecompiledFirstDebugFiles}
+			Dim firstAvailable As BindingListEx(Of String) = alternatives.FirstOrDefault(Function(files) files.Count > 0)
+			If firstAvailable IsNot Nothing Then decompileResultInfo.theDecompiledRelativePathFileNames = firstAvailable
+		End If
+		If decompileResultInfo.theDecompiledRelativePathFileNames.Count = 0 Then
 			Me.theOutputPathOrModelOutputFileName = ""
 			'ElseIf decompileResultInfo.theDecompiledRelativePathFileNames.Count = 1 Then
 			'	Me.theOutputPathOrModelOutputFileName = decompileResultInfo.theDecompiledRelativePathFileNames(0)
@@ -156,6 +164,8 @@ Public Class Decompiler
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
 		Me.theSkipCurrentModelIsActive = False
+		Me.theInputMdlPathName = ""
+		Dim modelResults As New List(Of StatusMessage)
 
 		Me.theDecompiledQcFiles.Clear()
 		Me.theDecompiledFirstRefSmdFiles.Clear()
@@ -178,7 +188,7 @@ Public Class Decompiler
 		End If
 
 		Dim progressDescriptionText As String
-		progressDescriptionText = "Decompiling with " + TheApp.GetProductNameAndVersion() + ": "
+		progressDescriptionText = "正在使用 ... 反编译：" + TheApp.GetProductNameAndVersion() + ": "
 
 		Try
 			If Me.theInputMdlPathName = "" Then
@@ -187,7 +197,7 @@ Public Class Decompiler
 				progressDescriptionText += """" + mdlPathFileName + """"
 				Me.UpdateProgressStart(progressDescriptionText + " ...")
 				Me.UpdateProgress()
-				Me.UpdateProgress(1, "ERROR: Failed because actual path is too long.")
+				Me.UpdateProgress(1, "错误：失败，因为实际路径过长。")
 				status = StatusMessage.Error
 			ElseIf TheApp.Settings.DecompileMode = InputOptions.FolderRecursion Then
 				progressDescriptionText += """" + Me.theInputMdlPathName + """ (folder + subfolders)"
@@ -198,7 +208,7 @@ Public Class Decompiler
 				'	Return status
 				'End If
 
-				Me.DecompileModelsInFolderRecursively(Me.theInputMdlPathName)
+				Me.DecompileModelsInFolderRecursively(Me.theInputMdlPathName, modelResults)
 			ElseIf TheApp.Settings.DecompileMode = InputOptions.Folder Then
 				progressDescriptionText += """" + Me.theInputMdlPathName + """ (folder)"
 				Me.UpdateProgressStart(progressDescriptionText + " ...")
@@ -208,267 +218,210 @@ Public Class Decompiler
 				'	Return status
 				'End If
 
-				Me.DecompileModelsInFolder(Me.theInputMdlPathName)
+				Me.DecompileModelsInFolder(Me.theInputMdlPathName, modelResults)
 			Else
 				progressDescriptionText += """" + mdlPathFileName + """"
 				Me.UpdateProgressStart(progressDescriptionText + " ...")
 				status = Me.DecompileOneModel(mdlPathFileName)
 			End If
+			If modelResults.Count > 0 Then
+				Dim counts As String = String.Join("，", modelResults.GroupBy(Function(result) result).
+					Select(Function(group) DescribeResult(group.Key) + " " + group.Count().ToString()))
+				Me.UpdateProgress(1, counts)
+				If status = StatusMessage.Success Then status = SummarizeResults(modelResults)
+			End If
 		Catch ex As Exception
+			Me.UpdateProgress(1, "批处理失败 — " + ex.Message)
 			status = StatusMessage.Error
 		Finally
 			If Me.theLogFileStream IsNot Nothing Then
-				Me.theLogFileStream.Flush()
-				Me.theLogFileStream.Close()
-				Me.theLogFileStream = Nothing
+				Me.CloseLog()
 			End If
 		End Try
 
-		Me.UpdateProgressStop("... " + progressDescriptionText + " finished.")
+		Me.UpdateProgressStop("反编译结果 — " + DescribeResult(If(Me.CancellationPending, StatusMessage.Canceled, status)))
 
 		Return status
 	End Function
 
-	Private Function DecompileModelsInFolderRecursively(ByVal modelsPathName As String) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
-		status = Me.DecompileModelsInFolder(modelsPathName)
-		If Me.CancellationPending Then
-			status = StatusMessage.Canceled
-			Return status
-		End If
-
-		For Each aPathName As String In Directory.GetDirectories(modelsPathName)
-			status = Me.DecompileModelsInFolderRecursively(aPathName)
-			If Me.CancellationPending Then
-				status = StatusMessage.Canceled
-				Return status
-			End If
+	Private Sub DecompileModelsInFolderRecursively(modelsPathName As String, results As List(Of StatusMessage))
+		Me.DecompileModelsInFolder(modelsPathName, results)
+		If Me.CancellationPending Then Return
+		For Each pathName As String In Directory.GetDirectories(modelsPathName)
+			Me.DecompileModelsInFolderRecursively(pathName, results)
+			If Me.CancellationPending Then Exit For
 		Next
+	End Sub
+
+	Private Sub DecompileModelsInFolder(modelsPathName As String, results As List(Of StatusMessage))
+		For Each pathFileName As String In Directory.GetFiles(modelsPathName, "*.mdl")
+			If Me.CancellationPending Then Exit For
+			results.Add(Me.DecompileOneModel(pathFileName))
+			Me.theSkipCurrentModelIsActive = False
+		Next
+	End Sub
+
+	Private Shared Function SummarizeResults(results As List(Of StatusMessage)) As StatusMessage
+		Dim completed As StatusMessage() = results.Where(Function(result) result <> StatusMessage.Skipped).Distinct().ToArray()
+		If completed.Length = 0 Then Return StatusMessage.Skipped
+		If completed.Length = 1 Then Return completed(0)
+		If completed.Contains(StatusMessage.Success) OrElse completed.Contains(StatusMessage.PartialSuccess) Then Return StatusMessage.PartialSuccess
+		Return StatusMessage.Error
 	End Function
 
-	Private Function DecompileModelsInFolder(ByVal modelsPathName As String) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
-		For Each aPathFileName As String In Directory.GetFiles(modelsPathName, "*.mdl")
-			status = Me.DecompileOneModel(aPathFileName)
-
-			If Me.CancellationPending Then
-				status = StatusMessage.Canceled
-				Return status
-			ElseIf Me.theSkipCurrentModelIsActive Then
-				Me.theSkipCurrentModelIsActive = False
-				Continue For
-			End If
-		Next
+	Private Shared Function DescribeResult(status As StatusMessage) As String
+		Select Case status
+			Case StatusMessage.Success : Return "成功"
+			Case StatusMessage.PartialSuccess : Return "部分成功"
+			Case StatusMessage.Unsupported : Return "不支持"
+			Case StatusMessage.Canceled : Return "已取消"
+			Case StatusMessage.Skipped : Return "已跳过"
+			Case Else : Return "失败"
+		End Select
 	End Function
 
-	Private Function DecompileOneModel(ByVal mdlPathFileName As String) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
+	Private Function DecompileOneModel(mdlPathFileName As String) As StatusMessage
+		Me.theCommittedModelFiles.Clear()
+		Me.theModelWriteFailed = False
+		Dim status As StatusMessage = StatusMessage.Error
+		Dim stage As String = "准备输出目录"
 		Try
-			Dim mdlFileName As String
-			Dim mdlRelativePathName As String
-			Dim mdlRelativePathFileName As String
-			mdlFileName = Path.GetFileName(mdlPathFileName)
-			mdlRelativePathName = FileManager.GetRelativePathFileName(Me.theInputMdlPathName, FileManager.GetPath(mdlPathFileName))
-			mdlRelativePathFileName = Path.Combine(mdlRelativePathName, mdlFileName)
-
-			Dim modelName As String
-			modelName = Path.GetFileNameWithoutExtension(mdlPathFileName)
-
-			Me.theModelOutputPath = Path.Combine(Me.theOutputPath, mdlRelativePathName)
-			Me.theModelOutputPath = Path.GetFullPath(Me.theModelOutputPath)
+			Dim mdlRelativePathName As String = FileManager.GetRelativePathFileName(Me.theInputMdlPathName, FileManager.GetPath(mdlPathFileName))
+			Me.theModelOutputPath = Path.GetFullPath(Path.Combine(Me.theOutputPath, mdlRelativePathName))
 			If TheApp.Settings.DecompileFolderForEachModelIsChecked Then
-				Me.theModelOutputPath = Path.Combine(Me.theModelOutputPath, modelName)
+				Me.theModelOutputPath = Path.Combine(Me.theModelOutputPath, Path.GetFileNameWithoutExtension(mdlPathFileName))
 			End If
+			Directory.CreateDirectory(Me.theModelOutputPath)
 
-			FileManager.CreatePath(Me.theModelOutputPath)
-
-			'Try
-			'	Me.CreateLogTextFile(mdlPathFileName)
-			'Catch ex As Exception
-			'	Me.UpdateProgress()
-			'	Me.UpdateProgress(2, "ERROR: Crowbar tried to write the decompile log file but the system gave this message: " + ex.Message)
-			'	status = StatusMessage.Error
-			'	Return status
-			'End Try
-			If TheApp.Settings.DecompileMode = InputOptions.File Then
-				status = Me.CreateLogTextFile(mdlPathFileName)
-				'If status = StatusMessage.Error Then
-				'	Return status
-				'End If
-			End If
-
+			Dim logFailed As Boolean = TheApp.Settings.DecompileMode = InputOptions.File AndAlso
+				Me.CreateLogTextFile(mdlPathFileName) <> StatusMessage.Success
 			Me.UpdateProgress()
-			Me.UpdateProgress(1, "Decompiling """ + mdlRelativePathFileName + """ ...")
-
-			Dim model As SourceModel = Nothing
+			Me.UpdateProgress(1, "正在反编译 """ + mdlPathFileName + """")
+			stage = "识别 MDL 布局"
 			Dim version As Integer
-			Try
-				model = SourceModel.Create(mdlPathFileName, TheApp.Settings.DecompileOverrideMdlVersion, version)
-				If model IsNot Nothing Then
-					If TheApp.Settings.DecompileOverrideMdlVersion = SupportedMdlVersion.DoNotOverride Then
-						Me.UpdateProgress(2, "Model version " + CStr(model.Version) + " detected.")
-					Else
-						Me.UpdateProgress(2, "Model version overridden to be " + CStr(model.Version) + ".")
-					End If
-				Else
-					Me.UpdateProgress(2, "ERROR: Model version " + CStr(version) + " not currently supported.")
-					Me.UpdateProgress(2, "       If the model works in-game or HLMV, try changing 'Override MDL version' option.")
-					Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ FAILED.")
-					status = StatusMessage.Error
-					Return status
-				End If
-			Catch ex As FormatException
-				Me.UpdateProgress(2, ex.Message)
-				Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ FAILED.")
-				status = StatusMessage.Error
+			Dim model As SourceModel = SourceModel.Create(mdlPathFileName, TheApp.Settings.DecompileOverrideMdlVersion, version)
+			If model Is Nothing Then
+				Me.UpdateProgress(2, stage + " — 不支持文件声明的版本 v" + version.ToString())
+				status = StatusMessage.Unsupported
 				Return status
-			Catch ex As Exception
-				'Me.UpdateProgress(2, "ERROR: " + ex.Message)
-				Me.UpdateProgress(2, "Crowbar tried to read the MDL file but the system gave this message: " + ex.Message)
-				Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ FAILED.")
-				status = StatusMessage.Error
+			End If
+			model.MeshResourceRoot = TheApp.Settings.DecompileMeshResourceRoot
+			Me.UpdateProgress(2, "MDL 声明版本 v" + model.HeaderVersion.GetValueOrDefault(model.Version).ToString() +
+				"，读取布局 v" + model.Version.ToString() + " (" + model.GetType().Name + ")" + model.LayoutReason)
+
+			stage = "读取 MDL 文件头"
+			Dim headerStatus As StatusMessage = model.ReadMdlFileHeader()
+			If headerStatus <> StatusMessage.Success AndAlso headerStatus <> StatusMessage.ErrorInvalidInternalMdlFileSize Then
+				Me.UpdateProgress(2, stage + " — " + headerStatus.ToString())
 				Return status
-			End Try
-
-			Me.UpdateProgress(2, "Reading MDL file header ...")
-			status = model.ReadMdlFileHeader()
-			'If status = StatusMessage.ErrorInvalidMdlFileId Then
-			'	Me.UpdateProgress(2, "ERROR: File does not have expected MDL header ID (first 4 bytes of file) of 'IDST' (without quotes). MDL file is not a GoldSource- or Source-engine MDL file.")
-			'	Return status
-			'ElseIf status = StatusMessage.ErrorInvalidInternalMdlFileSize Then
-			'	Me.UpdateProgress(3, "WARNING: The internally recorded file size is different than the actual file size. Some data might not decompile correctly.")
-			'ElseIf status = StatusMessage.ErrorRequiredMdlFileNotFound Then
-			'	Me.UpdateProgress(2, "ERROR: MDL file not found.")
-			'	Return status
-			'End If
-			If status = StatusMessage.ErrorInvalidInternalMdlFileSize Then
-				Me.UpdateProgress(3, "WARNING: The internally recorded file size is different than the actual file size. Some data might not decompile correctly.")
 			End If
-			Me.UpdateProgress(2, "... Reading MDL file header finished.")
-
-			Me.UpdateProgress(2, "Checking for required files ...")
-			Dim filesFoundFlags As AppEnums.FilesFoundFlags
-			filesFoundFlags = model.CheckForRequiredFiles()
-			'If status = StatusMessage.ErrorRequiredSequenceGroupMdlFileNotFound Then
-			'	Me.UpdateProgress(2, "ERROR: Sequence Group MDL file not found.")
-			'	Return status
-			'ElseIf status = StatusMessage.ErrorRequiredTextureMdlFileNotFound Then
-			'	Me.UpdateProgress(2, "ERROR: Texture MDL file not found.")
-			'	Return status
-			'ElseIf status = StatusMessage.ErrorRequiredAniFileNotFound Then
-			'	Me.UpdateProgress(2, "ERROR: ANI file not found.")
-			'	Return status
-			'ElseIf status = StatusMessage.ErrorRequiredVtxFileNotFound Then
-			'	Me.UpdateProgress(2, "ERROR: VTX file not found.")
-			'	Return status
-			'ElseIf status = StatusMessage.ErrorRequiredVvdFileNotFound Then
-			'	Me.UpdateProgress(2, "ERROR: VVD file not found.")
-			'	Return status
-			'End If
-			'Me.UpdateProgress(2, "... All required files found.")
-			If filesFoundFlags = AppEnums.FilesFoundFlags.ErrorRequiredSequenceGroupMdlFileNotFound Then
-				Me.UpdateProgress(2, "ERROR: Sequence Group MDL file not found.")
-				Return StatusMessage.ErrorRequiredSequenceGroupMdlFileNotFound
-			ElseIf filesFoundFlags = AppEnums.FilesFoundFlags.ErrorRequiredTextureMdlFileNotFound Then
-				Me.UpdateProgress(2, "ERROR: Texture MDL file not found.")
-				Return StatusMessage.ErrorRequiredTextureMdlFileNotFound
-			End If
-			If (filesFoundFlags And AppEnums.FilesFoundFlags.ErrorRequiredAniFileNotFound) > 0 Then
-				Me.UpdateProgress(3, "WARNING: ANI file not found.")
-			End If
-			If (filesFoundFlags And AppEnums.FilesFoundFlags.ErrorRequiredVtxFileNotFound) > 0 Then
-				Me.UpdateProgress(3, "WARNING: VTX file not found or the VTX file checksum does not match MDL file checksum.")
-			End If
-			If (filesFoundFlags And AppEnums.FilesFoundFlags.ErrorRequiredVvdFileNotFound) > 0 Then
-				Me.UpdateProgress(3, "WARNING: VVD file not found.")
-			End If
-			If filesFoundFlags = AppEnums.FilesFoundFlags.AllFilesFound Then
-				Me.UpdateProgress(2, "... All required files found.")
-			Else
-				Me.UpdateProgress(2, "... Not all required files found, but decompiling available files.")
+			If headerStatus = StatusMessage.ErrorInvalidInternalMdlFileSize Then
+				Me.UpdateProgress(2, stage + " — 声明长度与实际文件大小不同。")
 			End If
 
-			If Me.CancellationPending Then
-				Return status
-			ElseIf Me.theSkipCurrentModelIsActive Then
+			stage = "检查配套文件"
+			Dim missing As FilesFoundFlags = model.CheckForRequiredFiles()
+			For Each entry As String In model.CompatibilityDiagnostics
+				Me.UpdateProgress(3, entry)
+			Next
+			If missing <> FilesFoundFlags.AllFilesFound Then
+				Me.UpdateProgress(2, stage + " — " + missing.ToString())
+			End If
+			If (missing And (FilesFoundFlags.ErrorRequiredMdlFileNotFound Or FilesFoundFlags.ErrorRequiredSequenceGroupMdlFileNotFound Or
+				FilesFoundFlags.ErrorRequiredTextureMdlFileNotFound Or FilesFoundFlags.Error)) <> 0 Then Return status
+
+			If Me.CancellationPending OrElse Me.theSkipCurrentModelIsActive Then
+				status = If(Me.CancellationPending, StatusMessage.Canceled, StatusMessage.Skipped)
 				Return status
 			End If
 
-			Me.UpdateProgress(2, "Reading data ...")
-			status = Me.ReadCompiledFiles(mdlPathFileName, model)
-			If status = StatusMessage.ErrorRequiredMdlFileNotFound _
-				OrElse status = StatusMessage.ErrorRequiredAniFileNotFound _
-				OrElse status = StatusMessage.ErrorRequiredVtxFileNotFound _
-				OrElse status = StatusMessage.ErrorRequiredVvdFileNotFound Then
-				Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ stopped due to missing file.")
-				Return status
-			ElseIf status = StatusMessage.ErrorInvalidMdlFileId Then
-				Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ stopped due to invalid file.")
-				Return status
-			ElseIf status = StatusMessage.Error Then
-				Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ stopped due to error.")
-				Return status
-			ElseIf Me.CancellationPending Then
-				Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ canceled.")
-				status = StatusMessage.Canceled
-				Return status
-			ElseIf Me.theSkipCurrentModelIsActive Then
-				Me.UpdateProgress(1, "... Skipping """ + mdlRelativePathFileName + """.")
-				Return status
-			Else
-				Me.UpdateProgress(2, "... Reading data finished.")
-			End If
+			stage = "读取模型数据"
+			Dim readStatus As StatusMessage = Me.ReadCompiledFiles(model)
+			For Each entry As String In model.ReadDiagnostics
+				Me.UpdateProgress(3, entry)
+			Next
+			If readStatus = StatusMessage.Error Then Return status
 
-			'Me.UpdateProgress(2, "Processinging data ...")
-			'status = Me.ProcessData(model)
-			'Me.UpdateProgress(2, "... Processinging data finished.")
 
-			'NOTE: Write log files before data files, in case something goes wrong with writing data files.
 			If TheApp.Settings.DecompileDebugInfoFilesIsChecked Then
-				Me.UpdateProgress(2, "Writing decompile-info files ...")
+				stage = "写出反编译信息"
 				Me.WriteDebugFiles(model)
-				If Me.CancellationPending Then
-					Me.UpdateProgress(1, "... Decompile of """ + mdlRelativePathFileName + """ canceled.")
-					status = StatusMessage.Canceled
-					Return status
-				ElseIf Me.theSkipCurrentModelIsActive Then
-					Me.UpdateProgress(1, "... Skipping """ + mdlRelativePathFileName + """.")
-					status = StatusMessage.Skipped
-					Return status
-				Else
-					Me.UpdateProgress(2, "... Writing decompile-info files finished.")
-				End If
 			End If
 
-			Me.UpdateProgress(2, "Writing data ...")
-			Me.WriteDecompiledFiles(model)
-			If Me.CancellationPending Then
-				Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ canceled.")
-				status = StatusMessage.Canceled
+			stage = "写出模型文件"
+			Dim writeStatus As StatusMessage = Me.WriteDecompiledFiles(model)
+			For Each entry As String In model.NameDiagnostics
+				Me.UpdateProgress(3, entry)
+			Next
+			If writeStatus = StatusMessage.Canceled OrElse writeStatus = StatusMessage.Skipped Then
+				status = writeStatus
 				Return status
-			ElseIf Me.theSkipCurrentModelIsActive Then
-				Me.UpdateProgress(1, "... Skipping """ + mdlRelativePathFileName + """.")
-				status = StatusMessage.Skipped
-				Return status
+			End If
+
+			If logFailed OrElse missing <> FilesFoundFlags.AllFilesFound OrElse headerStatus <> StatusMessage.Success OrElse
+				readStatus <> StatusMessage.Success OrElse model.ReadDiagnostics.Count > 0 OrElse writeStatus <> StatusMessage.Success OrElse Me.theModelWriteFailed Then
+				status = If(Me.theCommittedModelFiles.Count > 0, StatusMessage.PartialSuccess, StatusMessage.Error)
+				Me.ReportUnwrittenQcReferences(model)
 			Else
-				Me.UpdateProgress(2, "... Writing data finished.")
+				status = StatusMessage.Success
 			End If
-
-			Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ finished.")
+		Catch ex As NotSupportedException When stage = "识别 MDL 布局"
+			status = StatusMessage.Unsupported
+			Me.UpdateProgress(2, stage + " — " + ex.Message)
 		Catch ex As Exception
-			Dim debug As Integer = 4242
-			'Finally
-			'	If Me.theLogFileStream IsNot Nothing Then
-			'		Me.theLogFileStream.Flush()
-			'		Me.theLogFileStream.Close()
-			'	End If
+			status = If(Me.theCommittedModelFiles.Count > 0, StatusMessage.PartialSuccess, StatusMessage.Error)
+			Me.UpdateProgress(2, stage + " — """ + mdlPathFileName + """ — " + ex.Message)
+		Finally
+			Me.UpdateProgress(1, """" + mdlPathFileName + """ — " + DescribeResult(status))
+			If TheApp.Settings.DecompileMode = InputOptions.File Then Me.CloseLog()
 		End Try
-
 		Return status
 	End Function
+
+	Private Sub CloseLog()
+		Dim writer As StreamWriter = Me.theLogFileStream
+		Me.theLogFileStream = Nothing
+		If writer Is Nothing Then Return
+		Try
+			writer.Dispose()
+		Catch ex As IOException
+			Me.ReportProgress(1, "关闭反编译日志失败 — " + ex.Message)
+		End Try
+	End Sub
+
+	Private Sub ReportUnwrittenQcReferences(model As SourceModel)
+		Dim qc As String = Path.Combine(Me.theModelOutputPath, model.Name + ".qc")
+		If Not Me.theCommittedModelFiles.Contains(qc) Then
+			If TheApp.Settings.DecompileQcFileIsChecked AndAlso Me.theCommittedModelFiles.Count > 0 Then
+				Me.UpdateProgress(3, "本次未提交 QC，已保留成功写出的文件。")
+			End If
+			Return
+		End If
+		Dim prefix As String = Me.theModelOutputPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar
+		Dim scripts As New Queue(Of String)
+		Dim seen As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
+		scripts.Enqueue(qc)
+		seen.Add(qc)
+		While scripts.Count > 0
+			Dim script As String = scripts.Dequeue()
+			For Each line As String In File.ReadLines(script)
+				If line.TrimStart().StartsWith("//", StringComparison.Ordinal) Then Continue For
+				For Each reference As System.Text.RegularExpressions.Match In System.Text.RegularExpressions.Regex.Matches(line,
+					"""([^""]+\.(?:smd|dmx|vta|vrd|qci))""", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+					Dim relativeName As String = reference.Groups(1).Value
+					If Path.IsPathRooted(relativeName) OrElse relativeName.IndexOfAny(Path.GetInvalidPathChars()) >= 0 Then Continue For
+					Dim pathFileName As String = Path.GetFullPath(Path.Combine(Me.theModelOutputPath, relativeName))
+					If Not pathFileName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) OrElse Not seen.Add(pathFileName) Then Continue For
+					If String.Equals(Path.GetExtension(pathFileName), ".qci", StringComparison.OrdinalIgnoreCase) AndAlso
+						File.Exists(pathFileName) AndAlso (File.GetAttributes(pathFileName) And FileAttributes.ReparsePoint) = 0 Then
+						scripts.Enqueue(pathFileName)
+					ElseIf Not Me.theCommittedModelFiles.Contains(pathFileName) Then
+						Me.UpdateProgress(3, "本次未生成的 QC 引用 — " + relativeName)
+					End If
+				Next
+			Next
+		End While
+	End Sub
 
 	Private Function CreateLogTextFile(ByVal mdlPathFileName As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
@@ -502,7 +455,7 @@ Public Class Decompiler
 				Me.theLogFileStream.Flush()
 			Catch ex As Exception
 				Me.UpdateProgress()
-				Me.UpdateProgress(2, "ERROR: Crowbar tried to write the decompile log file but the system gave this message: " + ex.Message)
+				Me.UpdateProgress(2, "错误：Crowbar 尝试写入反编译日志文件，但系统返回了此消息：" + ex.Message)
 				status = StatusMessage.Error
 			End Try
 		Else
@@ -512,81 +465,38 @@ Public Class Decompiler
 		Return status
 	End Function
 
-	Private Function ReadCompiledFiles(ByVal mdlPathFileName As String, ByVal model As SourceModel) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
-		Me.UpdateProgress(3, "Reading MDL file ...")
-		status = model.ReadMdlFile()
-		If status = StatusMessage.Success Then
-			Me.UpdateProgress(3, "... Reading MDL file finished.")
-		ElseIf status = StatusMessage.Error Then
-			Me.UpdateProgress(3, "... Reading MDL file FAILED. (Probably unexpected format.)")
-			Return status
-		End If
-
-		If model.SequenceGroupMdlFilesAreUsed Then
-			Me.UpdateProgress(3, "Reading sequence group MDL files ...")
-			status = model.ReadSequenceGroupMdlFiles()
-			If status = StatusMessage.Success Then
-				Me.UpdateProgress(3, "... Reading sequence group MDL files finished.")
-			ElseIf status = StatusMessage.Error Then
-				Me.UpdateProgress(3, "... Reading sequence group MDL files FAILED. (Probably unexpected format.)")
-			End If
-		End If
-
-		If model.TextureMdlFileIsUsed Then
-			Me.UpdateProgress(3, "Reading texture MDL file ...")
-			status = model.ReadTextureMdlFile()
-			If status = StatusMessage.Success Then
-				Me.UpdateProgress(3, "... Reading texture MDL file finished.")
-			ElseIf status = StatusMessage.Error Then
-				Me.UpdateProgress(3, "... Reading texture MDL file FAILED. (Probably unexpected format.)")
-			End If
-		End If
-
+	Private Function ReadCompiledFiles(model As SourceModel) As StatusMessage
+		If Not Me.ReadStage(model, "MDL", AddressOf model.ReadMdlFile) Then Return StatusMessage.Error
+		Dim complete As Boolean = True
+		If model.SequenceGroupMdlFilesAreUsed Then complete = Me.ReadStage(model, "序列组 MDL", AddressOf model.ReadSequenceGroupMdlFiles) And complete
+		If model.TextureMdlFileIsUsed Then complete = Me.ReadStage(model, "纹理 MDL", AddressOf model.ReadTextureMdlFile) And complete
 		If model.PhyFileIsUsed Then
-			Me.UpdateProgress(3, "Reading PHY file ...")
 			AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
-			status = model.ReadPhyFile()
-			RemoveHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
-			If status = StatusMessage.Success Then
-				Me.UpdateProgress(3, "... Reading PHY file finished.")
-			ElseIf status = StatusMessage.Error Then
-				Me.UpdateProgress(3, "... Reading PHY file FAILED. (Probably unexpected format.)")
-			End If
+			Try
+				complete = Me.ReadStage(model, "PHY", AddressOf model.ReadPhyFile) And complete
+			Finally
+				RemoveHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
+			End Try
 		End If
-
-		If model.VtxFileIsUsed Then
-			Me.UpdateProgress(3, "Reading VTX file ...")
-			status = model.ReadVtxFile()
-			If status = StatusMessage.Success Then
-				Me.UpdateProgress(3, "... Reading VTX file finished.")
-			ElseIf status = StatusMessage.Error Then
-				Me.UpdateProgress(3, "... Reading VTX file FAILED. (Probably unexpected format.)")
-			End If
-		End If
-
+		If model.VtxFileIsUsed Then complete = Me.ReadStage(model, "VTX", AddressOf model.ReadVtxFile) And complete
 		If model.AniFileIsUsed AndAlso TheApp.Settings.DecompileBoneAnimationSmdFilesIsChecked Then
-			Me.UpdateProgress(3, "Reading ANI file ...")
-			status = model.ReadAniFile()
-			If status = StatusMessage.Success Then
-				Me.UpdateProgress(3, "... Reading ANI file finished.")
-			ElseIf status = StatusMessage.Error Then
-				Me.UpdateProgress(3, "... Reading ANI file FAILED. (Probably unexpected format.)")
-			End If
+			complete = Me.ReadStage(model, "ANI", AddressOf model.ReadAniFile) And complete
 		End If
+		If model.VvdFileIsUsed Then complete = Me.ReadStage(model, "VVD", AddressOf model.ReadVvdFile) And complete
+		Return If(complete, StatusMessage.Success, StatusMessage.PartialSuccess)
+	End Function
 
-		If model.VvdFileIsUsed Then
-			Me.UpdateProgress(3, "Reading VVD file ...")
-			status = model.ReadVvdFile()
-			If status = StatusMessage.Success Then
-				Me.UpdateProgress(3, "... Reading VVD file finished.")
-			ElseIf status = StatusMessage.Error Then
-				Me.UpdateProgress(3, "... Reading VVD file FAILED. (Probably unexpected format.)")
-			End If
-		End If
-
-		Return status
+	Private Function ReadStage(model As SourceModel, inputType As String, read As Func(Of StatusMessage)) As Boolean
+		Me.UpdateProgress(3, "正在读取 " + inputType)
+		model.LastReadError = Nothing
+		Try
+			Dim status As StatusMessage = read()
+			If status = StatusMessage.Success Then Return True
+			Me.UpdateProgress(3, "读取失败 — " + inputType + " — " + If(model.LastReadError, status.ToString()))
+		Catch ex As Exception
+			Me.UpdateProgress(3, "读取失败 — " + inputType + " — " + If(model.LastReadError, ex.Message))
+		End Try
+		Return False
 	End Function
 
 	'Private Function ProcessData(ByVal model As SourceModel) As AppEnums.StatusMessage
@@ -599,73 +509,38 @@ Public Class Decompiler
 	'	Return status
 	'End Function
 
-	Private Function WriteDecompiledFiles(ByVal model As SourceModel) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
+	Private Function WriteDecompiledFiles(model As SourceModel) As StatusMessage
 		TheApp.SmdFileNames.Clear()
-
-		'TEST:
-		'Me.TestWriteDmx()
-
-		status = Me.WriteQcFile(model)
-		If status = StatusMessage.Canceled Then
-			Return status
-		ElseIf status = StatusMessage.Skipped Then
-			Return status
-		End If
-
-		status = Me.WriteReferenceMeshFiles(model)
-		If status = StatusMessage.Canceled Then
-			Return status
-		ElseIf status = StatusMessage.Skipped Then
-			Return status
-		End If
-
-		status = Me.WriteLodMeshFiles(model)
-		If status = StatusMessage.Canceled Then
-			Return status
-		ElseIf status = StatusMessage.Skipped Then
-			Return status
-		End If
-
-		status = Me.WritePhysicsMeshFile(model)
-		If status = StatusMessage.Canceled Then
-			Return status
-		ElseIf status = StatusMessage.Skipped Then
-			Return status
-		End If
-
-		status = Me.WriteProceduralBonesFile(model)
-		If status = StatusMessage.Canceled Then
-			Return status
-		ElseIf status = StatusMessage.Skipped Then
-			Return status
-		End If
-
-		status = Me.WriteVertexAnimationFiles(model)
-		If status = StatusMessage.Canceled Then
-			Return status
-		ElseIf status = StatusMessage.Skipped Then
-			Return status
-		End If
-
-		status = Me.WriteBoneAnimationFiles(model)
-		If status = StatusMessage.Canceled Then
-			Return status
-		ElseIf status = StatusMessage.Skipped Then
-			Return status
-		End If
-
-		status = Me.WriteTextureFiles(model)
-		If status = StatusMessage.Canceled Then
-			Return status
-		ElseIf status = StatusMessage.Skipped Then
-			Return status
-		End If
-
-		status = Me.WriteDeclareSequenceQciFile(model)
-
-		Return status
+		Dim stages As (Name As String, Write As Func(Of SourceModel, StatusMessage))() = {
+			("QC", AddressOf Me.WriteQcFile),
+			("参考网格", AddressOf Me.WriteReferenceMeshFiles),
+			("LOD 网格", AddressOf Me.WriteLodMeshFiles),
+			("物理网格", AddressOf Me.WritePhysicsMeshFile),
+			("VRD", AddressOf Me.WriteProceduralBonesFile),
+			("VTA", AddressOf Me.WriteVertexAnimationFiles),
+			("骨骼动画", AddressOf Me.WriteBoneAnimationFiles),
+			("BMP", AddressOf Me.WriteTextureFiles),
+			("DeclareSequence QCI", AddressOf Me.WriteDeclareSequenceQciFile)
+		}
+		Dim result As StatusMessage = StatusMessage.Success
+		For Each stage As (Name As String, Write As Func(Of SourceModel, StatusMessage)) In stages
+			If Me.CancellationPending Then Return StatusMessage.Canceled
+			If Me.theSkipCurrentModelIsActive Then Return StatusMessage.Skipped
+			Try
+				Dim status As StatusMessage = stage.Write(model)
+				If status = StatusMessage.Canceled OrElse status = StatusMessage.Skipped Then Return status
+				If status <> StatusMessage.Success Then
+					result = StatusMessage.Error
+					Me.UpdateProgress(3, "写出阶段失败 — " + stage.Name + " — " + status.ToString())
+				End If
+			Catch ex As Exception
+				result = StatusMessage.Error
+				Me.UpdateProgress(3, "写出阶段失败 — " + stage.Name + " — " + ex.Message)
+			Finally
+				RemoveHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
+			End Try
+		Next
+		Return result
 	End Function
 
 	'Private Sub TestWriteDmx()
@@ -689,10 +564,10 @@ Public Class Decompiler
 		If TheApp.Settings.DecompileQcFileIsChecked Then
 			If TheApp.Settings.DecompileGroupIntoQciFilesIsChecked Then
 				'Me.UpdateProgress(3, "Writing QC and QCI files ...")
-				Me.UpdateProgress(3, "QC and QCI files: ")
+				Me.UpdateProgress(3, "QC 和 QCI 文件：")
 			Else
 				'Me.UpdateProgress(3, "Writing QC file ...")
-				Me.UpdateProgress(3, "QC file: ")
+				Me.UpdateProgress(3, "QC 文件：")
 			End If
 			Me.theDecompiledFileType = DecompiledFileType.QC
 			Me.theFirstDecompiledFileHasBeenAdded = False
@@ -703,7 +578,7 @@ Public Class Decompiler
 
 			status = model.WriteQcFile(qcPathFileName)
 
-			If File.Exists(qcPathFileName) Then
+			If status = StatusMessage.Success AndAlso Me.theCommittedModelFiles.Contains(qcPathFileName) Then
 				Me.theDecompiledQcFiles.Add(FileManager.GetRelativePathFileName(Me.theOutputPath, qcPathFileName))
 			End If
 
@@ -728,9 +603,10 @@ Public Class Decompiler
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
 		If TheApp.Settings.DecompileReferenceMeshSmdFileIsChecked Then
-			If model.HasMeshData Then
+			Dim source49 As SourceModel49 = TryCast(model, SourceModel49)
+			If model.HasMeshData OrElse (source49 IsNot Nothing AndAlso source49.CanWriteSkeletonOnly) Then
 				'Me.UpdateProgress(3, "Writing reference mesh files ...")
-				Me.UpdateProgress(3, "Reference mesh files: ")
+				Me.UpdateProgress(3, "参考网格文件：")
 				Me.theDecompiledFileType = DecompiledFileType.ReferenceMesh
 				Me.theFirstDecompiledFileHasBeenAdded = False
 				AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
@@ -751,7 +627,7 @@ Public Class Decompiler
 		If TheApp.Settings.DecompileLodMeshSmdFilesIsChecked Then
 			If model.HasLodMeshData Then
 				'Me.UpdateProgress(3, "Writing LOD mesh files ...")
-				Me.UpdateProgress(3, "LOD mesh files: ")
+				Me.UpdateProgress(3, "LOD 网格文件：")
 				Me.theDecompiledFileType = DecompiledFileType.LodMesh
 				Me.theFirstDecompiledFileHasBeenAdded = False
 				AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
@@ -772,7 +648,7 @@ Public Class Decompiler
 		If TheApp.Settings.DecompilePhysicsMeshSmdFileIsChecked Then
 			If model.HasPhysicsMeshData Then
 				'Me.UpdateProgress(3, "Writing physics mesh file ...")
-				Me.UpdateProgress(3, "Physics mesh file: ")
+				Me.UpdateProgress(3, "物理网格文件：")
 				Me.theDecompiledFileType = DecompiledFileType.PhysicsMesh
 				Me.theFirstDecompiledFileHasBeenAdded = False
 				AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
@@ -799,7 +675,7 @@ Public Class Decompiler
 		If TheApp.Settings.DecompileVertexAnimationVtaFileIsChecked Then
 			If model.HasVertexAnimationData Then
 				'Me.UpdateProgress(3, "Writing VTA file ...")
-				Me.UpdateProgress(3, "Vertex animation files: ")
+				Me.UpdateProgress(3, "顶点动画文件：")
 				Me.theDecompiledFileType = DecompiledFileType.VertexAnimation
 				Me.theFirstDecompiledFileHasBeenAdded = False
 				AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
@@ -837,7 +713,7 @@ Public Class Decompiler
 				outputPath = Path.Combine(Me.theModelOutputPath, SourceFileNamesModule.GetAnimationSmdRelativePath(model.Name))
 				If FileManager.PathExistsAfterTryToCreate(outputPath) Then
 					'Me.UpdateProgress(3, "Writing bone animation SMD files ...")
-					Me.UpdateProgress(3, "Bone animation files: ")
+					Me.UpdateProgress(3, "骨骼动画文件：")
 					Me.theDecompiledFileType = DecompiledFileType.BoneAnimation
 					Me.theFirstDecompiledFileHasBeenAdded = False
 					AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
@@ -847,7 +723,8 @@ Public Class Decompiler
 					RemoveHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
 					'Me.UpdateProgress(3, "... Writing bone animation SMD files finished.")
 				Else
-					Me.UpdateProgress(3, "WARNING: Unable to create """ + outputPath + """ where bone animation SMD files would be written.")
+					Me.UpdateProgress(3, "无法创建骨骼动画输出目录 — " + outputPath)
+					status = StatusMessage.Error
 				End If
 			End If
 		End If
@@ -861,7 +738,7 @@ Public Class Decompiler
 		If TheApp.Settings.DecompileProceduralBonesVrdFileIsChecked Then
 			If model.HasProceduralBonesData Then
 				'Me.UpdateProgress(3, "Writing VRD file ...")
-				Me.UpdateProgress(3, "Procedural bones file: ")
+				Me.UpdateProgress(3, "程序化骨骼文件：")
 				Me.theDecompiledFileType = DecompiledFileType.ProceduralBones
 				Me.theFirstDecompiledFileHasBeenAdded = False
 				AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
@@ -871,7 +748,7 @@ Public Class Decompiler
 
 				status = model.WriteVrdFile(vrdPathFileName)
 
-				If File.Exists(vrdPathFileName) Then
+				If status = StatusMessage.Success AndAlso Me.theCommittedModelFiles.Contains(vrdPathFileName) Then
 					Me.theDecompiledVrdFiles.Add(FileManager.GetRelativePathFileName(Me.theOutputPath, vrdPathFileName))
 				End If
 
@@ -894,7 +771,7 @@ Public Class Decompiler
 
 		If TheApp.Settings.DecompileDeclareSequenceQciFileIsChecked Then
 			If model.HasBoneAnimationData Then
-				Me.UpdateProgress(3, "DeclareSequence QCI file: ")
+				Me.UpdateProgress(3, "DeclareSequence QCI 文件：")
 				Me.theDecompiledFileType = DecompiledFileType.DeclareSequenceQci
 				Me.theFirstDecompiledFileHasBeenAdded = False
 				AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
@@ -904,7 +781,7 @@ Public Class Decompiler
 
 				status = model.WriteDeclareSequenceQciFile(declareSequenceQciPathFileName)
 
-				If File.Exists(declareSequenceQciPathFileName) Then
+				If status = StatusMessage.Success AndAlso Me.theCommittedModelFiles.Contains(declareSequenceQciPathFileName) Then
 					Me.theDecompiledDeclareSequenceQciFiles.Add(FileManager.GetRelativePathFileName(Me.theOutputPath, declareSequenceQciPathFileName))
 				End If
 
@@ -927,7 +804,7 @@ Public Class Decompiler
 		If TheApp.Settings.DecompileTextureBmpFilesIsChecked Then
 			If model.HasTextureFileData Then
 				'Me.UpdateProgress(3, "Writing texture files ...")
-				Me.UpdateProgress(3, "Texture files: ")
+				Me.UpdateProgress(3, "纹理文件：")
 				Me.theDecompiledFileType = DecompiledFileType.TextureBmp
 				Me.theFirstDecompiledFileHasBeenAdded = False
 				AddHandler model.SourceModelProgress, AddressOf Me.Model_SourceModelProgress
@@ -996,8 +873,13 @@ Public Class Decompiler
 
 	Private Sub UpdateProgressInternal(ByVal progressValue As Integer, ByVal line As String)
 		If progressValue = 1 AndAlso Me.theLogFileStream IsNot Nothing Then
-			Me.theLogFileStream.WriteLine(line)
-			Me.theLogFileStream.Flush()
+			Try
+				Me.theLogFileStream.WriteLine(line)
+			Catch ex As IOException
+				Me.theModelWriteFailed = True
+				Me.CloseLog()
+				Me.ReportProgress(1, "写出反编译日志失败 — " + ex.Message)
+			End Try
 		End If
 
 		Me.ReportProgress(progressValue, line)
@@ -1010,7 +892,7 @@ Public Class Decompiler
 	Private Sub Model_SourceModelProgress(ByVal sender As Object, ByVal e As SourceModelProgressEventArgs)
 		If e.Progress = ProgressOptions.WarningPhyFileChecksumDoesNotMatchMdlFileChecksum Then
 			'TODO: Test that this shows when needed.
-			Me.UpdateProgress(4, "WARNING: The PHY file's checksum value does not match the MDL file's checksum value.")
+			Me.UpdateProgress(4, "警告：PHY 文件的校验和值与 MDL 文件的校验和值不匹配。")
 		'ElseIf e.Progress = ProgressOptions.WritingFileStarted Then
 		'	Dim pathFileName As String
 		'	Dim fileName As String
@@ -1028,11 +910,13 @@ Public Class Decompiler
 		'		'	Me.UpdateProgress(4, "Writing """ + fileName + """ file ...")
 		'	End If
 		ElseIf e.Progress = ProgressOptions.WritingFileFailed Then
+			Me.theModelWriteFailed = True
 			Me.UpdateProgress(4, e.Message)
 		ElseIf e.Progress = ProgressOptions.WritingFileFinished Then
 			Dim pathFileName As String
 			Dim fileName As String
 			pathFileName = e.Message
+			If File.Exists(pathFileName) Then Me.theCommittedModelFiles.Add(pathFileName)
 			fileName = Path.GetFileName(pathFileName)
 			'Me.UpdateProgress(4, "... Writing """ + fileName + """ file finished.")
 			Me.UpdateProgress(4, fileName)
@@ -1049,6 +933,8 @@ Public Class Decompiler
 					Me.theDecompiledFirstBoneAnimSmdFiles.Add(relativePathFileName)
 				ElseIf Me.theDecompiledFileType = DecompiledFileType.PhysicsMesh Then
 					Me.theDecompiledPhysicsFiles.Add(relativePathFileName)
+				ElseIf Me.theDecompiledFileType = DecompiledFileType.VertexAnimation Then
+					Me.theDecompiledVtaFiles.Add(relativePathFileName)
 				ElseIf Me.theDecompiledFileType = DecompiledFileType.TextureBmp Then
 					Me.theDecompiledFirstTextureBmpFiles.Add(relativePathFileName)
 				ElseIf Me.theDecompiledFileType = DecompiledFileType.Debug Then
@@ -1077,6 +963,8 @@ Public Class Decompiler
 
 #Region "Data"
 
+	Private ReadOnly theCommittedModelFiles As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
+	Private theModelWriteFailed As Boolean
 	Private theSkipCurrentModelIsActive As Boolean
 	Private theInputMdlPathName As String
 	Private theOutputPath As String

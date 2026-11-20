@@ -52,7 +52,7 @@ Partial Class AgreementRequiresAcceptanceForm
 		Me.OpenSteamSubscriberAgreementButton.Name = "OpenSteamSubscriberAgreementButton"
 		Me.OpenSteamSubscriberAgreementButton.Size = New System.Drawing.Size(200, 23)
 		Me.OpenSteamSubscriberAgreementButton.TabIndex = 1
-		Me.OpenSteamSubscriberAgreementButton.Text = "Open Steam Subscriber Agreement"
+		Me.OpenSteamSubscriberAgreementButton.Text = "打开 Steam 订户协议"
 		Me.OpenSteamSubscriberAgreementButton.UseVisualStyleBackColor = True
 		'
 		'CancelDeleteButton
@@ -61,7 +61,7 @@ Partial Class AgreementRequiresAcceptanceForm
 		Me.CancelDeleteButton.Name = "CancelDeleteButton"
 		Me.CancelDeleteButton.Size = New System.Drawing.Size(75, 23)
 		Me.CancelDeleteButton.TabIndex = 3
-		Me.CancelDeleteButton.Text = "Cancel"
+		Me.CancelDeleteButton.Text = "取消"
 		Me.CancelDeleteButton.UseVisualStyleBackColor = True
 		'
 		'OpenWorkshopPageButton
@@ -70,13 +70,13 @@ Partial Class AgreementRequiresAcceptanceForm
 		Me.OpenWorkshopPageButton.Name = "OpenWorkshopPageButton"
 		Me.OpenWorkshopPageButton.Size = New System.Drawing.Size(125, 23)
 		Me.OpenWorkshopPageButton.TabIndex = 2
-		Me.OpenWorkshopPageButton.Text = "Open Workshop Page"
+		Me.OpenWorkshopPageButton.Text = "打开创意工坊页面"
 		Me.OpenWorkshopPageButton.UseVisualStyleBackColor = True
 		'
 		'AgreementRequiresAcceptanceForm
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.ClientSize = New System.Drawing.Size(357, 221)
 		Me.ControlBox = False
 		Me.Controls.Add(Me.OpenWorkshopPageButton)
@@ -86,7 +86,7 @@ Partial Class AgreementRequiresAcceptanceForm
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.Name = "AgreementRequiresAcceptanceForm"
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-		Me.Text = "Steam Subscriber Agreement Requires Acceptance"
+		Me.Text = "Steam 订户协议需要接受"
 		Me.TopMost = True
 		Me.ResumeLayout(False)
 		Me.PerformLayout()

@@ -53,8 +53,8 @@ Partial Class SourceFilmmakerTagsUserControl
 		'
 		'SourceFilmmakerTagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.Controls.Add(Me.ComboBox3)
 		Me.Controls.Add(Me.ComboBox2)
 		Me.Controls.Add(Me.ComboBox1)

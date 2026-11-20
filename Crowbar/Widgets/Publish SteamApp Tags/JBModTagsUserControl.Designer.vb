@@ -43,7 +43,7 @@ Partial Class JBModTagsUserControl
 		Me.GameTypeGroupBox.Size = New System.Drawing.Size(114, 77)
 		Me.GameTypeGroupBox.TabIndex = 0
 		Me.GameTypeGroupBox.TabStop = False
-		Me.GameTypeGroupBox.Text = "GAME TYPE"
+		Me.GameTypeGroupBox.Text = "游戏类型"
 		'
 		'MultiplayerTagCheckBox
 		'
@@ -80,7 +80,7 @@ Partial Class JBModTagsUserControl
 		Me.ContentTypeGroupBox.Size = New System.Drawing.Size(114, 123)
 		Me.ContentTypeGroupBox.TabIndex = 1
 		Me.ContentTypeGroupBox.TabStop = False
-		Me.ContentTypeGroupBox.Text = "CONTENT TYPE"
+		Me.ContentTypeGroupBox.Text = "内容类型"
 		'
 		'SkinTagCheckBox
 		'
@@ -132,8 +132,8 @@ Partial Class JBModTagsUserControl
 		'
 		'JBModTagsUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.Controls.Add(Me.ContentTypeGroupBox)
 		Me.Controls.Add(Me.GameTypeGroupBox)
 		Me.Name = "JBModTagsUserControl"

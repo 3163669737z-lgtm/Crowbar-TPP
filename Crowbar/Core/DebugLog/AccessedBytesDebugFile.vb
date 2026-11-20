@@ -23,13 +23,13 @@ Public Class AccessedBytesDebugFile
 	Public Sub WriteFileSeekLog(ByVal aFileSeekLog As FileSeekLog)
 		Dim line As String
 
-		line = "====== File Size ======"
+		line = "====== 文件大小 ======"
 		Me.WriteLogLine(0, line)
 
 		line = aFileSeekLog.theFileSize.ToString("N0")
 		Me.WriteLogLine(1, line)
 
-		line = "====== File Seek Log ======"
+		line = "====== 文件定位日志 ======"
 		Me.WriteLogLine(0, line)
 
 		'line = "--- Summary ---"

@@ -26,5 +26,6 @@ Public Class SourceMdlBodyPart
 	Public theModelCommandIsUsed As Boolean
 	Public theEyeballOptionIsUsed As Boolean
 	Public theFlexFrames As List(Of FlexFrame)
+	Friend theExportFlexVariantsAsDmx As Boolean
 
 End Class

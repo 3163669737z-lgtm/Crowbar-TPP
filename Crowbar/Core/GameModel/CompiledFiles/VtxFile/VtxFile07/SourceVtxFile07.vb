@@ -5,9 +5,10 @@ Public Class SourceVtxFile07
 
 #Region "Creation and Destruction"
 
-	Public Sub New(ByVal vtxFileReader As BinaryReader, ByVal vtxFileData As SourceVtxFileData07, Optional ByVal vtxFileOffsetStart As Long = 0)
+	Public Sub New(ByVal vtxFileReader As BinaryReader, ByVal vtxFileData As SourceVtxFileData07, Optional ByVal vtxFileOffsetStart As Long = 0, Optional extendedStripLayout As Boolean? = Nothing)
 		Me.theInputFileReader = vtxFileReader
 		Me.theVtxFileOffsetStart = vtxFileOffsetStart
+		Me.theExtendedStripLayout = extendedStripLayout
 		Me.theVtxFileData = vtxFileData
 
 		Me.theVtxFileData.theFileSeekLog.FileSize = Me.theInputFileReader.BaseStream.Length
@@ -58,7 +59,7 @@ Public Class SourceVtxFile07
 			Me.theSecondMeshWithStripGroups = Nothing
 			Me.theStartOfStripGroupVtxStrips = -1
 			Me.theExpectedStartOfDataAfterFirstStripGroupList = -1
-			Me.theStripGroupAndStripUseExtraFields = False
+			Me.theStripGroupAndStripUseExtraFields = Me.theExtendedStripLayout.GetValueOrDefault()
 
 			Dim fileOffsetStart As Long
 			Dim fileOffsetEnd As Long
@@ -73,7 +74,7 @@ Public Class SourceVtxFile07
 
 				'TODO: If there is no second mesh with strip groups, then check if calculated offset matches actual offset.
 				'      If does not match, then read again with larger sizes.
-				If Me.theSecondMeshWithStripGroups Is Nothing Then
+				If Not Me.theExtendedStripLayout.HasValue AndAlso Me.theSecondMeshWithStripGroups Is Nothing Then
 					If Me.theStartOfStripGroupVtxStrips <> -1 AndAlso Me.theExpectedStartOfDataAfterFirstStripGroupList <> Me.theStartOfStripGroupVtxStrips Then
 						Me.theStripGroupAndStripUseExtraFields = True
 						Me.theInputFileReader.BaseStream.Seek(Me.theVtxFileOffsetStart + Me.theVtxFileData.bodyPartOffset, SeekOrigin.Begin)
@@ -83,7 +84,7 @@ Public Class SourceVtxFile07
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theVtxFileData.theVtxBodyParts " + Me.theVtxFileData.theVtxBodyParts.Count.ToString())
-			Catch ex As Exception
+			Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 				Dim debug As Integer = 4242
 			End Try
 		End If
@@ -121,7 +122,7 @@ Public Class SourceVtxFile07
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theVtxFileData.theVtxMaterialReplacementLists " + Me.theVtxFileData.theVtxMaterialReplacementLists.Count.ToString())
-			Catch ex As Exception
+			Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 				Dim debug As Integer = 4242
 			End Try
 		End If
@@ -156,7 +157,7 @@ Public Class SourceVtxFile07
 
 				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 			Next
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			Dim debug As Integer = 4242
 		End Try
 	End Sub
@@ -195,7 +196,7 @@ Public Class SourceVtxFile07
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBodyPart.theVtxModels " + aBodyPart.theVtxModels.Count.ToString())
-			Catch ex As Exception
+			Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 				Dim debug As Integer = 4242
 			End Try
 		End If
@@ -236,7 +237,7 @@ Public Class SourceVtxFile07
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aModel.theVtxModelLods " + aModel.theVtxModelLods.Count.ToString())
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			Dim debug As Integer = 4242
 		End Try
 	End Sub
@@ -267,6 +268,11 @@ Public Class SourceVtxFile07
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
 				If aMesh.stripGroupCount > 0 AndAlso aMesh.stripGroupOffset <> 0 Then
+					If Me.theExtendedStripLayout.HasValue Then
+						Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
+						Me.theInputFileReader.BaseStream.Position = inputFileStreamPosition
+						Continue For
+					End If
 					If Me.theFirstMeshWithStripGroups Is Nothing Then
 						Me.theFirstMeshWithStripGroups = aMesh
 						Me.theFirstMeshWithStripGroupsInputFileStreamPosition = meshInputFileStreamPosition
@@ -303,7 +309,7 @@ Public Class SourceVtxFile07
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aModelLod.theVtxMeshes " + aModelLod.theVtxMeshes.Count.ToString())
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			Dim debug As Integer = 4242
 		End Try
 	End Sub
@@ -333,7 +339,7 @@ Public Class SourceVtxFile07
 			Next
 
 			Me.theExpectedStartOfDataAfterFirstStripGroupList = Me.theInputFileReader.BaseStream.Position
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
 			Dim debug As Integer = 4242
 		End Try
@@ -430,7 +436,7 @@ Public Class SourceVtxFile07
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aMesh.theVtxStripGroups " + aMesh.theVtxStripGroups.Count.ToString())
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
 			Dim debug As Integer = 4242
 		End Try
@@ -471,7 +477,7 @@ Public Class SourceVtxFile07
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aStripGroup.theVtxVertexes " + aStripGroup.theVtxVertexes.Count.ToString())
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
 			Dim debug As Integer = 4242
 		End Try
@@ -502,7 +508,7 @@ Public Class SourceVtxFile07
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aStripGroup.theVtxIndexes " + aStripGroup.theVtxIndexes.Count.ToString())
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			Dim debug As Integer = 4242
 		End Try
 	End Sub
@@ -555,7 +561,7 @@ Public Class SourceVtxFile07
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aStripGroup.theVtxStrips " + aStripGroup.theVtxStrips.Count.ToString())
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
 			Dim debug As Integer = 4242
 		End Try
@@ -589,7 +595,7 @@ Public Class SourceVtxFile07
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aStripGroup.theVtxTopologies " + aStripGroup.theVtxTopologyIndexes.Count.ToString())
-		Catch ex As Exception
+		Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 			'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
 			Dim debug As Integer = 4242
 		End Try
@@ -642,7 +648,7 @@ Public Class SourceVtxFile07
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aStrip.theVtxBoneStateChanges " + aStrip.theVtxBoneStateChanges.Count.ToString())
-			Catch ex As Exception
+			Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 				'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
 				Dim debug As Integer = 4242
 			End Try
@@ -693,7 +699,7 @@ Public Class SourceVtxFile07
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aMaterialReplacementList.theVtxMaterialReplacements " + aMaterialReplacementList.theVtxMaterialReplacements.Count.ToString())
-			Catch ex As Exception
+			Catch ex As Exception When Not Me.theExtendedStripLayout.HasValue
 				Dim debug As Integer = 4242
 			End Try
 		End If
@@ -705,6 +711,7 @@ Public Class SourceVtxFile07
 
 	Private theInputFileReader As BinaryReader
 	Private theVtxFileOffsetStart As Long
+	Private ReadOnly theExtendedStripLayout As Boolean?
 	Private theVtxFileData As SourceVtxFileData07
 
 	Private theFirstMeshWithStripGroups As SourceVtxMesh07

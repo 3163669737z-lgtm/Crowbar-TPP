@@ -2,9 +2,7 @@
 
 	Public sequenceFrameIndexAsSingle As Double
 	Public unknown(10) As Integer
-	Public unknownSingle01 As Double
-	Public unknownSingle02 As Double
-	Public unknownSingle03 As Double
+	Public rootPosition As New SourceVector()
 	'Public positionScaleX As Short
 	'Public positionScaleY As Short
 	'Public positionScaleZ As Short

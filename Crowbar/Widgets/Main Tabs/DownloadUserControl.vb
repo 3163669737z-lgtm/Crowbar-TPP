@@ -99,11 +99,20 @@ Public Class DownloadUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub DownloadUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
-		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.ItemIdTextBox, Me.OpenWorkshopPageButton)
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DocumentsOutputPathTextBox, Me.BrowseForOutputPathButton)
+	Private Sub LayoutDownloadFields() Handles DownloadUserControlFillPanel.Layout
+		If Not Me.IsHandleCreated Then Return
+		Dim fieldLeft As Integer = Math.Max(LogicalToDeviceUnits(87), Math.Max(
+			Workarounds.FieldLeftAfter(Me.ItemIdOrLinkLabel, Me.ItemIdTextBox),
+			Workarounds.FieldLeftAfter(Me.OuputToLabel, Me.OutputPathComboBox)))
+		Me.OutputPathComboBox.Left = fieldLeft
+		Workarounds.FitFieldBefore(Me.ItemIdTextBox, fieldLeft, Me.OpenWorkshopPageButton)
+
+		Dim pathLeft As Integer = Workarounds.FieldLeftAfter(Me.OutputPathComboBox, Me.OutputPathTextBox)
+		Workarounds.FitFieldBefore(Me.OutputPathTextBox, pathLeft, Me.BrowseForOutputPathButton)
+		Workarounds.FitFieldBefore(Me.DocumentsOutputPathTextBox, pathLeft, Me.BrowseForOutputPathButton)
+	End Sub
+
+	Private Sub DownloadUserControl_Resize() Handles Me.Resize
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBar, Me.DownloadProgressBar.Parent, True)
 	End Sub
 
@@ -201,7 +210,7 @@ Public Class DownloadUserControl
 		Dim pathFileName As String = CType(e.UserState, String)
 
 		If e.Cancelled Then
-			Me.LogTextBox.AppendText("Download cancelled." + vbCrLf)
+			Me.LogTextBox.AppendText("下载已取消。" + vbCrLf + "")
 			Me.DownloadProgressBar.Text = ""
 			Me.DownloadProgressBar.Value = 0
 
@@ -209,15 +218,15 @@ Public Class DownloadUserControl
 				Try
 					File.Delete(pathFileName)
 				Catch ex As Exception
-					Me.LogTextBox.AppendText("WARNING: Problem deleting incomplete downloaded file." + vbCrLf)
+					Me.LogTextBox.AppendText("警告：删除未完成的下载文件时出现问题。" + vbCrLf + "")
 				End Try
 			End If
 		Else
 			If File.Exists(pathFileName) Then
-				Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded file: """ + pathFileName + """" + vbCrLf)
+				Me.LogTextBox.AppendText("下载完成。" + vbCrLf + "已下载文件：""" + pathFileName + """" + vbCrLf)
 				Me.DownloadedItemTextBox.Text = pathFileName
 			Else
-				Me.LogTextBox.AppendText("Download failed." + vbCrLf)
+				Me.LogTextBox.AppendText("下载失败。" + vbCrLf + "")
 			End If
 		End If
 
@@ -260,7 +269,7 @@ Public Class DownloadUserControl
 		Dim outputInfo As BackgroundSteamPipe.DownloadItemOutputInfo = Nothing
 
 		If e.Cancelled Then
-			Me.LogTextBox.AppendText("Download cancelled." + vbCrLf)
+			Me.LogTextBox.AppendText("下载已取消。" + vbCrLf + "")
 			Me.DownloadProgressBar.Text = ""
 			Me.DownloadProgressBar.Value = 0
 		Else
@@ -281,11 +290,11 @@ Public Class DownloadUserControl
 
 				File.WriteAllBytes(outputPathFileName, outputInfo.ContentFile)
 				If File.Exists(outputPathFileName) Then
-					Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded file: """ + outputPathFileName + """" + vbCrLf)
+					Me.LogTextBox.AppendText("下载完成。" + vbCrLf + "已下载文件：""" + outputPathFileName + """" + vbCrLf)
 					Me.DownloadedItemTextBox.Text = outputPathFileName
 					'Me.ProcessFolderOrFileAfterDownload(outputPathFileName)
 				Else
-					Me.LogTextBox.AppendText("Download failed." + vbCrLf)
+					Me.LogTextBox.AppendText("下载失败。" + vbCrLf + "")
 				End If
 			ElseIf outputInfo.Result = "success_SteamUGC" Then
 				Dim outputPath As String
@@ -317,13 +326,13 @@ Public Class DownloadUserControl
 
 					If Directory.Exists(targetOutputPath) Then
 						'Me.ProcessFolderOrFileAfterDownload(targetOutputPath)
-						Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded folder: """ + targetOutputPath + """" + vbCrLf)
+						Me.LogTextBox.AppendText("下载完成。" + vbCrLf + "已下载文件夹：""" + targetOutputPath + """" + vbCrLf)
 						Me.DownloadedItemTextBox.Text = targetOutputPath
 					Else
-						Me.LogTextBox.AppendText("Download failed." + vbCrLf)
+						Me.LogTextBox.AppendText("下载失败。" + vbCrLf + "")
 					End If
 				Else
-					Me.LogTextBox.AppendText("Download failed." + vbCrLf)
+					Me.LogTextBox.AppendText("下载失败。" + vbCrLf + "")
 				End If
 			End If
 		End If
@@ -364,7 +373,7 @@ Public Class DownloadUserControl
 
 	Private Sub UnsubscribeItem_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
 		'If e.Cancelled Then
-		'	Me.LogTextBox.AppendText("Download cancelled." + vbCrLf)
+		'	Me.LogTextBox.AppendText("下载已取消。" + vbCrLf + "")
 		'Else
 		'	Dim outputInfo As BackgroundSteamPipe.DownloadItemOutputInfo = CType(e.Result, BackgroundSteamPipe.DownloadItemOutputInfo)
 		'	If outputInfo.Result = "success" Then
@@ -419,7 +428,7 @@ Public Class DownloadUserControl
 			'      does not show the path name bar nor does it scroll to the selected folder in the folder tree view.
 			Dim outputPathWdw As New OpenFileDialog()
 
-			outputPathWdw.Title = "Open the folder you want as Output Folder"
+			outputPathWdw.Title = "打开要用作输出文件夹的文件夹"
 			outputPathWdw.InitialDirectory = FileManager.GetLongestExtantPath(TheApp.Settings.DownloadOutputWorkPath)
 			If outputPathWdw.InitialDirectory = "" Then
 				outputPathWdw.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
@@ -430,7 +439,7 @@ Public Class DownloadUserControl
 			outputPathWdw.Multiselect = False
 			outputPathWdw.ValidateNames = False
 
-			If outputPathWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+			If outputPathWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 				' Allow dialog window to completely disappear.
 				Application.DoEvents()
 
@@ -478,11 +487,11 @@ Public Class DownloadUserControl
 		Dim itemID As String = Me.GetItemID()
 		Dim appID As UInteger = 0
 		If itemID = "0" Then
-			Me.LogTextBox.AppendText("ERROR: Item ID is invalid." + vbCrLf)
+			Me.LogTextBox.AppendText("错误：项目 ID 无效。" + vbCrLf + "")
 			Exit Sub
 		Else
 			'Me.LogTextBox.AppendText("Getting item content download link." + vbCrLf)
-			Me.LogTextBox.AppendText("Getting item content download link...")
+			Me.LogTextBox.AppendText("正在获取项目内容下载链接...")
 			Application.DoEvents()
 			Me.Timer1.Interval = 1000
 			Me.Timer1.Start()
@@ -490,11 +499,11 @@ Public Class DownloadUserControl
 			Me.Timer1.Stop()
 		End If
 		If itemLink <> "" Then
-			Me.LogTextBox.AppendText("Item content download link found. Downloading file via web." + vbCrLf)
+			Me.LogTextBox.AppendText("已找到项目内容下载链接。正在通过网页下载文件。" + vbCrLf + "")
 			Me.DownloadViaWeb(itemLink, Me.theItemContentPathFileName)
 		Else
 			'Me.LogTextBox.AppendText("Item content download link not found. Probably an item that uses newer Steam API or a Friends-only item not downloadable via web." + vbCrLf)
-			Me.LogTextBox.AppendText("Item content download link not found. Downloading file via Steam." + vbCrLf)
+			Me.LogTextBox.AppendText("未找到项目内容下载链接。正在通过 Steam 下载文件。" + vbCrLf + "")
 
 			Dim outputPath As String
 			outputPath = Me.GetOutputPath()
@@ -664,7 +673,7 @@ Public Class DownloadUserControl
 		Try
 			FileManager.CreatePath(outputPath)
 		Catch ex As Exception
-			Me.LogTextBox.AppendText("Crowbar tried to create folder path """ + outputPath + """, but Windows gave this message: " + ex.Message + vbCrLf)
+			Me.LogTextBox.AppendText("Crowbar 尝试创建文件夹路径 """ + outputPath + """，但 Windows 返回了此消息：" + ex.Message + vbCrLf)
 			Exit Sub
 		End Try
 
@@ -675,7 +684,7 @@ Public Class DownloadUserControl
 		outputPathFileName = Path.Combine(outputPath, outputFileName)
 		outputPathFileName = FileManager.GetTestedPathFileName(outputPathFileName)
 
-		Me.LogTextBox.AppendText("Downloading workshop item as: """ + outputPathFileName + """" + vbCrLf)
+		Me.LogTextBox.AppendText("正在将创意工坊项目下载为：""" + outputPathFileName + """" + vbCrLf)
 
 		'Me.DownloadButton.Enabled = False
 		'Me.CancelDownloadButton.Enabled = True
@@ -789,7 +798,7 @@ Public Class DownloadUserControl
 				AddHandler Me.theProcessAfterDownloadWorker.RunWorkerCompleted, AddressOf ProcessAfterDownloadWorker_RunWorkerCompleted
 				Me.theProcessAfterDownloadWorker.RunWorkerAsync(pathFileName)
 			Catch ex As Exception
-				Me.LogTextBox.AppendText("ERROR: " + ex.Message + vbCrLf)
+				Me.LogTextBox.AppendText("错误：" + ex.Message + vbCrLf)
 			End Try
 		End If
 	End Sub
@@ -818,7 +827,7 @@ Public Class DownloadUserControl
 		Else
 			Dim pathFileName As String = CType(e.Result, String)
 			If pathFileName <> "" Then
-				Me.LogTextBox.AppendText("Converted to file: """ + pathFileName + """" + vbCrLf)
+				Me.LogTextBox.AppendText("已转换为文件：""" + pathFileName + """" + vbCrLf)
 				'Me.DownloadedItemTextBox.Text = pathFileName
 			End If
 		End If

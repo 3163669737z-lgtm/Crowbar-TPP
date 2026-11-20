@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Text
 
 Public Class SourcePhyFile
@@ -38,7 +38,7 @@ Public Class SourcePhyFile
 		Me.theInputFileReader.BaseStream.Seek(fileOffsetStart + Me.thePhyFileData.size, SeekOrigin.Begin)
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-		Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Header")
+		Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "文件头")
 	End Sub
 
 	Public Sub ReadSourceCollisionData()
@@ -484,7 +484,7 @@ Public Class SourcePhyFile
 		End Try
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-		Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Properties")
+		Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "属性")
 	End Sub
 
 	Public Sub ReadSourcePhyRagdollConstraintDescs()
@@ -553,7 +553,7 @@ Public Class SourcePhyFile
 
 		If fileOffsetStart < Me.theInputFileReader.BaseStream.Position Then
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Ragdoll constraints")
+			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "布娃娃约束")
 		End If
 	End Sub
 
@@ -611,7 +611,7 @@ Public Class SourcePhyFile
 
 		If fileOffsetStart < Me.theInputFileReader.BaseStream.Position Then
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Collision rules")
+			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "碰撞规则")
 		End If
 	End Sub
 
@@ -666,7 +666,7 @@ Public Class SourcePhyFile
 
 		If fileOffsetStart < Me.theInputFileReader.BaseStream.Position Then
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Animated Friction")
+			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "动画摩擦")
 		End If
 	End Sub
 
@@ -724,7 +724,7 @@ Public Class SourcePhyFile
 
 		If fileOffsetStart < Me.theInputFileReader.BaseStream.Position Then
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Edit params")
+			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "编辑参数")
 		End If
 	End Sub
 
@@ -750,7 +750,7 @@ Public Class SourcePhyFile
 
 		If fileOffsetStart < Me.theInputFileReader.BaseStream.Position Then
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Collision text")
+			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "碰撞文本")
 		End If
 	End Sub
 

@@ -1,4 +1,4 @@
-Public Class AboutUserControl
+﻿Public Class AboutUserControl
 
 #Region "Creation and Destruction"
 
@@ -21,7 +21,7 @@ Public Class AboutUserControl
 		Me.GotoSteamGroupLinkLabel.Text = My.Resources.About_GotoSteamGroupText
 		Me.GotoSteamGroupLinkLabel.Links.Add(0, My.Resources.About_GotoSteamGroupText.Length(), My.Resources.About_ProductLink)
 
-		Me.ProductInfoTextBox.Text = "Version " + My.Application.Info.Version.ToString(2) + vbCrLf
+		Me.ProductInfoTextBox.Text = "版本 " + My.Application.Info.Version.ToString(2) + vbCrLf
 		Me.ProductInfoTextBox.Text += My.Application.Info.Copyright + vbCrLf
 		Me.ProductInfoTextBox.Text += My.Application.Info.CompanyName
 
@@ -52,6 +52,16 @@ Public Class AboutUserControl
 
 #Region "Child Widget Event Handlers"
 
+	Private Sub ResizeDescription() Handles ProductDescriptionTextBox.TextChanged, ProductDescriptionTextBox.SizeChanged,
+			ProductDescriptionTextBox.FontChanged
+		Dim description As TextBox = Me.ProductDescriptionTextBox
+		If Not Me.IsHandleCreated OrElse description.TextLength = 0 OrElse description.Width <= 0 Then Return
+
+		Dim textSize As Size = description.GetPreferredSize(New Size(description.Width, 0))
+		description.Height = textSize.Height
+		Me.SpecialThanksGroupBox.Top = description.Bottom + LogicalToDeviceUnits(6)
+	End Sub
+
 	Private Sub ProductLogoButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ProductLogoButton.Click
 		System.Diagnostics.Process.Start(My.Resources.About_ProductLink)
 	End Sub
@@ -64,11 +74,11 @@ Public Class AboutUserControl
 		Dim aLinkLabel As LinkLabel
 		aLinkLabel = CType(sender, LinkLabel)
 
-		If e.Button = Windows.Forms.MouseButtons.Left Then
+		If e.Button = System.Windows.Forms.MouseButtons.Left Then
 			aLinkLabel.LinkVisited = True
 			Dim target As String = CType(e.Link.LinkData, String)
 			System.Diagnostics.Process.Start(target)
-		ElseIf e.Button = Windows.Forms.MouseButtons.Right Then
+		ElseIf e.Button = System.Windows.Forms.MouseButtons.Right Then
 			'TODO: Show context menu with: Copy Link, Copy Text
 		End If
 	End Sub

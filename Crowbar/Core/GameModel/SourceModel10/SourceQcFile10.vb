@@ -331,8 +331,13 @@ Public Class SourceQcFile10
 
 		Me.theOutputFileStreamWriter.WriteLine()
 
+		Dim flags As Integer = Me.theMdlFileData.flags
+		If (flags And SourceMdlFileData10.XashBoneWeights) <> 0 Then
+			Me.theOutputFileStreamWriter.WriteLine("$boneweights")
+			flags = flags And Not (SourceMdlFileData10.XashBoneInfo Or SourceMdlFileData10.XashBoneWeights)
+		End If
 		line = "$flags "
-		line += Me.theMdlFileData.flags.ToString(TheApp.InternalNumberFormat)
+		line += flags.ToString(TheApp.InternalNumberFormat)
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
@@ -340,7 +345,7 @@ Public Class SourceQcFile10
 		Dim line As String = ""
 		Dim aHitbox As SourceMdlHitbox10
 
-		If Me.theMdlFileData.theHitboxes.Count > 0 Then
+		If Me.theMdlFileData.theHitboxes IsNot Nothing AndAlso Me.theMdlFileData.theHitboxes.Count > 0 Then
 			Me.theOutputFileStreamWriter.WriteLine()
 
 			For j As Integer = 0 To Me.theMdlFileData.theHitboxes.Count - 1
@@ -424,7 +429,7 @@ Public Class SourceQcFile10
 		Dim groupSize As Long = 0
 		Dim remainder As Double = 0
 
-		If Me.theMdlFileData.theSequenceGroups.Count > 1 Then
+		If Me.theMdlFileData.theSequenceGroups IsNot Nothing AndAlso Me.theMdlFileData.theSequenceGroups.Count > 1 Then
 			For sequenceGroupIndex As Integer = 0 To Me.theMdlFileData.theSequenceGroups.Count - 1
 				fileSize = Me.theMdlFileData.theSequenceGroupFileHeaders(sequenceGroupIndex).theActualFileSize
 				If largestFileSize < fileSize Then

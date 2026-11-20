@@ -1,4 +1,4 @@
-Imports System.Collections.ObjectModel
+﻿Imports System.Collections.ObjectModel
 Imports System.Globalization
 Imports System.IO
 Imports System.Text
@@ -197,7 +197,7 @@ Public Class App
 				File.WriteAllText(appSettingsPathFileName, My.Resources.Crowbar_Settings)
 			End If
 		Catch ex As Exception
-			Console.WriteLine("EXCEPTION: " + ex.Message)
+			Console.WriteLine("异常：" + ex.Message)
 			'Throw New Exception(ex.Message, ex.InnerException)
 			Exit Sub
 		Finally
@@ -282,8 +282,8 @@ Public Class App
 		'NOTE: Using Path.Combine in case theStartupFolder is a root folder, like "C:\".
 		customDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ZeqMacaw")
 		customDataPath += Path.DirectorySeparatorChar
-		'customDataPath += "Crowbar"
-		customDataPath += My.Application.Info.ProductName
+		' Keep the existing settings directory after the product rename.
+		customDataPath += "Crowbar-Starfelll"
 		customDataPath += " "
 		customDataPath += My.Application.Info.Version.ToString(2)
 
@@ -393,7 +393,7 @@ Public Class App
 				File.WriteAllBytes(pathFileName, dataResource)
 			End If
 		Catch ex As Exception
-			Console.WriteLine("EXCEPTION: " + ex.Message)
+			Console.WriteLine("异常：" + ex.Message)
 			'Throw New Exception(ex.Message, ex.InnerException)
 			Exit Sub
 		Finally
@@ -403,7 +403,7 @@ Public Class App
 	Public Function GetHeaderComment() As String
 		Dim line As String
 
-		line = "Created by "
+		line = "由以下人员创建："
 		line += Me.GetProductNameAndVersion()
 
 		Return line

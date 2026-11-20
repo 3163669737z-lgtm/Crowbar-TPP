@@ -1,5 +1,7 @@
 ﻿Public Class SourceMdlWeightingBoneData14
 
-	Public theWeightingBoneIndexes(31) As Integer
+	Public theWeightingBoneIndexes(23) As Byte
+	Public firstIndex As Integer
+	Public indexCount As Integer
 
 End Class

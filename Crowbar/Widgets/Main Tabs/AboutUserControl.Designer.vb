@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class AboutUserControl
 	Inherits BaseUserControl
 
@@ -57,6 +57,7 @@ Partial Class AboutUserControl
 		'
 		'ProductDescriptionTextBox
 		'
+		Me.ProductDescriptionTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right
 		Me.ProductDescriptionTextBox.Location = New System.Drawing.Point(175, 3)
 		Me.ProductDescriptionTextBox.Multiline = True
 		Me.ProductDescriptionTextBox.Name = "ProductDescriptionTextBox"
@@ -108,7 +109,7 @@ Partial Class AboutUserControl
 		Me.AuthorLinkLabel.Size = New System.Drawing.Size(165, 20)
 		Me.AuthorLinkLabel.TabIndex = 5
 		Me.AuthorLinkLabel.TabStop = True
-		Me.AuthorLinkLabel.Text = "Author"
+		Me.AuthorLinkLabel.Text = "作者"
 		Me.AuthorLinkLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		Me.AuthorLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
 		'
@@ -122,12 +123,13 @@ Partial Class AboutUserControl
 		Me.ProductNameLinkLabel.Size = New System.Drawing.Size(165, 23)
 		Me.ProductNameLinkLabel.TabIndex = 1
 		Me.ProductNameLinkLabel.TabStop = True
-		Me.ProductNameLinkLabel.Text = "Product Name"
+		Me.ProductNameLinkLabel.Text = "产品名称"
 		Me.ProductNameLinkLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		Me.ProductNameLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
 		'
 		'Panel1
 		'
+		Me.Panel1.AutoScroll = True
 		Me.Panel1.Controls.Add(Me.ProductLogoButton)
 		Me.Panel1.Controls.Add(Me.ProductNameLinkLabel)
 		Me.Panel1.Controls.Add(Me.ProductInfoTextBox)
@@ -155,7 +157,7 @@ Partial Class AboutUserControl
 		Me.GotoSteamGroupLinkLabel.Size = New System.Drawing.Size(165, 21)
 		Me.GotoSteamGroupLinkLabel.TabIndex = 2
 		Me.GotoSteamGroupLinkLabel.TabStop = True
-		Me.GotoSteamGroupLinkLabel.Text = "Goto Steam Group"
+		Me.GotoSteamGroupLinkLabel.Text = "前往 Steam 组"
 		Me.GotoSteamGroupLinkLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		Me.GotoSteamGroupLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
 		'
@@ -169,7 +171,7 @@ Partial Class AboutUserControl
 		Me.GotoSteamProfileLinkLabel.Size = New System.Drawing.Size(165, 20)
 		Me.GotoSteamProfileLinkLabel.TabIndex = 6
 		Me.GotoSteamProfileLinkLabel.TabStop = True
-		Me.GotoSteamProfileLinkLabel.Text = "Goto Steam Profile"
+		Me.GotoSteamProfileLinkLabel.Text = "前往 Steam 个人资料"
 		Me.GotoSteamProfileLinkLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		Me.GotoSteamProfileLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
 		'
@@ -193,7 +195,7 @@ Partial Class AboutUserControl
 		Me.SpecialThanksGroupBox.Size = New System.Drawing.Size(598, 232)
 		Me.SpecialThanksGroupBox.TabIndex = 8
 		Me.SpecialThanksGroupBox.TabStop = False
-		Me.SpecialThanksGroupBox.Text = "Special Thanks"
+		Me.SpecialThanksGroupBox.Text = "特别鸣谢"
 		'
 		'Credits2TextBox
 		'
@@ -225,8 +227,6 @@ Partial Class AboutUserControl
 		'
 		'AboutUserControl
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.Panel1)
 		Me.Name = "AboutUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)

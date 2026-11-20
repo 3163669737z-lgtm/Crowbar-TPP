@@ -12,7 +12,7 @@ Public Class Left4Dead2SteamAppInfo
 		Me.Name = "Left 4 Dead 2"
 		Me.UsesSteamUGC = False
 		Me.CanUseContentFolderOrFile = False
-		Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source Engine VPK Files")
+		Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source 引擎 VPK 文件")
 		Me.TagsControlType = GetType(Left4Dead2TagsUserControl)
 	End Sub
 

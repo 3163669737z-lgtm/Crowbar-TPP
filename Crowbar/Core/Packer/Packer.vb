@@ -117,25 +117,25 @@ Public Class Packer
 
 		If Not File.Exists(gamePackerPathFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "The model packer, """ + gamePackerPathFileName + """, does not exist.")
+			Me.WriteErrorMessage(1, "模型打包工具 """ + gamePackerPathFileName + """ 不存在。")
 			Me.UpdateProgress(1, My.Resources.ErrorMessageSDKMissingCause)
 		End If
 		If Not File.Exists(gamePathFileName) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "The game's """ + gamePathFileName + """ file does not exist.")
+			Me.WriteErrorMessage(1, "游戏的 """ + gamePathFileName + """ 文件不存在。")
 			Me.UpdateProgress(1, My.Resources.ErrorMessageSDKMissingCause)
 		End If
 		If String.IsNullOrEmpty(TheApp.Settings.PackInputPath) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "Input Folder has not been selected.")
+			Me.WriteErrorMessage(1, "尚未选择输入文件夹。")
 		ElseIf Not Directory.Exists(TheApp.Settings.PackInputPath) Then
 			inputsAreValid = False
-			Me.WriteErrorMessage(1, "The Input Folder, """ + TheApp.Settings.PackInputPath + """, does not exist.")
+			Me.WriteErrorMessage(1, "输入文件夹 """ + TheApp.Settings.PackInputPath + """ 不存在。")
 		End If
 		If TheApp.Settings.PackOutputFolderOption = PackOutputPathOptions.WorkFolder Then
 			If Not FileManager.PathExistsAfterTryToCreate(Me.theOutputPath) Then
 				inputsAreValid = False
-				Me.WriteErrorMessage(1, "The Output Folder, """ + Me.theOutputPath + """ could not be created.")
+				Me.WriteErrorMessage(1, "输出文件夹 """ + Me.theOutputPath + """ 无法创建。")
 			End If
 		End If
 
@@ -171,7 +171,7 @@ Public Class Packer
 		inputPath = TheApp.Settings.PackInputPath
 
 		Dim progressDescriptionText As String
-		progressDescriptionText = "Packing with " + TheApp.GetProductNameAndVersion() + ": "
+		progressDescriptionText = "正在使用 ... 打包：" + TheApp.GetProductNameAndVersion() + ": "
 
 		Try
 			If TheApp.Settings.PackMode = PackInputOptions.ParentFolder Then
@@ -196,7 +196,7 @@ Public Class Packer
 			End If
 		End Try
 
-		Me.UpdateProgressStop("... " + progressDescriptionText + " finished.")
+		Me.UpdateProgressStop("... " + progressDescriptionText + " 已完成。")
 
 		Return status
 	End Function
@@ -226,18 +226,18 @@ Public Class Packer
 			End If
 
 			Me.UpdateProgress()
-			Me.UpdateProgress(1, "Packing """ + inputPath + """ ...")
+			Me.UpdateProgress(1, "正在打包 """ + inputPath + """ ...")
 
 			Dim result As String
 			result = Me.PrepareFiles(inputPath)
 			If result = "success" Then
-				Me.UpdateProgress(2, "Output from packer """ + Me.GetGamePackerPathFileName() + """: ")
+				Me.UpdateProgress(2, "打包工具的输出 """ + Me.GetGamePackerPathFileName() + """: ")
 				Me.RunPackerApp(inputPath)
 
 				If Not Me.theProcessHasOutputData Then
-					Me.UpdateProgress(2, "ERROR: The packer did not return any status messages.")
-					Me.UpdateProgress(2, "CAUSE: The packer is not the correct one for the selected game.")
-					Me.UpdateProgress(2, "SOLUTION: Verify integrity of game files via Steam so that the correct packer is installed.")
+					Me.UpdateProgress(2, "错误：打包工具未返回任何状态消息。")
+					Me.UpdateProgress(2, "原因：该打包工具不适用于所选游戏。")
+					Me.UpdateProgress(2, "解决方法：通过 Steam 验证游戏文件完整性，以安装正确的打包工具。")
 				Else
 					Me.ProcessPackage(inputPath)
 				End If
@@ -252,7 +252,7 @@ Public Class Packer
 				'End If
 			End If
 
-			Me.UpdateProgress(1, "... Packing """ + inputPath + """ finished. Check above for any errors.")
+			Me.UpdateProgress(1, "... 正在打包 """ + inputPath + """ 已完成。请查看上方的错误信息。")
 		Catch ex As Exception
 			'TODO: [PackOneFolder] Should at least give an error message to let user know something prevented the pack.
 			Dim debug As Integer = 4242
@@ -288,7 +288,7 @@ Public Class Packer
 					Me.WriteFilesToListFileInFolderRecursively(inputPath)
 				End If
 			Catch ex As Exception
-				Me.UpdateProgress(2, "ERROR: Crowbar tried to write the list file for multi-file VPK packing, but the system gave this message: " + ex.Message + vbCr)
+				Me.UpdateProgress(2, "错误：Crowbar 尝试写入多文件 VPK 打包的列表文件，但系统返回了此消息：" + ex.Message + vbCr)
 			Finally
 				If Me.theVpkMultiFileListFileStream IsNot Nothing Then
 					Me.theVpkMultiFileListFileStream.Flush()
@@ -445,11 +445,11 @@ Public Class Packer
 			End Try
 			Try
 				File.Move(sourcePathFileName, targetPathFileName)
-				Me.UpdateProgress(2, "CROWBAR: Moved package file """ + sourcePathFileName + """ to """ + Me.theOutputPath + """")
+				Me.UpdateProgress(2, "CROWBAR：已移动包文件 """ + sourcePathFileName + """ to """ + Me.theOutputPath + """")
 			Catch ex As Exception
 				Me.UpdateProgress()
-				Me.UpdateProgress(2, "WARNING: Crowbar tried to move the file, """ + sourcePathFileName + """, to the output folder, but Windows complained with this message: " + ex.Message.Trim())
-				Me.UpdateProgress(2, "SOLUTION: Pack again (and hope Windows does not complain again) or move the file yourself.")
+				Me.UpdateProgress(2, "警告：Crowbar 尝试移动文件，""" + sourcePathFileName + """ 到输出文件夹，但 Windows 返回了此消息：" + ex.Message.Trim())
+				Me.UpdateProgress(2, "解决方法：重新打包（并希望 Windows 不再报错），或自行移动文件。")
 				Me.UpdateProgress()
 			End Try
 		End If
@@ -559,7 +559,7 @@ Public Class Packer
 		End If
 
 		If processIsCanceled Then
-			Me.theLastLine = "...Packing canceled."
+			Me.theLastLine = "...打包已取消。"
 		End If
 	End Sub
 
@@ -581,7 +581,7 @@ Public Class Packer
 				Try
 					FileManager.CreatePath(tempCrowbarPath)
 				Catch ex As Exception
-					Throw New System.Exception("Crowbar tried to create folder path """ + tempCrowbarPath + """, but Windows gave this message: " + ex.Message)
+					Throw New System.Exception("Crowbar 尝试创建文件夹路径 """ + tempCrowbarPath + """，但 Windows 返回了此消息：" + ex.Message)
 				End Try
 
 				listFileName = "crowbar_vpk_file_list.txt"
@@ -640,7 +640,7 @@ Public Class Packer
 				Me.theLogFileStream.Flush()
 			Catch ex As Exception
 				Me.UpdateProgress()
-				Me.UpdateProgress(2, "ERROR: Crowbar tried to write the pack log file but the system gave this message: " + ex.Message)
+				Me.UpdateProgress(2, "错误：Crowbar 尝试写入打包日志文件，但系统返回了此消息：" + ex.Message)
 				status = StatusMessage.Error
 			End Try
 		Else
@@ -663,7 +663,7 @@ Public Class Packer
 	End Sub
 
 	Private Sub WriteErrorMessage(ByVal indentLevel As Integer, ByVal line As String)
-		Me.UpdateProgress(indentLevel, "Crowbar ERROR: " + line)
+		Me.UpdateProgress(indentLevel, "Crowbar 错误：" + line)
 	End Sub
 
 	Private Sub UpdateProgress(ByVal indentLevel As Integer, ByVal line As String)

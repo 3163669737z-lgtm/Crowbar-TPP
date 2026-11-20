@@ -519,7 +519,7 @@ Public Class SourceModel52
 
 			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, "$KeyValues")
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		Finally
 		End Try
 	End Sub

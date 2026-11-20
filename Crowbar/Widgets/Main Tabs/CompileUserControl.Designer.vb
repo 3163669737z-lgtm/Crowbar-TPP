@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class CompileUserControl
 	Inherits BaseUserControl
 
@@ -51,7 +51,7 @@ Partial Class CompileUserControl
         Me.CompileComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.GotoQcButton = New System.Windows.Forms.Button()
-        Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
+        Me.Options_LogSplitContainer = New Crowbar.SplitContainerEx()
         Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
         Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
         Me.GameSetupPanel = New System.Windows.Forms.Panel()
@@ -62,7 +62,7 @@ Partial Class CompileUserControl
         Me.CompilerOptionsGoldSourceEnginePanel = New System.Windows.Forms.Panel()
         Me.GoldSourceEngineLogFileCheckBox = New System.Windows.Forms.CheckBox()
         Me.CompileOptionsGoldSourceEngineUseDefaultsButton = New System.Windows.Forms.Button()
-        Me.CompilerOptionsTextBoxMinScrollPanel = New System.Windows.Forms.Panel()
+        Me.CompilerOptionsContentPanel = New System.Windows.Forms.Panel()
         Me.CompileLogRichTextBox = New Crowbar.RichTextBoxEx()
         Me.CompileButtonsPanel = New System.Windows.Forms.Panel()
         Me.SkipCurrentModelButton = New System.Windows.Forms.Button()
@@ -83,6 +83,7 @@ Partial Class CompileUserControl
         Me.Options_LogSplitContainer.SuspendLayout()
         Me.OptionsGroupBox.SuspendLayout()
         Me.OptionsGroupBoxFillPanel.SuspendLayout()
+        Me.CompilerOptionsContentPanel.SuspendLayout()
         Me.GameSetupPanel.SuspendLayout()
         Me.CompilerOptionsSourceEnginePanel.SuspendLayout()
         Me.DefineBonesGroupBox.SuspendLayout()
@@ -124,7 +125,7 @@ Partial Class CompileUserControl
         Me.FolderForEachModelCheckBox.Name = "FolderForEachModelCheckBox"
         Me.FolderForEachModelCheckBox.Size = New System.Drawing.Size(141, 20)
         Me.FolderForEachModelCheckBox.TabIndex = 3
-        Me.FolderForEachModelCheckBox.Text = "Folder for each model"
+        Me.FolderForEachModelCheckBox.Text = "每个模型一个文件夹"
         Me.FolderForEachModelCheckBox.UseVisualStyleBackColor = True
         Me.FolderForEachModelCheckBox.Visible = False
         '
@@ -136,8 +137,8 @@ Partial Class CompileUserControl
         Me.SourceEngineLogFileCheckBox.Name = "SourceEngineLogFileCheckBox"
         Me.SourceEngineLogFileCheckBox.Size = New System.Drawing.Size(116, 20)
         Me.SourceEngineLogFileCheckBox.TabIndex = 4
-        Me.SourceEngineLogFileCheckBox.Text = "Write log to a file"
-        Me.ToolTip1.SetToolTip(Me.SourceEngineLogFileCheckBox, "Write compile log to a file (in same folder as QC file).")
+        Me.SourceEngineLogFileCheckBox.Text = "将日志写入文件"
+        Me.ToolTip1.SetToolTip(Me.SourceEngineLogFileCheckBox, "将编译日志写入文件（与 QC 文件同文件夹）。")
         Me.SourceEngineLogFileCheckBox.UseVisualStyleBackColor = True
         '
         'CompilerOptionDefineBonesCheckBox
@@ -159,8 +160,8 @@ Partial Class CompileUserControl
         Me.CompilerOptionNoP4CheckBox.Name = "CompilerOptionNoP4CheckBox"
         Me.CompilerOptionNoP4CheckBox.Size = New System.Drawing.Size(58, 20)
         Me.CompilerOptionNoP4CheckBox.TabIndex = 5
-        Me.CompilerOptionNoP4CheckBox.Text = "No P4"
-        Me.ToolTip1.SetToolTip(Me.CompilerOptionNoP4CheckBox, "No Perforce integration (modders do not usually have Perforce software).")
+        Me.CompilerOptionNoP4CheckBox.Text = "不使用 P4"
+        Me.ToolTip1.SetToolTip(Me.CompilerOptionNoP4CheckBox, "不集成 Perforce（模组制作者通常没有 Perforce 软件）。")
         Me.CompilerOptionNoP4CheckBox.UseVisualStyleBackColor = True
         '
         'CompilerOptionVerboseCheckBox
@@ -171,8 +172,8 @@ Partial Class CompileUserControl
         Me.CompilerOptionVerboseCheckBox.Name = "CompilerOptionVerboseCheckBox"
         Me.CompilerOptionVerboseCheckBox.Size = New System.Drawing.Size(68, 20)
         Me.CompilerOptionVerboseCheckBox.TabIndex = 6
-        Me.CompilerOptionVerboseCheckBox.Text = "Verbose"
-        Me.ToolTip1.SetToolTip(Me.CompilerOptionVerboseCheckBox, "Write more info in compile log.")
+        Me.CompilerOptionVerboseCheckBox.Text = "详细日志"
+        Me.ToolTip1.SetToolTip(Me.CompilerOptionVerboseCheckBox, "在编译日志中写入更多信息。")
         Me.CompilerOptionVerboseCheckBox.UseVisualStyleBackColor = True
         '
         'CompilerOptionDefineBonesModifyQcFileCheckBox
@@ -184,7 +185,7 @@ Partial Class CompileUserControl
         Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Name = "CompilerOptionDefineBonesModifyQcFileCheckBox"
         Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Size = New System.Drawing.Size(245, 20)
         Me.CompilerOptionDefineBonesModifyQcFileCheckBox.TabIndex = 11
-        Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Text = "Put in QC file: $include ""<QCI file name>"""
+        Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Text = "写入 QC 文件：$include ""<QCI 文件名>"""
         Me.CompilerOptionDefineBonesModifyQcFileCheckBox.UseVisualStyleBackColor = True
         '
         'CompilerOptionDefineBonesWriteQciFileCheckBox
@@ -196,7 +197,7 @@ Partial Class CompileUserControl
         Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Name = "CompilerOptionDefineBonesWriteQciFileCheckBox"
         Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Size = New System.Drawing.Size(98, 20)
         Me.CompilerOptionDefineBonesWriteQciFileCheckBox.TabIndex = 8
-        Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Text = "Write QCI file:"
+        Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Text = "写入 QCI 文件："
         Me.CompilerOptionDefineBonesWriteQciFileCheckBox.UseVisualStyleBackColor = True
         '
         'CompilerOptionDefineBonesFileNameTextBox
@@ -215,7 +216,7 @@ Partial Class CompileUserControl
         Me.DirectCompilerOptionsLabel.Name = "DirectCompilerOptionsLabel"
         Me.DirectCompilerOptionsLabel.Size = New System.Drawing.Size(891, 16)
         Me.DirectCompilerOptionsLabel.TabIndex = 13
-        Me.DirectCompilerOptionsLabel.Text = "Direct entry of command-line options (in case they are not included above):"
+        Me.DirectCompilerOptionsLabel.Text = "直接输入命令行选项（如果上面未包含）："
         '
         'DirectCompilerOptionsTextBox
         '
@@ -235,7 +236,7 @@ Partial Class CompileUserControl
         Me.BrowseForQcPathFolderOrFileNameButton.Name = "BrowseForQcPathFolderOrFileNameButton"
         Me.BrowseForQcPathFolderOrFileNameButton.Size = New System.Drawing.Size(75, 28)
         Me.BrowseForQcPathFolderOrFileNameButton.TabIndex = 3
-        Me.BrowseForQcPathFolderOrFileNameButton.Text = "Browse..."
+        Me.BrowseForQcPathFolderOrFileNameButton.Text = "浏览..."
         Me.BrowseForQcPathFolderOrFileNameButton.UseVisualStyleBackColor = True
         '
         'Label6
@@ -245,7 +246,7 @@ Partial Class CompileUserControl
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(66, 16)
         Me.Label6.TabIndex = 0
-        Me.Label6.Text = "QC input:"
+        Me.Label6.Text = "QC 输入："
         '
         'EditGameSetupButton
         '
@@ -255,7 +256,7 @@ Partial Class CompileUserControl
         Me.EditGameSetupButton.Name = "EditGameSetupButton"
         Me.EditGameSetupButton.Size = New System.Drawing.Size(105, 28)
         Me.EditGameSetupButton.TabIndex = 2
-        Me.EditGameSetupButton.Text = "Set Up Games"
+        Me.EditGameSetupButton.Text = "设置游戏"
         Me.EditGameSetupButton.UseVisualStyleBackColor = True
         '
         'GameSetupLabel
@@ -265,7 +266,7 @@ Partial Class CompileUserControl
         Me.GameSetupLabel.Name = "GameSetupLabel"
         Me.GameSetupLabel.Size = New System.Drawing.Size(217, 16)
         Me.GameSetupLabel.TabIndex = 0
-        Me.GameSetupLabel.Text = "Game that has the model compiler:"
+        Me.GameSetupLabel.Text = "包含模型编译器的游戏："
         '
         'CompileButton
         '
@@ -274,7 +275,7 @@ Partial Class CompileUserControl
         Me.CompileButton.Name = "CompileButton"
         Me.CompileButton.Size = New System.Drawing.Size(146, 28)
         Me.CompileButton.TabIndex = 1
-        Me.CompileButton.Text = "&Compile DefineBones"
+        Me.CompileButton.Text = "编译 DefineBones"
         Me.CompileButton.UseVisualStyleBackColor = True
         '
         'Panel1
@@ -355,7 +356,7 @@ Partial Class CompileUserControl
         Me.GotoOutputPathButton.Name = "GotoOutputPathButton"
         Me.GotoOutputPathButton.Size = New System.Drawing.Size(50, 28)
         Me.GotoOutputPathButton.TabIndex = 11
-        Me.GotoOutputPathButton.Text = "Goto"
+        Me.GotoOutputPathButton.Text = "转到"
         Me.GotoOutputPathButton.UseVisualStyleBackColor = True
         '
         'BrowseForOutputPathButton
@@ -367,7 +368,7 @@ Partial Class CompileUserControl
         Me.BrowseForOutputPathButton.Name = "BrowseForOutputPathButton"
         Me.BrowseForOutputPathButton.Size = New System.Drawing.Size(75, 28)
         Me.BrowseForOutputPathButton.TabIndex = 10
-        Me.BrowseForOutputPathButton.Text = "Browse..."
+        Me.BrowseForOutputPathButton.Text = "浏览..."
         Me.BrowseForOutputPathButton.UseVisualStyleBackColor = True
         '
         'OutputPathComboBox
@@ -392,12 +393,13 @@ Partial Class CompileUserControl
         '
         'Label1
         '
+        Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(4, 46)
         Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(72, 16)
         Me.Label1.TabIndex = 5
-        Me.Label1.Text = "Output to:"
+        Me.Label1.Text = "输出到："
         '
         'GotoQcButton
         '
@@ -407,7 +409,7 @@ Partial Class CompileUserControl
         Me.GotoQcButton.Name = "GotoQcButton"
         Me.GotoQcButton.Size = New System.Drawing.Size(50, 28)
         Me.GotoQcButton.TabIndex = 4
-        Me.GotoQcButton.Text = "Goto"
+        Me.GotoQcButton.Text = "转到"
         Me.GotoQcButton.UseVisualStyleBackColor = True
         '
         'Options_LogSplitContainer
@@ -448,18 +450,18 @@ Partial Class CompileUserControl
         Me.OptionsGroupBox.Size = New System.Drawing.Size(898, 230)
         Me.OptionsGroupBox.TabIndex = 0
         Me.OptionsGroupBox.TabStop = False
-        Me.OptionsGroupBox.Text = "Options"
+        Me.OptionsGroupBox.Text = "选项"
         '
         'OptionsGroupBoxFillPanel
         '
         Me.OptionsGroupBoxFillPanel.AutoScroll = True
-        Me.OptionsGroupBoxFillPanel.Controls.Add(Me.GameSetupPanel)
-        Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsSourceEnginePanel)
-        Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsGoldSourceEnginePanel)
-        Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectCompilerOptionsLabel)
-        Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectCompilerOptionsTextBox)
-        Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsTextBox)
-        Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsTextBoxMinScrollPanel)
+        Me.CompilerOptionsContentPanel.Controls.Add(Me.GameSetupPanel)
+        Me.CompilerOptionsContentPanel.Controls.Add(Me.CompilerOptionsSourceEnginePanel)
+        Me.CompilerOptionsContentPanel.Controls.Add(Me.CompilerOptionsGoldSourceEnginePanel)
+        Me.CompilerOptionsContentPanel.Controls.Add(Me.DirectCompilerOptionsLabel)
+        Me.CompilerOptionsContentPanel.Controls.Add(Me.DirectCompilerOptionsTextBox)
+        Me.CompilerOptionsContentPanel.Controls.Add(Me.CompilerOptionsTextBox)
+        Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsContentPanel)
         Me.OptionsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.OptionsGroupBoxFillPanel.Location = New System.Drawing.Point(4, 18)
         Me.OptionsGroupBoxFillPanel.Margin = New System.Windows.Forms.Padding(4)
@@ -519,7 +521,7 @@ Partial Class CompileUserControl
         Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Name = "CompilerOptionDefineBonesOverwriteQciFileCheckBox"
         Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Size = New System.Drawing.Size(118, 20)
         Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.TabIndex = 13
-        Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Text = "Overwrite QCI file"
+        Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Text = "覆盖 QCI 文件"
         Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.UseVisualStyleBackColor = True
         '
         'CompileOptionsSourceEngineUseDefaultsButton
@@ -530,8 +532,8 @@ Partial Class CompileUserControl
         Me.CompileOptionsSourceEngineUseDefaultsButton.Name = "CompileOptionsSourceEngineUseDefaultsButton"
         Me.CompileOptionsSourceEngineUseDefaultsButton.Size = New System.Drawing.Size(105, 28)
         Me.CompileOptionsSourceEngineUseDefaultsButton.TabIndex = 12
-        Me.CompileOptionsSourceEngineUseDefaultsButton.Text = "Use Defaults"
-        Me.ToolTip1.SetToolTip(Me.CompileOptionsSourceEngineUseDefaultsButton, "Set the compiler options back to default settings")
+        Me.CompileOptionsSourceEngineUseDefaultsButton.Text = "使用默认值"
+        Me.ToolTip1.SetToolTip(Me.CompileOptionsSourceEngineUseDefaultsButton, "将编译器选项恢复为默认设置")
         Me.CompileOptionsSourceEngineUseDefaultsButton.UseVisualStyleBackColor = True
         '
         'CompilerOptionsGoldSourceEnginePanel
@@ -554,8 +556,8 @@ Partial Class CompileUserControl
         Me.GoldSourceEngineLogFileCheckBox.Name = "GoldSourceEngineLogFileCheckBox"
         Me.GoldSourceEngineLogFileCheckBox.Size = New System.Drawing.Size(116, 20)
         Me.GoldSourceEngineLogFileCheckBox.TabIndex = 14
-        Me.GoldSourceEngineLogFileCheckBox.Text = "Write log to a file"
-        Me.ToolTip1.SetToolTip(Me.GoldSourceEngineLogFileCheckBox, "Write compile log to a file (in same folder as QC file).")
+        Me.GoldSourceEngineLogFileCheckBox.Text = "将日志写入文件"
+        Me.ToolTip1.SetToolTip(Me.GoldSourceEngineLogFileCheckBox, "将编译日志写入文件（与 QC 文件同文件夹）。")
         Me.GoldSourceEngineLogFileCheckBox.UseVisualStyleBackColor = True
         '
         'CompileOptionsGoldSourceEngineUseDefaultsButton
@@ -566,17 +568,17 @@ Partial Class CompileUserControl
         Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Name = "CompileOptionsGoldSourceEngineUseDefaultsButton"
         Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Size = New System.Drawing.Size(105, 28)
         Me.CompileOptionsGoldSourceEngineUseDefaultsButton.TabIndex = 13
-        Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Text = "Use Defaults"
-        Me.ToolTip1.SetToolTip(Me.CompileOptionsGoldSourceEngineUseDefaultsButton, "Set the compiler options back to default settings")
+        Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Text = "使用默认值"
+        Me.ToolTip1.SetToolTip(Me.CompileOptionsGoldSourceEngineUseDefaultsButton, "将编译器选项恢复为默认设置")
         Me.CompileOptionsGoldSourceEngineUseDefaultsButton.UseVisualStyleBackColor = True
         '
-        'CompilerOptionsTextBoxMinScrollPanel
+        'CompilerOptionsContentPanel
         '
-        Me.CompilerOptionsTextBoxMinScrollPanel.Location = New System.Drawing.Point(0, 208)
-        Me.CompilerOptionsTextBoxMinScrollPanel.Margin = New System.Windows.Forms.Padding(4)
-        Me.CompilerOptionsTextBoxMinScrollPanel.Name = "CompilerOptionsTextBoxMinScrollPanel"
-        Me.CompilerOptionsTextBoxMinScrollPanel.Size = New System.Drawing.Size(891, 46)
-        Me.CompilerOptionsTextBoxMinScrollPanel.TabIndex = 41
+        Me.CompilerOptionsContentPanel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.CompilerOptionsContentPanel.Margin = New System.Windows.Forms.Padding(4)
+        Me.CompilerOptionsContentPanel.Name = "CompilerOptionsContentPanel"
+        Me.CompilerOptionsContentPanel.Size = New System.Drawing.Size(890, 254)
+        Me.CompilerOptionsContentPanel.TabIndex = 41
         '
         'CompileLogRichTextBox
         '
@@ -613,7 +615,7 @@ Partial Class CompileUserControl
         Me.SkipCurrentModelButton.Name = "SkipCurrentModelButton"
         Me.SkipCurrentModelButton.Size = New System.Drawing.Size(140, 28)
         Me.SkipCurrentModelButton.TabIndex = 2
-        Me.SkipCurrentModelButton.Text = "Skip Current Model"
+        Me.SkipCurrentModelButton.Text = "跳过当前模型"
         Me.SkipCurrentModelButton.UseVisualStyleBackColor = True
         '
         'CancelCompileButton
@@ -624,7 +626,7 @@ Partial Class CompileUserControl
         Me.CancelCompileButton.Name = "CancelCompileButton"
         Me.CancelCompileButton.Size = New System.Drawing.Size(140, 28)
         Me.CancelCompileButton.TabIndex = 3
-        Me.CancelCompileButton.Text = "Cancel Compile"
+        Me.CancelCompileButton.Text = "取消编译"
         Me.CancelCompileButton.UseVisualStyleBackColor = True
         '
         'UseAllInPackButton
@@ -635,7 +637,7 @@ Partial Class CompileUserControl
         Me.UseAllInPackButton.Name = "UseAllInPackButton"
         Me.UseAllInPackButton.Size = New System.Drawing.Size(140, 28)
         Me.UseAllInPackButton.TabIndex = 4
-        Me.UseAllInPackButton.Text = "Use All in Pack"
+        Me.UseAllInPackButton.Text = "在打包中使用全部"
         Me.UseAllInPackButton.UseVisualStyleBackColor = True
         Me.UseAllInPackButton.Visible = False
         '
@@ -674,7 +676,7 @@ Partial Class CompileUserControl
         Me.UseInViewButton.Name = "UseInViewButton"
         Me.UseInViewButton.Size = New System.Drawing.Size(88, 28)
         Me.UseInViewButton.TabIndex = 2
-        Me.UseInViewButton.Text = "Use in View"
+        Me.UseInViewButton.Text = "在查看中使用"
         Me.UseInViewButton.UseVisualStyleBackColor = True
         '
         'RecompileButton
@@ -686,7 +688,7 @@ Partial Class CompileUserControl
         Me.RecompileButton.Name = "RecompileButton"
         Me.RecompileButton.Size = New System.Drawing.Size(88, 28)
         Me.RecompileButton.TabIndex = 5
-        Me.RecompileButton.Text = "Recompile"
+        Me.RecompileButton.Text = "重新编译"
         Me.RecompileButton.UseVisualStyleBackColor = True
         '
         'UseInPackButton
@@ -698,7 +700,7 @@ Partial Class CompileUserControl
         Me.UseInPackButton.Name = "UseInPackButton"
         Me.UseInPackButton.Size = New System.Drawing.Size(88, 28)
         Me.UseInPackButton.TabIndex = 3
-        Me.UseInPackButton.Text = "Use in Pack"
+        Me.UseInPackButton.Text = "在打包中使用"
         Me.UseInPackButton.UseVisualStyleBackColor = True
         Me.UseInPackButton.Visible = False
         '
@@ -710,7 +712,7 @@ Partial Class CompileUserControl
         Me.GotoCompiledMdlButton.Name = "GotoCompiledMdlButton"
         Me.GotoCompiledMdlButton.Size = New System.Drawing.Size(50, 28)
         Me.GotoCompiledMdlButton.TabIndex = 4
-        Me.GotoCompiledMdlButton.Text = "Goto"
+        Me.GotoCompiledMdlButton.Text = "转到"
         Me.GotoCompiledMdlButton.UseVisualStyleBackColor = True
         '
         'UseDefaultOutputSubfolderButton
@@ -721,12 +723,11 @@ Partial Class CompileUserControl
         Me.UseDefaultOutputSubfolderButton.Name = "UseDefaultOutputSubfolderButton"
         Me.UseDefaultOutputSubfolderButton.Size = New System.Drawing.Size(132, 28)
         Me.UseDefaultOutputSubfolderButton.TabIndex = 12
-        Me.UseDefaultOutputSubfolderButton.Text = "Use Default"
+        Me.UseDefaultOutputSubfolderButton.Text = "使用默认值"
         Me.UseDefaultOutputSubfolderButton.UseVisualStyleBackColor = True
         '
         'CompileUserControl
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
         Me.Controls.Add(Me.Panel1)
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "CompileUserControl"
@@ -738,6 +739,8 @@ Partial Class CompileUserControl
         CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Options_LogSplitContainer.ResumeLayout(False)
         Me.OptionsGroupBox.ResumeLayout(False)
+        Me.CompilerOptionsContentPanel.ResumeLayout(False)
+        Me.CompilerOptionsContentPanel.PerformLayout()
         Me.OptionsGroupBoxFillPanel.ResumeLayout(False)
         Me.OptionsGroupBoxFillPanel.PerformLayout()
         Me.GameSetupPanel.ResumeLayout(False)
@@ -801,7 +804,7 @@ Partial Class CompileUserControl
 	Friend WithEvents QcPathFileNameTextBox As Crowbar.TextBoxEx
 	Friend WithEvents GameSetupPanel As Panel
 	Friend WithEvents CompileButtonsPanel As Panel
-	Friend WithEvents CompilerOptionsTextBoxMinScrollPanel As Panel
+	Friend WithEvents CompilerOptionsContentPanel As Panel
 	Friend WithEvents PostCompilePanel As Panel
 	Friend WithEvents DefineBonesGroupBox As GroupBox
 	Friend WithEvents CompilerOptionDefineBonesOverwriteQciFileCheckBox As CheckBox

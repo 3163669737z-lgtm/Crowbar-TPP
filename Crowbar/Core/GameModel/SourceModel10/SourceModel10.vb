@@ -618,7 +618,7 @@ Public Class SourceModel10
 			'qcFile.WriteSequenceGroupCommands()
 			qcFile.WriteSequenceCommands()
 		Catch ex As Exception
-			Dim debug As Integer = 4242
+			Throw
 		Finally
 		End Try
 

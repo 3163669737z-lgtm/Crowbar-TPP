@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Text
 
 Public Class ViewUserControl
@@ -93,9 +93,12 @@ Public Class ViewUserControl
 	'	End If
 	'End Sub
 
-	Private Sub ViewUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
-		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlFileButton)
+	Private Sub LayoutModelFields() Handles Panel2.Layout
+		If Not Me.IsHandleCreated Then Return
+		Dim pathLeft As Integer = Math.Max(LogicalToDeviceUnits(58), Workarounds.FieldLeftAfter(Me.Label1, Me.MdlPathFileNameTextBox))
+		Workarounds.FitFieldBefore(Me.MdlPathFileNameTextBox, pathLeft, Me.BrowseForMdlFileButton)
+		Me.OverrideMdlVersionComboBox.Left = Math.Max(LogicalToDeviceUnits(123),
+			Workarounds.FieldLeftAfter(Me.OverrideMdlVersionLabel, Me.OverrideMdlVersionComboBox))
 	End Sub
 
 #End Region
@@ -116,19 +119,19 @@ Public Class ViewUserControl
 	Private Sub BrowseForMdlFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForMdlFileButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 
-		openFileWdw.Title = "Open the MDL file you want to view"
+		openFileWdw.Title = "打开要查看的 MDL 文件"
 		'openFileWdw.InitialDirectory = FileManager.GetPath(Me.AppSettingMdlPathFileName)
 		openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(Me.AppSettingMdlPathFileName)
 		If openFileWdw.InitialDirectory = "" Then
 			openFileWdw.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 		End If
 		openFileWdw.FileName = Path.GetFileName(Me.AppSettingMdlPathFileName)
-		openFileWdw.Filter = "Source Engine Model Files (*.mdl) | *.mdl"
+		openFileWdw.Filter = "Source 引擎模型文件 (*.mdl) | *.mdl"
 		openFileWdw.AddExtension = True
 		openFileWdw.Multiselect = False
 		openFileWdw.ValidateNames = True
 
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 

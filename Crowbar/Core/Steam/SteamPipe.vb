@@ -28,7 +28,7 @@ Public Class SteamPipe
 		Me.theReasonText = reasonText
 
 		If Me.theBackgroundWorker IsNot Nothing Then
-			Dim logMessage As String = Me.theReasonText + " - opening connection to Steam Workshop." + vbCrLf
+			Dim logMessage As String = Me.theReasonText + " - 正在打开到 Steam 创意工坊的连接。" + vbCrLf + ""
 			Me.theBackgroundWorker.ReportProgress(0, logMessage)
 		End If
 
@@ -44,14 +44,14 @@ Public Class SteamPipe
 #End If
 			Me.theCrowbarSteamPipeProcess.Start()
 		Catch ex As Exception
-			Console.WriteLine("EXCEPTION: " + ex.Message)
+			Console.WriteLine("异常：" + ex.Message)
 		Finally
 		End Try
 
 		Me.theCrowbarSteamPipeServer = New NamedPipeServerStream("CrowbarSteamPipe" + pipeNameSuffix, PipeDirection.InOut, 1)
-		Console.WriteLine("Waiting for client to connect to pipe ...")
+		Console.WriteLine("正在等待客户端连接到管道 ...")
 		Me.theCrowbarSteamPipeServer.WaitForConnection()
-		Console.WriteLine("... Client connected to pipe.")
+		Console.WriteLine("... 客户端已连接到管道。")
 
 		Me.theStreamWriter = New StreamWriter(Me.theCrowbarSteamPipeServer)
 		Me.theStreamWriter.AutoFlush = True
@@ -65,7 +65,7 @@ Public Class SteamPipe
 			Console.WriteLine("Command: Init")
 
 			Dim result As String = Me.theStreamReader.ReadLine()
-			Console.WriteLine("Result: " + result)
+			Console.WriteLine("结果：" + result)
 			If Me.theBackgroundWorker IsNot Nothing Then
 				If result <> "success" Then
 					Dim logMessage As String
@@ -78,10 +78,10 @@ Public Class SteamPipe
 					'Else
 					'	logMessage = "Connection to Steam Workshop failed because you do not own the app or game to which this item belongs." + vbCrLf
 					'End If
-					logMessage = "Connection to Steam Workshop failed. This most likely means you need to login to Steam or you do not own the app or game to which this item belongs." + vbCrLf
+					logMessage = "连接到 Steam 创意工坊失败。这很可能意味着您需要登录 Steam，或者您不拥有该项目所属的应用或游戏。" + vbCrLf + ""
 					Me.theBackgroundWorker.ReportProgress(0, logMessage)
 					If Me.theCrowbarSteamPipeServer IsNot Nothing Then
-						Console.WriteLine("Closing pipe due to error.")
+						Console.WriteLine("因错误关闭管道。")
 						Me.theCrowbarSteamPipeServer.Close()
 						Me.theCrowbarSteamPipeServer = Nothing
 					End If
@@ -92,9 +92,9 @@ Public Class SteamPipe
 				End If
 			End If
 		Catch ex As IOException
-			Console.WriteLine("EXCEPTION: " + ex.Message)
+			Console.WriteLine("异常：" + ex.Message)
 			If Me.theCrowbarSteamPipeServer IsNot Nothing Then
-				Console.WriteLine("Closing pipe due to error.")
+				Console.WriteLine("因错误关闭管道。")
 				Me.theCrowbarSteamPipeServer.Close()
 				Me.theCrowbarSteamPipeServer = Nothing
 			End If
@@ -109,13 +109,13 @@ Public Class SteamPipe
 			Me.theStreamWriter.WriteLine("Free")
 			Console.WriteLine("Command: Free")
 			If Me.theBackgroundWorker IsNot Nothing Then
-				Dim logMessage As String = Me.theReasonText + " finished - closing connection to Steam Workshop." + vbCrLf
+				Dim logMessage As String = Me.theReasonText + " 已完成 - 正在关闭到 Steam 创意工坊的连接。" + vbCrLf + ""
 				Me.theBackgroundWorker.ReportProgress(0, logMessage)
 			End If
 		Catch ex As IOException
-			Console.WriteLine("EXCEPTION: " + ex.Message)
+			Console.WriteLine("异常：" + ex.Message)
 			If Me.theCrowbarSteamPipeServer IsNot Nothing Then
-				Console.WriteLine("Closing pipe due to error.")
+				Console.WriteLine("因错误关闭管道。")
 				Me.theCrowbarSteamPipeServer.Close()
 				Me.theCrowbarSteamPipeServer = Nothing
 			End If
@@ -123,7 +123,7 @@ Public Class SteamPipe
 #If DEBUG Then
 			'NOTE: This 'If DEBUG Then' block allows the CrowbarSteamPipe console window to stay open, if it is set to do that. 
 			If Me.theCrowbarSteamPipeServer IsNot Nothing Then
-				Console.WriteLine("Closing pipe.")
+				Console.WriteLine("正在关闭管道。")
 				Me.theCrowbarSteamPipeServer.Close()
 				Me.theCrowbarSteamPipeServer = Nothing
 			End If
@@ -139,14 +139,14 @@ Public Class SteamPipe
 
 	Public Sub Kill()
 		If Me.theCrowbarSteamPipeServer IsNot Nothing Then
-			Console.WriteLine("Closing pipe.")
+			Console.WriteLine("正在关闭管道。")
 			Me.theCrowbarSteamPipeServer.Close()
 			Me.theCrowbarSteamPipeServer = Nothing
 		End If
 		If Me.theCrowbarSteamPipeProcess IsNot Nothing Then
 			Try
 				If Not Me.theCrowbarSteamPipeProcess.HasExited AndAlso Not Me.theCrowbarSteamPipeProcess.CloseMainWindow() Then
-					Console.WriteLine("Killing pipe process.")
+					Console.WriteLine("正在终止管道进程。")
 					Me.theCrowbarSteamPipeProcess.Kill()
 				End If
 			Catch ex As Exception
@@ -210,7 +210,7 @@ Public Class SteamPipe
 						bytesRemaining -= batchByteCount
 					End While
 				Catch ex As Exception
-					Me.theBackgroundWorker.ReportProgress(0, "WARNING: Unable to get content folder or file. Exception raised: " + ex.Message + vbCrLf)
+					Me.theBackgroundWorker.ReportProgress(0, "警告：无法获取内容文件夹或文件。出现异常：" + ex.Message + vbCrLf)
 				End Try
 			End If
 		ElseIf result = "success_SteamUGC" Then
@@ -221,7 +221,7 @@ Public Class SteamPipe
 
 			Dim debug As Integer = 4242
 		Else
-			Me.theBackgroundWorker.ReportProgress(0, "WARNING: Unable to get content folder or file. Steam message: " + result + vbCrLf)
+			Me.theBackgroundWorker.ReportProgress(0, "警告：无法获取内容文件夹或文件。Steam 消息：" + result + vbCrLf)
 		End If
 
 		Return result
@@ -247,11 +247,11 @@ Public Class SteamPipe
 					Dim pictureBytes As New MemoryStream(data)
 					Me.theBackgroundWorker.ReportProgress(1, Image.FromStream(pictureBytes))
 				Catch ex As Exception
-					Me.theBackgroundWorker.ReportProgress(0, "WARNING: Unable to get preview image." + vbCrLf)
+					Me.theBackgroundWorker.ReportProgress(0, "警告：无法获取预览图像。" + vbCrLf + "")
 				End Try
 			End If
 		Else
-			Me.theBackgroundWorker.ReportProgress(0, "WARNING: Unable to get preview image. Steam message: " + result + vbCrLf)
+			Me.theBackgroundWorker.ReportProgress(0, "警告：无法获取预览图像。Steam 消息：" + result + vbCrLf)
 		End If
 
 		Return result
@@ -325,7 +325,7 @@ Public Class SteamPipe
 			Dim ownerSteamIDText As String
 
 			publishedItem.ID = Me.theStreamReader.ReadLine()
-			Console.WriteLine("Item ID: " + publishedItem.ID)
+			Console.WriteLine("项目 ID：" + publishedItem.ID)
 
 			publishedItem.CreatorAppID = Me.theStreamReader.ReadLine()
 
@@ -355,7 +355,7 @@ Public Class SteamPipe
 
 			If itemAppID <> appID_text Then
 				publishedItem.ID = "0"
-				publishedItem.Title = "Item is not published under selected game."
+				publishedItem.Title = "该项目未在所选游戏下发布。"
 			End If
 		Else
 			publishedItem.ID = "0"
@@ -718,8 +718,8 @@ Public Class SteamPipe
 
 #Region "Constants"
 
-	Public Const AgreementMessageForCreate As String = "WARNING: Created workshop item, but is unavailable to anyone else until you accept" + vbCrLf + "    the Steam Subscriber Agreement. (NOTE: This can occur when the agreement" + vbCrLf + "    has been updated.) Click ""Steam Subscriber Agreement"" button above to open the web page" + vbCrLf + "    where you can accept the agreement."
-	Public Const AgreementMessageForUpdate As String = "WARNING: Updated workshop item, but is unavailable to anyone else until you accept" + vbCrLf + "    the Steam Subscriber Agreement. (NOTE: This can occur when the agreement" + vbCrLf + "    has been updated.) Click ""Steam Subscriber Agreement"" button above to open the web page" + vbCrLf + "    where you can accept the agreement."
+	Public Const AgreementMessageForCreate As String = "警告：已创建创意工坊项目，但在您接受" + vbCrLf + "    Steam 订户协议之前，其他任何人都无法使用它。（注意：当协议" + vbCrLf + "    已更新时可能出现这种情况。）点击上方的" & ChrW(&H201C) & "Steam 订户协议" & ChrW(&H201D) & "按钮打开网页" + vbCrLf + "    即可接受该协议。"
+	Public Const AgreementMessageForUpdate As String = "警告：已更新创意工坊项目，但在您接受" + vbCrLf + "    Steam 订户协议之前，其他任何人都无法使用它。（注意：当协议" + vbCrLf + "    已更新时可能出现这种情况。）点击上方的" & ChrW(&H201C) & "Steam 订户协议" & ChrW(&H201D) & "按钮打开网页" + vbCrLf + "    即可接受该协议。"
 
 #End Region
 

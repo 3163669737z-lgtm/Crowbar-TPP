@@ -1,9 +1,13 @@
-Imports System.IO
+﻿Imports System.IO
 
 Module Main
 
 	' Entry point of application.
 	Public Function Main() As Integer
+		Application.EnableVisualStyles()
+		Application.SetCompatibleTextRenderingDefault(False)
+		UiAppearance.StyleMenus()
+
 		'' Create a job with JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE flag, so that all processes 
 		''	(e.g. HLMV called by Crowbar) associated with the job 
 		''	terminate when the last handle to the job is closed.
@@ -27,10 +31,6 @@ Module Main
 		'	'MessageBox.Show("Another instance is already running!")
 		'	Win32Api.PostMessage(CType(Win32Api.WindowsMessages.HWND_BROADCAST, IntPtr), appUniqueWindowsMessageIdentifier, IntPtr.Zero, IntPtr.Zero)
 		'Else
-		'NOTE: Use the Windows Vista and later visual styles (such as rounded buttons).
-		Application.EnableVisualStyles()
-		'NOTE: Needed for keeping Label and Button text rendering correctly.
-		Application.SetCompatibleTextRenderingDefault(False)
 
 		AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf ResolveAssemblies
 
@@ -40,7 +40,7 @@ Module Main
 		If TheApp.Settings.AppIsSingleInstance Then
 			SingleInstanceApplication.Run(New MainForm(), AddressOf StartupNextInstanceEventHandler)
 		Else
-			Windows.Forms.Application.Run(MainForm)
+			System.Windows.Forms.Application.Run(MainForm)
 		End If
 		'Catch e As Exception
 		'	MsgBox(e.Message)

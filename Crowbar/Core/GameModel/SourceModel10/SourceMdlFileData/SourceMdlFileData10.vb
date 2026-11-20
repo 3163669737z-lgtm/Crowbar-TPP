@@ -110,6 +110,9 @@
 
 	'	int					flags;
 	Public flags As Integer
+	Friend Const XashBoneInfo As Integer = &H40000000
+	Friend Const XashBoneWeights As Integer = &H80000000
+	Friend theXashSkinTransforms As List(Of SourceBoneTransform10)
 
 	'	int					numbones;			// bones
 	Public boneCount As Integer

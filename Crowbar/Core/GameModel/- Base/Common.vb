@@ -11,12 +11,13 @@ Module Common
 			streamLastPosition = endOffset
 
 			If streamLastPosition > theInputFileReader.BaseStream.Position Then
-				'NOTE: Use -1 to avoid including the null terminator character.
-				result = theInputFileReader.ReadChars(CInt(streamLastPosition - theInputFileReader.BaseStream.Position - 1))
+				'NOTE: Use -1 to avoid including the null terminator byte.
+				result = FileManager.ReadModelString(theInputFileReader, CInt(streamLastPosition - theInputFileReader.BaseStream.Position - 1))
 				' Read the NULL byte to help with debug logging.
-				theInputFileReader.ReadChar()
+				theInputFileReader.ReadByte()
 				' Only grab text to the first NULL byte. (Needed for PHY data stored within Titanfall 2 MDL file.)
-				result = result.Substring(0, result.IndexOf(Chr(0)))
+				Dim terminator As Integer = result.IndexOf(ChrW(0))
+				If terminator >= 0 Then result = result.Substring(0, terminator)
 			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242

@@ -49,7 +49,7 @@ Partial Class DeleteItemForm
 		Me.DeleteButton.Name = "DeleteButton"
 		Me.DeleteButton.Size = New System.Drawing.Size(75, 23)
 		Me.DeleteButton.TabIndex = 1
-		Me.DeleteButton.Text = "Delete"
+		Me.DeleteButton.Text = "删除"
 		Me.DeleteButton.UseVisualStyleBackColor = True
 		'
 		'CancelDeleteButton
@@ -58,13 +58,13 @@ Partial Class DeleteItemForm
 		Me.CancelDeleteButton.Name = "CancelDeleteButton"
 		Me.CancelDeleteButton.Size = New System.Drawing.Size(75, 23)
 		Me.CancelDeleteButton.TabIndex = 2
-		Me.CancelDeleteButton.Text = "Cancel"
+		Me.CancelDeleteButton.Text = "取消"
 		Me.CancelDeleteButton.UseVisualStyleBackColor = True
 		'
 		'DeleteItemForm
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
 		Me.ClientSize = New System.Drawing.Size(444, 113)
 		Me.ControlBox = False
 		Me.Controls.Add(Me.CancelDeleteButton)
@@ -73,7 +73,7 @@ Partial Class DeleteItemForm
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.Name = "DeleteItemForm"
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-		Me.Text = "Delete Item"
+		Me.Text = "删除项目"
 		Me.TopMost = True
 		Me.ResumeLayout(False)
 		Me.PerformLayout()

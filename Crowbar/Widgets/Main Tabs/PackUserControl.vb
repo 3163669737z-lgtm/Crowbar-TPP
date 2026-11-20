@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Web.Script.Serialization
 
 Public Class PackUserControl
@@ -149,7 +149,7 @@ Public Class PackUserControl
 	Private Sub BrowseForInputFolderOrFileNameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForInputFolderOrFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
 
-		openFileWdw.Title = "Open the folder you want to pack"
+		openFileWdw.Title = "打开要打包的文件夹"
 		If Directory.Exists(TheApp.Settings.PackInputPath) Then
 			openFileWdw.InitialDirectory = TheApp.Settings.PackInputPath
 		Else
@@ -164,7 +164,7 @@ Public Class PackUserControl
 		openFileWdw.Multiselect = False
 		openFileWdw.ValidateNames = False
 
-		If openFileWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+		If openFileWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 			' Allow dialog window to completely disappear.
 			Application.DoEvents()
 
@@ -290,14 +290,14 @@ Public Class PackUserControl
 		Dim statusText As String
 
 		If e.Cancelled Then
-			statusText = "Pack canceled"
+			statusText = "打包已取消"
 		Else
 			Dim packResultInfo As PackerOutputInfo
 			packResultInfo = CType(e.Result, PackerOutputInfo)
 			If packResultInfo.theStatus = StatusMessage.Error Then
-				statusText = "Pack failed; check the log"
+				statusText = "打包失败；请查看日志"
 			Else
-				statusText = "Pack succeeded"
+				statusText = "打包成功"
 			End If
 			Me.UpdatePackedRelativePathFileNames(packResultInfo.thePackedRelativePathFileNames)
 		End If
@@ -514,7 +514,7 @@ Public Class PackUserControl
 			'      does not show the path name bar nor does it scroll to the selected folder in the folder tree view.
 			Dim outputPathWdw As New OpenFileDialog()
 
-			outputPathWdw.Title = "Open the folder you want as Output Folder"
+			outputPathWdw.Title = "打开要用作输出文件夹的文件夹"
 			outputPathWdw.InitialDirectory = FileManager.GetLongestExtantPath(TheApp.Settings.PackOutputPath)
 			If outputPathWdw.InitialDirectory = "" Then
 				If File.Exists(TheApp.Settings.PackInputPath) Then
@@ -531,7 +531,7 @@ Public Class PackUserControl
 			outputPathWdw.Multiselect = False
 			outputPathWdw.ValidateNames = False
 
-			If outputPathWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
+			If outputPathWdw.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
 				' Allow dialog window to completely disappear.
 				Application.DoEvents()
 
@@ -556,7 +556,7 @@ Public Class PackUserControl
 
 #Region "Data"
 
-	Private theWarningMessgeAboutInvalidJsonFormat As String = "WARNING: The addon.json file is invalid json format. Crowbar will overwrite the file with current options."
+	Private theWarningMessgeAboutInvalidJsonFormat As String = "警告：addon.json 文件不是有效的 JSON 格式。Crowbar 将用当前选项覆盖该文件。"
 	Private theSelectedPackerOptions As List(Of String)
 	Private thePackedRelativePathFileNames As BindingListEx(Of String)
 	Private theGmaGarrysModTagsUserControlIsBeingChangedByMe As Boolean
