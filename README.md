@@ -1,12 +1,12 @@
 # Crowbar-TPP
 
-面向 GoldSource 和 Source 1 的 Windows 模组工具，可反编译 MDL、调用游戏的 StudioMDL 编译 QC，并管理游戏资源包。**TPP-009** 是本次公开版本，对应旧归档中的 TPP-09。
+面向 GoldSource 和 Source 1 的 Windows 模组工具，可反编译 MDL、调用游戏的 StudioMDL 编译 QC，并管理游戏资源包。
 
 ## 下载与运行
 
-在 [TPP-009 发布页](https://github.com/3163669737z-lgtm/Crowbar-TPP/releases/tag/TPP-009) 下载 `Crowbar-TPP-TPP-009-Windows-x86.zip`。解压整个目录后运行 `Crowbar-TPP.exe`。这是便携包，运行需要 Windows 和 .NET Framework 4.8。请保留同目录的 `Crowbar-TPP.exe.config`，它用于高 DPI 设置。编译和预览功能依赖对应游戏或 SDK 的外部工具。
+在 [GitHub 发布页](https://github.com/3163669737z-lgtm/Crowbar-TPP/releases/latest) 下载 Windows x86 便携包。解压整个目录后运行 `Crowbar-TPP.exe`。运行需要 Windows 和 .NET Framework 4.8。请保留同目录的 `Crowbar-TPP.exe.config`，它用于高 DPI 设置。编译和预览功能依赖对应游戏或 SDK 的外部工具。
 
-发布页也附有同一标签的 `Crowbar-TPP-TPP-009-source.zip` 和 SHA-256 校验文件。源码可直接在本仓库查看。
+发布页也附有同一标签的源码 ZIP 和 SHA-256 校验文件。源码可直接在本仓库查看。
 
 ## 上游与贡献
 
@@ -48,7 +48,7 @@ py Tests/run_vtf_header.py Crowbar/bin/x86/Release/Crowbar-TPP.exe
 
 格式参考与样本来源见 [Half-Life Alpha 模型集](https://gamebanana.com/mods/639190)、[Nightfire 试玩版](https://archive.org/details/007NightfireDemo)、[Nightfire MDL 读取器](https://github.com/noodlecollie/nightfire-model-compiler)、[PVR2MDL](https://github.com/supadupaplex/PVR2MDL) 和 [Xash3D FWGS MDL 导出器](https://github.com/FWGS/xash3d-fwgs/blob/master/utils/mdldec/smd.c)。
 
-上游已经包含部分早期格式的读取器。此处列的是 TPP-009 完善且有样本覆盖的格式。Half-Life Beta v9、Counter-Strike Xbox 的骨架变体、Zeno Clash 的 VVD v5，以及 Apex Legends RMDL/RPak 和 Titanfall Xbox 360 v63 仍需要各自的格式适配与样本验证。
+上游已经包含部分早期格式的读取器。此处列的是 Crowbar-TPP 完善且有样本覆盖的格式。Half-Life Beta v9、Counter-Strike Xbox 的骨架变体、Zeno Clash 的 VVD v5，以及 Apex Legends RMDL/RPak 和 Titanfall Xbox 360 v63 仍需要各自的格式适配与样本验证。
 
 ### 《求生之路 2》分离网格模组
 
@@ -66,4 +66,4 @@ py Tests/run_vtf_header.py Crowbar/bin/x86/Release/Crowbar-TPP.exe
 
 ### VTF 文件头修复
 
-在「反编译」中选择「修复 VTF 文件头…」，可检查已提取的 PC VTF 7.0–7.2 二维纹理。程序先核对缩略图和完整像素数据范围，再决定是否提供头长度修复副本。参见 [防反编译与加密复查](防反编译与加密复查.md)。
+在「反编译」中选择「修复 VTF 文件头…」，可检查已提取的 PC VTF 7.0–7.2 二维纹理。缩略图和完整像素数据符合布局时，可另存仅修正头长度字段的副本。

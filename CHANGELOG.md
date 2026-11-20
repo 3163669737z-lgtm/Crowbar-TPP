@@ -1,4 +1,4 @@
-# Crowbar-TPP TPP-009 变更对照
+# Crowbar-TPP 变更对照
 
 Crowbar-TPP 的直接上游是 Starfelll 的 Crowbar-Starfelll。该分支基于 ZeqMacaw 的 Crowbar v0.74。本页以 [Crowbar v0.74 的源码](https://github.com/ZeqMacaw/Crowbar/tree/0d46f3b6a694b74453db407c72c12a9685d8eb1d)和 [Crowbar-Starfelll 的 946e34e 快照](https://github.com/Starfelll/Crowbar-Starfelll/tree/946e34e9a1d927aece5f621800f383e661ed837e)为基准。
 
@@ -10,7 +10,7 @@ Crowbar-TPP 的直接上游是 Starfelll 的 Crowbar-Starfelll。该分支基于
 | 工具调用 | 按 UTF-8 读取编译器输出，适配 HLMV++ 预览。 | 沿用外部编译器和预览器接口，补齐中文反馈，兼容原 Starfelll 设置目录。 |
 | 反编译 | 改进 v49 的 UTF-8 名称读取，合并 corrective animation 的输出与引用。 | 延续这些改动，进一步处理中文及异常名称、旧 MDL 格式、L4D2 分离网格与导出、批量恢复和 VTF 文件头检查。具体功能见下一节。 |
 
-[查看从 Crowbar v0.74 到 TPP-009 的代码差异](https://github.com/3163669737z-lgtm/Crowbar-TPP/compare/0d46f3b6a694b74453db407c72c12a9685d8eb1d...TPP-009)
+[查看 Crowbar v0.74 与 Crowbar-TPP 的代码差异](https://github.com/3163669737z-lgtm/Crowbar-TPP/compare/0d46f3b6a694b74453db407c72c12a9685d8eb1d...v1.0.0)
 
 ## 相对 Crowbar-Starfelll
 
@@ -19,13 +19,9 @@ Crowbar-TPP 的直接上游是 Starfelll 的 Crowbar-Starfelll。该分支基于
 - **旧版和衍生 MDL。** 完善 Half-Life Alpha v4 与 007: Nightfire PC v14 的网格、动画和 QC 导出。加入 Half-Life Dreamcast v10 的 PowerVR 内嵌纹理导出，以及 Xash3D v10 的绑定矩阵、多骨骼权重和半精度 UV 读取。已覆盖的具体变体和验证范围见 [MDL 兼容性表](README.md#mdl-反编译兼容性)。
 - **L4D2 分离网格。** 区分声明为 v53、内部使用 v49 布局的模型与真正的 v53 模型。按内部路径、校验和及数据表寻找匹配的 VVD 和 VTX，支持指定配套资源目录。候选有冲突时列出位置，便于手动缩小范围。
 - **L4D2 导出和重编译。** 在 QC、SMD、VTA、VRD 中同步异常骨骼名的替代名称，为缺名网格和表情生成有效名称。动画 SMD 优先使用原名，缺名且只关联一个序列时可借用序列名。样本中的五个 `faceeffect` 选项按原顺序分别导出带表情的 DMX，并保留 SMD。验收记录覆盖使用原版 StudioMDL 重编译手臂及使用 NekoMDL 重编译角色。
-- **反编译容错。** 对 Source v49 增加文件结构及表边界校验。外置网格缺失或不可用时，可按选项导出还能读取的骨架、动画和元数据。批量任务按模型记录结果并继续处理其余文件。QC/QCI 写出路径增加本地引用检查及安全写入。见[反编译兼容性验收](反编译兼容性验收.md)。
-- **VTF 文件头修复（TPP-009 新增）。** 通过「反编译」→「修复 VTF 文件头…」检查已经提取的 PC VTF 7.0–7.2 二维纹理。只有缩略图和完整像素数据均符合布局时，才允许另存仅修正头长度字段的副本。支持边界与测试结果见 [VTF 修复复查](防反编译与加密复查.md#本次加入的功能)。
+- **反编译容错。** 对 Source v49 增加文件结构及表边界校验。外置网格缺失或不可用时，可按选项导出还能读取的骨架、动画和元数据。批量任务按模型记录结果并继续处理其余文件。QC/QCI 写出路径增加本地引用检查及安全写入。
+- **VTF 文件头修复。** 通过「反编译」→「修复 VTF 文件头…」检查已经提取的 PC VTF 7.0–7.2 二维纹理。只有缩略图和完整像素数据均符合布局时，才允许另存仅修正头长度字段的副本。
 
-[查看从 Crowbar-Starfelll 到 TPP-009 的代码差异](https://github.com/3163669737z-lgtm/Crowbar-TPP/compare/946e34e9a1d927aece5f621800f383e661ed837e...TPP-009)
-
-## TPP-009 发布构建
-
-在本地 TPP-09 功能快照基础上补写公开发布文档，并在程序的「关于」页标明版本和贡献分工。Windows 便携包从发布标签对应的源码构建。
+[查看 Crowbar-Starfelll 与 Crowbar-TPP 的代码差异](https://github.com/3163669737z-lgtm/Crowbar-TPP/compare/946e34e9a1d927aece5f621800f383e661ed837e...v1.0.0)
 
 Crowbar-TPP 改动由 **ChatGPT（OpenAI）** 实现，**TPP** 负责监督修改进度和状况。Crowbar 原作归功于 **ZeqMacaw**，直接上游改动归功于 **Starfelll**。
