@@ -1,19 +1,39 @@
 # Crowbar-TPP
- Crowbar-TPP - GoldSource and Source Engine Modding Tool
- 
- [Website](https://steamcommunity.com/groups/CrowbarTool)
- 
- IMPORTANT: When providing link to Crowbar, please only use the above website link, because that page provides info and links to everything related to Crowbar.
 
-# Building
- Install the .NET Framework 4.8 Developer Pack and build `Crowbar/Crowbar.vbproj` in Release x86. The source archive includes the embedded helper binaries. Building the entire solution also requires the .NET Framework 4.0 reference assemblies for the helper projects.
+面向 GoldSource 和 Source 1 的 Windows 模组工具，可反编译 MDL、调用游戏的 StudioMDL 编译 QC，并管理游戏资源包。**TPP-009** 是本次公开版本，对应旧归档中的 TPP-09。
 
- Keep `Crowbar-TPP.exe.config` next to the executable. It enables per-monitor DPI scaling on compatible Windows versions.
+## 下载与运行
 
-I currently build via Visual Basic in Visual Studio Community 2017.
-I use Debug x86 when debugging and Release x86 when releasing to public.
+在 [TPP-009 发布页](https://github.com/3163669737z-lgtm/Crowbar-TPP/releases/tag/TPP-009) 下载 `Crowbar-TPP-TPP-009-Windows-x86.zip`。解压整个目录后运行 `Crowbar-TPP.exe`。这是便携包，运行需要 Windows 和 .NET Framework 4.8。请保留同目录的 `Crowbar-TPP.exe.config`，它用于高 DPI 设置。编译和预览功能依赖对应游戏或 SDK 的外部工具。
 
-I tested building in Visual Studio Community 2019 on 15-Apr-2021. All I had to change were the settings from Debug Any CPU and Release Any CPU to Debug x86 and Release x86 at the top in the default toolbars.
+发布页也附有同一标签的 `Crowbar-TPP-TPP-009-source.zip` 和 SHA-256 校验文件。源码可直接在本仓库查看。
+
+## 上游与贡献
+
+- **Crowbar** 由 **ZeqMacaw** 创建，是原始项目。对照版本为 [Crowbar v0.74](https://github.com/ZeqMacaw/Crowbar/tree/0d46f3b6a694b74453db407c72c12a9685d8eb1d)。原项目主页为 [Steam 社区](https://steamcommunity.com/groups/CrowbarTool)。
+- **Crowbar-Starfelll** 由 **Starfelll** 修改，是 Crowbar-TPP 的直接上游。对照快照为 [946e34e](https://github.com/Starfelll/Crowbar-Starfelll/tree/946e34e9a1d927aece5f621800f383e661ed837e)。
+- **Crowbar-TPP** 的代码修改由 **ChatGPT（OpenAI）** 实现。**TPP** 负责监督修改进度和状况。上游贡献沿用原有署名。
+
+分别查看[相对 Crowbar v0.74](CHANGELOG.md#相对-crowbar-v074)和[相对 Crowbar-Starfelll](CHANGELOG.md#相对-crowbar-starfelll)的变化。
+
+项目沿用 [CC BY-SA 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/) 许可。原始署名和转载条件见 [LICENSE.txt](LICENSE.txt)。
+
+## 从源码构建
+
+安装 Visual Studio 的「.NET 桌面开发」工作负载和 .NET Framework 4.8 Developer Pack。在 Developer Command Prompt 中构建 Release x86 主程序。
+
+```powershell
+msbuild Crowbar/Crowbar.vbproj /t:Build /p:Configuration=Release /p:Platform=x86
+```
+
+产物位于 `Crowbar/bin/x86/Release`。主项目使用源码树内的嵌入式辅助程序。如果还要单独构建 Launcher 和 SteamPipe 项目，需要 .NET Framework 4.0 参考程序集。
+
+构建后可在 Windows 上用 Python 3 运行仓库自带的测试。
+
+```powershell
+py Tests/run_compatibility.py Crowbar/bin/x86/Release/Crowbar-TPP.exe
+py Tests/run_vtf_header.py Crowbar/bin/x86/Release/Crowbar-TPP.exe
+```
 
 ## MDL 反编译兼容性
 
@@ -28,7 +48,7 @@ I tested building in Visual Studio Community 2019 on 15-Apr-2021. All I had to c
 
 格式参考与样本来源见 [Half-Life Alpha 模型集](https://gamebanana.com/mods/639190)、[Nightfire 试玩版](https://archive.org/details/007NightfireDemo)、[Nightfire MDL 读取器](https://github.com/noodlecollie/nightfire-model-compiler)、[PVR2MDL](https://github.com/supadupaplex/PVR2MDL) 和 [Xash3D FWGS MDL 导出器](https://github.com/FWGS/xash3d-fwgs/blob/master/utils/mdldec/smd.c)。
 
-原版 Crowbar 的 Source 分支包含部分反编译读取器。Half-Life Beta v9、Counter-Strike Xbox 的骨架变体、Zeno Clash 的 VVD v5，以及 Respawn 的 Apex Legends RMDL/RPak 和 Titanfall Xbox 360 v63 仍需要各自的格式适配与样本验证。原有高版本号转入 v49 读取器的路径未作游戏兼容性验证。
+上游已经包含部分早期格式的读取器。此处列的是 TPP-009 完善且有样本覆盖的格式。Half-Life Beta v9、Counter-Strike Xbox 的骨架变体、Zeno Clash 的 VVD v5，以及 Apex Legends RMDL/RPak 和 Titanfall Xbox 360 v63 仍需要各自的格式适配与样本验证。
 
 ### 《求生之路 2》分离网格模组
 

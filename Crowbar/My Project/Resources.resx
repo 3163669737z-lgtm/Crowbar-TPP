@@ -137,7 +137,10 @@
 * 从任何允许公开下载的 Steam 游戏下载创意工坊项目的下载器。
 * 多个 Source 引擎游戏创意工坊项目的发布器。
 
-现代界面版基于 ZeqMacaw 的 Crowbar 和 Starfelll 的改版。</value>
+Crowbar-TPP TPP-009
+上游：ZeqMacaw 的 Crowbar、Starfelll 的 Crowbar-Starfelll
+修改：ChatGPT（OpenAI）
+进度与状况监督：TPP</value>
   </data>
   <data name="Decompile_DebugAniFileNameSuffix" xml:space="preserve">
     <value>decompile-ANI.txt</value>
