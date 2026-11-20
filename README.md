@@ -2,6 +2,8 @@
 
 面向 GoldSource 和 Source 1 的 Windows 模组工具，可反编译 MDL、调用游戏的 StudioMDL 编译 QC，并管理游戏资源包。
 
+Crowbar-TPP is a Windows MDL decompiler and modding toolkit for GoldSource and Source 1. It adds Left 4 Dead 2 model compatibility, VTF header repair, Simplified Chinese UI, and per-monitor DPI scaling.
+
 ## 下载与运行
 
 在 [GitHub 发布页](https://github.com/3163669737z-lgtm/Crowbar-TPP/releases/latest) 下载 Windows x86 便携包。解压整个目录后运行 `Crowbar-TPP.exe`。运行需要 Windows 和 .NET Framework 4.8。请保留同目录的 `Crowbar-TPP.exe.config`，它用于高 DPI 设置。编译和预览功能依赖对应游戏或 SDK 的外部工具。

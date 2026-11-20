@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Crowbar-TPP is a Windows MDL decompiler for GoldSource and Source 1 with Left 4 Dead 2 model support and VTF header repair.">
+  <meta name="theme-color" content="#14101f">
+  <meta property="og:title" content="Crowbar-TPP · GoldSource 与 Source 1 模组工具">
+  <meta property="og:description" content="Windows MDL decompiler, L4D2 model export, and VTF header repair.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://3163669737z-lgtm.github.io/Crowbar-TPP/">
+  <link rel="canonical" href="https://3163669737z-lgtm.github.io/Crowbar-TPP/">
+  <link rel="icon" href="crowbar.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Crowbar-TPP · GoldSource 与 Source 1 模组工具</title>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./"><img src="crowbar.png" width="28" height="28" alt="">Crowbar-TPP</a>
+      <nav aria-label="主导航">
+        <a href="#features">功能</a>
+        <a href="#upstream">上游</a>
+        <a href="https://github.com/3163669737z-lgtm/Crowbar-TPP">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero" aria-labelledby="project-name">
+      <div>
+        <p class="engine">GoldSource &amp; Source 1</p>
+        <h1 id="project-name">Crowbar-TPP</h1>
+        <p class="intro">面向 Windows 的模型反编译与模组工具。支持《求生之路 2》分离网格、更多 MDL 格式，以及 VTF 文件头修复。</p>
+        <p class="english" lang="en">A Windows MDL decompiler and modding toolkit with Left 4 Dead 2 model export, VTF header repair, and a high-DPI Simplified Chinese interface.</p>
+        <div class="actions">
+          <a class="primary" href="https://github.com/3163669737z-lgtm/Crowbar-TPP/releases/latest">Windows 下载</a>
+          <a class="secondary" href="https://github.com/3163669737z-lgtm/Crowbar-TPP">查看源码</a>
+        </div>
+        <p class="requirements">x86 便携包 · .NET Framework 4.8</p>
+      </div>
+      <div class="art" aria-hidden="true">
+        <img src="crowbar.png" width="128" height="128" alt="">
+      </div>
+    </section>
+
+    <section id="features" class="features" aria-labelledby="features-heading">
+      <h2 id="features-heading">新增功能</h2>
+      <div class="feature-grid">
+        <article>
+          <h3>更多 MDL 格式</h3>
+          <p>完善 Half-Life Alpha v4 和 007: Nightfire PC v14 的模型导出，支持 Dreamcast v10 的 PowerVR 纹理和 Xash3D v10 的扩展顶点数据。</p>
+        </article>
+        <article>
+          <h3>《求生之路 2》分离网格与导出</h3>
+          <p>自动识别采用 Source v49 布局的模型并匹配外置 VVD 和 VTX。支持指定配套资源目录，按条件导出可用数据和带表情的 DMX。</p>
+        </article>
+        <article>
+          <h3>VTF 文件头修复</h3>
+          <p>检查 PC VTF 7.0–7.2 二维纹理的数据布局，符合要求时可另存仅修正头长度的副本。</p>
+        </article>
+        <article>
+          <h3>简体中文与高 DPI</h3>
+          <p>补全常用界面、菜单和日志的简体中文，支持不同缩放比例的多显示器环境。</p>
+        </article>
+      </div>
+      <a class="text-link" href="https://github.com/3163669737z-lgtm/Crowbar-TPP/blob/master/CHANGELOG.md">查看与两个上游的完整变更对照</a>
+    </section>
+
+    <section id="upstream" class="upstream" aria-labelledby="upstream-heading">
+      <h2 id="upstream-heading">上游与贡献</h2>
+      <ul class="lineage">
+        <li><a href="https://github.com/ZeqMacaw/Crowbar">Crowbar</a><span>ZeqMacaw · 原始项目</span></li>
+        <li><a href="https://github.com/Starfelll/Crowbar-Starfelll">Crowbar-Starfelll</a><span>Starfelll · 直接上游</span></li>
+      </ul>
+      <p>Crowbar-TPP 的代码修改由 ChatGPT（OpenAI）实现。TPP 负责监督修改进度和状况。</p>
+    </section>
+  </main>
+
+  <footer class="shell site-footer">
+    <span>Crowbar-TPP</span>
+    <a href="https://github.com/3163669737z-lgtm/Crowbar-TPP/blob/master/LICENSE.txt">CC BY-SA 3.0</a>
+  </footer>
+</body>
+</html>
