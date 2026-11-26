@@ -291,6 +291,8 @@ Public Class SourceModel49
 		Dim writeStatus As String
 
 		Try
+			Me.EnsureDeltaBaseAnimationDesc()
+
 			If Me.theMdlFileData.theCorrectiveAnimationDescs IsNot Nothing Then
 				For Each anAnimationDesc As SourceMdlAnimationDesc49 In Me.theMdlFileData.theCorrectiveAnimationDescs
 					smdPathFileName = Path.Combine(modelOutputPath, SourceFileNamesModule.CreateCorrectiveAnimationSmdRelativePathFileName(anAnimationDesc.theName, Me.Name))
@@ -308,7 +310,11 @@ Public Class SourceModel49
 						End If
 
 						writeStatus = "Failed"
-						writeStatus = Me.WriteCorrectiveAnimationSmdFile(smdPathFileName, Nothing, anAnimationDesc)
+						If Me.theMdlFileData.theDeltaBaseAnimationDesc IsNot Nothing Then
+							writeStatus = Me.WriteCorrectiveAnimationSmdFile(smdPathFileName, Nothing, Me.theMdlFileData.theDeltaBaseAnimationDesc, False)
+						Else
+							writeStatus = Me.WriteCorrectiveAnimationSmdFile(smdPathFileName, Nothing, anAnimationDesc, True)
+						End If
 						If writeStatus = "Success" Then
 							Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
 						Else
@@ -991,16 +997,94 @@ Public Class SourceModel49
 				End If
 			Next
 		End If
+
+		Me.EnsureDeltaBaseAnimationDesc()
 	End Sub
 
-	Private Function WriteCorrectiveAnimationSmdFile(smdPathFileName As String, sequence As SourceMdlSequenceDescBase, animation As SourceMdlAnimationDescBase) As String
+	Private Sub EnsureDeltaBaseAnimationDesc()
+		If Me.theMdlFileData Is Nothing OrElse Me.theMdlFileData.theAnimationDescs Is Nothing Then
+			Return
+		End If
+		If Me.theMdlFileData.theDeltaBaseAnimationDesc IsNot Nothing Then
+			Return
+		End If
+
+		Dim hasDelta As Boolean = False
+		For Each anAnim As SourceMdlAnimationDesc49 In Me.theMdlFileData.theAnimationDescs
+			If (anAnim.flags And SourceMdlAnimationDesc.STUDIO_DELTA) > 0 Then
+				hasDelta = True
+				Exit For
+			End If
+		Next
+		If Not hasDelta AndAlso Me.theMdlFileData.theSequenceDescs IsNot Nothing Then
+			For Each aSeq As SourceMdlSequenceDesc In Me.theMdlFileData.theSequenceDescs
+				If (aSeq.flags And SourceMdlAnimationDesc.STUDIO_DELTA) > 0 Then
+					hasDelta = True
+					Exit For
+				End If
+			Next
+		End If
+
+		If hasDelta Then
+			Me.theMdlFileData.theDeltaBaseAnimationDesc = Me.SelectDeltaBaseAnimationDesc()
+		End If
+	End Sub
+
+	Private Function SelectDeltaBaseAnimationDesc() As SourceMdlAnimationDesc49
+		Dim bestAnim As SourceMdlAnimationDesc49 = Nothing
+		Dim bestScore As Integer = -1
+
+		For Each anAnim As SourceMdlAnimationDesc49 In Me.theMdlFileData.theAnimationDescs
+			If (anAnim.flags And SourceMdlAnimationDesc.STUDIO_DELTA) > 0 Then
+				Continue For
+			End If
+			If (anAnim.flags And SourceMdlAnimationDesc.STUDIO_ALLZEROS) > 0 Then
+				Continue For
+			End If
+			If anAnim.frameCount <= 0 Then
+				Continue For
+			End If
+
+			Dim cleanName As String = If(anAnim.theName, "").Trim()
+			If cleanName.StartsWith("@") Then
+				cleanName = cleanName.Substring(1)
+			End If
+			Dim lowerName As String = cleanName.ToLowerInvariant()
+
+			Dim score As Integer = 20
+			If lowerName = "idle_raw" Then
+				score = 100
+			ElseIf lowerName.Contains("idle_raw") Then
+				score = 90
+			ElseIf lowerName = "idle" OrElse lowerName = "a_idle" OrElse lowerName = "a_idle_1" Then
+				score = 80
+			ElseIf lowerName.Contains("idle") AndAlso Not lowerName.Contains("layer") Then
+				score = 70
+			ElseIf lowerName = "ref" OrElse lowerName = "reference" OrElse lowerName = "ragdoll" OrElse lowerName = "bindpose" Then
+				score = 60
+			ElseIf anAnim.theAnimIsLinkedToSequence AndAlso anAnim.theLinkedSequences IsNot Nothing AndAlso anAnim.theLinkedSequences.Count > 0 Then
+				If (anAnim.theLinkedSequences(0).flags And SourceMdlAnimationDesc.STUDIO_DELTA) = 0 Then
+					score = 40
+				End If
+			End If
+
+			If score > bestScore Then
+				bestScore = score
+				bestAnim = anAnim
+			End If
+		Next
+
+		Return bestAnim
+	End Function
+
+	Private Function WriteCorrectiveAnimationSmdFile(smdPathFileName As String, sequence As SourceMdlSequenceDescBase, animation As SourceMdlAnimationDescBase, Optional onlyWriteRootBones As Boolean = True) As String
 		Return Me.WriteTextFile(smdPathFileName,
 			Sub()
 				Dim smd As New SourceSmdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData)
 				smd.WriteHeaderComment()
 				smd.WriteHeaderSection()
 				smd.WriteNodesSection()
-				smd.WriteSkeletonSectionForAnimation(sequence, animation, True)
+				smd.WriteSkeletonSectionForAnimation(sequence, animation, onlyWriteRootBones, 1)
 			End Sub)
 	End Function
 

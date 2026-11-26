@@ -59,6 +59,10 @@ Half-Life Beta v9、Counter-Strike Xbox 的骨架变体、Zeno Clash 的 VVD v5�
 - **动画文件命名。** 动画 SMD 优先采用 MDL 中的原名。缺名且只关联一个序列时，可借用该序列名。QC 中的动画标识单独命名。
 - **体组与重编译。** 对支持 DMX 导出的多选项表情体组，按原顺序在 QC 的 `$bodygroup` 中引用带表情的 DMX，同时保留 SMD。分离网格模型的 `$bodygrouppreset` 以注释保留，便于使用原版 L4D2 编译器。
 
+### Source v49 Delta 动画还原
+
+反编译包含 `STUDIO_DELTA` 增量序列的 Source v49 模型（例如现代《求生之路 2》第一人称武器模组）时，Crowbar-TPP 自动挑选合适的非 Delta 基准动画（优先 `idle_raw` / `idle`），按 Source 1 叠加规则（父空间位移相加、四元数按 `STUDIO_POST` / `predelta` 顺序相乘）将 Delta 动画还原为完整绝对姿态写入 SMD，使反编译出的动作文件可直接导入 Blender 查看与编辑；同时将基准动画第 0 帧的全骨骼绝对姿态写入 `_corrective_animation.smd`，配合 QC 中保留的 `subtract "_corrective_animation" 0` 与 `delta`，修改后可直接通过 StudioMDL 无损重编译回游戏。
+
 ### VTF 文件头修复
 
 在「反编译」中选择「修复 VTF 文件头…」，可检查已提取的 PC VTF 7.0–7.2 二维纹理。缩略图和完整像素数据符合布局时，可另存仅修正头长度字段的副本。

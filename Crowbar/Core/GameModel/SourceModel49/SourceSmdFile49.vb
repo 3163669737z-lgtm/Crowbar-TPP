@@ -384,7 +384,7 @@ Public Class SourceSmdFile49
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
-	Public Sub WriteSkeletonSectionForAnimation(ByVal aSequenceDescBase As SourceMdlSequenceDescBase, ByVal anAnimationDescBase As SourceMdlAnimationDescBase, Optional onlyWriteCorrectiveAnimationRootBones As Boolean = False)
+	Public Sub WriteSkeletonSectionForAnimation(ByVal aSequenceDescBase As SourceMdlSequenceDescBase, ByVal anAnimationDescBase As SourceMdlAnimationDescBase, Optional onlyWriteCorrectiveAnimationRootBones As Boolean = False, Optional maxFrameCount As Integer = -1)
 		Dim line As String = ""
 		Dim aBone As SourceMdlBone
 		Dim boneIndex As Integer
@@ -415,7 +415,22 @@ Public Class SourceSmdFile49
 			Dim frameCount As Integer = anAnimationDesc.frameCount
 			If onlyWriteCorrectiveAnimationRootBones Then
 				frameCount = 1
+			ElseIf maxFrameCount > 0 AndAlso maxFrameCount < frameCount Then
+				frameCount = maxFrameCount
 			End If
+
+			Dim restoreDeltaToAbsolute As Boolean = (Not onlyWriteCorrectiveAnimationRootBones) AndAlso ((anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_DELTA) > 0) AndAlso (Me.theMdlFileData.theDeltaBaseAnimationDesc IsNot Nothing)
+			Dim deltaBaseFrameLines As SortedList(Of Integer, AnimationFrameLine) = Nothing
+			Dim isPostDelta As Boolean = True
+			If restoreDeltaToAbsolute Then
+				deltaBaseFrameLines = Me.ComputeSingleFrameLines(Nothing, Me.theMdlFileData.theDeltaBaseAnimationDesc, 0)
+				If aSequenceDesc IsNot Nothing Then
+					isPostDelta = (aSequenceDesc.flags And SourceMdlAnimationDesc.STUDIO_POST) > 0
+				ElseIf anAnimationDesc.theAnimIsLinkedToSequence AndAlso anAnimationDesc.theLinkedSequences IsNot Nothing AndAlso anAnimationDesc.theLinkedSequences.Count > 0 Then
+					isPostDelta = (anAnimationDesc.theLinkedSequences(0).flags And SourceMdlAnimationDesc.STUDIO_POST) > 0
+				End If
+			End If
+
 			For frameIndex As Integer = 0 To frameCount - 1
 				Me.theAnimationFrameLines.Clear()
 
@@ -926,9 +941,20 @@ Public Class SourceSmdFile49
 					'Me.AdjustPositionAndRotation(boneIndex, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
 					'Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, adjustedPosition, adjustedRotation, position, rotation)
 					'------
+					Dim sourcePosition As SourceVector = aFrameLine.position
+					Dim sourceRotation As SourceVector = aFrameLine.rotation
+					If restoreDeltaToAbsolute AndAlso deltaBaseFrameLines IsNot Nothing AndAlso deltaBaseFrameLines.ContainsKey(boneIndex) Then
+						Dim baseLine As AnimationFrameLine = deltaBaseFrameLines(boneIndex)
+						Dim composedPosition As New SourceVector()
+						Dim composedRotation As New SourceVector()
+						Me.ComposeDeltaBoneTransform(baseLine.position, baseLine.rotation, aFrameLine.position, aFrameLine.rotation, isPostDelta, composedPosition, composedRotation)
+						sourcePosition = composedPosition
+						sourceRotation = composedRotation
+					End If
+
 					Dim adjustedPosition As New SourceVector()
 					Dim adjustedRotation As New SourceVector()
-					Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
+					Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, sourcePosition, sourceRotation, adjustedPosition, adjustedRotation)
 					Me.AdjustPositionAndRotation(boneIndex, adjustedPosition, adjustedRotation, thisIsForFirstSequence, position, rotation)
 
 					If onlyWriteCorrectiveAnimationRootBones Then
@@ -979,6 +1005,185 @@ Public Class SourceSmdFile49
 #End Region
 
 #Region "Private Methods"
+
+	Private Function ComputeSingleFrameLines(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc49, ByVal frameIndex As Integer) As SortedList(Of Integer, AnimationFrameLine)
+		Dim previousFrameLines As SortedList(Of Integer, AnimationFrameLine) = Me.theAnimationFrameLines
+		Dim result As New SortedList(Of Integer, AnimationFrameLine)()
+		Me.theAnimationFrameLines = result
+
+		Try
+			If ((anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_FRAMEANIM) <> 0) Then
+				Dim sectionFrameIndex As Integer
+				Dim sectionIndex As Integer
+				If anAnimationDesc.sectionFrameCount = 0 Then
+					sectionIndex = 0
+					sectionFrameIndex = frameIndex
+				Else
+					sectionIndex = CInt(Math.Truncate(frameIndex / anAnimationDesc.sectionFrameCount))
+					sectionFrameIndex = frameIndex - (sectionIndex * anAnimationDesc.sectionFrameCount)
+				End If
+				Dim aSectionOfAnimation As SourceAniFrameAnim49 = anAnimationDesc.theSectionsOfFrameAnim(sectionIndex)
+
+				For boneIndex As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
+					Dim aBone As SourceMdlBone = Me.theMdlFileData.theBones(boneIndex)
+					Dim aFrameLine As New AnimationFrameLine()
+					result.Add(boneIndex, aFrameLine)
+					aFrameLine.position = New SourceVector()
+					aFrameLine.rotation = New SourceVector()
+
+					If (anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_DELTA) > 0 Then
+						aFrameLine.position.x = 0
+						aFrameLine.position.y = 0
+						aFrameLine.position.z = 0
+						aFrameLine.rotation.x = 0
+						aFrameLine.rotation.y = 0
+						aFrameLine.rotation.z = 0
+					Else
+						aFrameLine.position.x = aBone.position.x
+						aFrameLine.position.y = aBone.position.y
+						aFrameLine.position.z = aBone.position.z
+						aFrameLine.rotation.x = aBone.rotation.x
+						aFrameLine.rotation.y = aBone.rotation.y
+						aFrameLine.rotation.z = aBone.rotation.z
+					End If
+
+					Dim boneFlag As Byte = aSectionOfAnimation.theBoneFlags(boneIndex)
+					If aSectionOfAnimation.theBoneConstantInfos IsNot Nothing Then
+						Dim aBoneConstantInfo As BoneConstantInfo49 = aSectionOfAnimation.theBoneConstantInfos(boneIndex)
+						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWROT) > 0 Then
+							aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRawRot.quaternion)
+						End If
+						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWPOS) > 0 Then
+							aFrameLine.position.x = aBoneConstantInfo.theConstantRawPos.x
+							aFrameLine.position.y = aBoneConstantInfo.theConstantRawPos.y
+							aFrameLine.position.z = aBoneConstantInfo.theConstantRawPos.z
+						End If
+						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_POS2) > 0 Then
+							aFrameLine.position.x = aBoneConstantInfo.theConstantPosition2.x
+							aFrameLine.position.y = aBoneConstantInfo.theConstantPosition2.y
+							aFrameLine.position.z = aBoneConstantInfo.theConstantPosition2.z
+						End If
+						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_ROT2) > 0 Then
+							aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRotation2.quaternion)
+						End If
+					End If
+					If aSectionOfAnimation.theBoneFrameDataInfos IsNot Nothing Then
+						Dim aBoneFrameDataInfo As BoneFrameDataInfo49 = aSectionOfAnimation.theBoneFrameDataInfos(sectionFrameIndex)(boneIndex)
+						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIMROT) > 0 Then
+							aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotation.quaternion)
+						End If
+						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIMPOS) > 0 Then
+							aFrameLine.position.x = aBoneFrameDataInfo.theAnimPosition.x
+							aFrameLine.position.y = aBoneFrameDataInfo.theAnimPosition.y
+							aFrameLine.position.z = aBoneFrameDataInfo.theAnimPosition.z
+						End If
+						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_FULLANIMPOS) > 0 Then
+							aFrameLine.position.x = aBoneFrameDataInfo.theFullAnimPosition.x
+							aFrameLine.position.y = aBoneFrameDataInfo.theFullAnimPosition.y
+							aFrameLine.position.z = aBoneFrameDataInfo.theFullAnimPosition.z
+						End If
+						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIM_ROT2) > 0 Then
+							aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotationUnknown.quaternion)
+						End If
+					End If
+				Next
+			Else
+				Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex, False)
+			End If
+		Finally
+			Me.theAnimationFrameLines = previousFrameLines
+		End Try
+
+		Return result
+	End Function
+
+	Private Sub ComposeDeltaBoneTransform(ByVal basePos As SourceVector, ByVal baseRot As SourceVector, ByVal deltaPos As SourceVector, ByVal deltaRot As SourceVector, ByVal isPostDelta As Boolean, ByRef outPos As SourceVector, ByRef outRot As SourceVector)
+		outPos.x = basePos.x + deltaPos.x
+		outPos.y = basePos.y + deltaPos.y
+		outPos.z = basePos.z + deltaPos.z
+
+		If deltaRot.x = 0 AndAlso deltaRot.y = 0 AndAlso deltaRot.z = 0 Then
+			outRot.x = baseRot.x
+			outRot.y = baseRot.y
+			outRot.z = baseRot.z
+			Return
+		End If
+
+		Dim qBase As SourceQuaternion = Me.RadianEulerToQuaternion(baseRot)
+		Dim qDelta As SourceQuaternion = Me.RadianEulerToQuaternion(deltaRot)
+		Dim qAbs As SourceQuaternion
+		If isPostDelta Then
+			qAbs = Me.QuaternionMultiply(qBase, qDelta)
+		Else
+			qAbs = Me.QuaternionMultiply(qDelta, qBase)
+		End If
+		outRot = Me.QuaternionToRadianEuler(qAbs)
+	End Sub
+
+	Private Function RadianEulerToQuaternion(ByVal euler As SourceVector) As SourceQuaternion
+		Dim cx As Double = Math.Cos(euler.x * 0.5)
+		Dim sx As Double = Math.Sin(euler.x * 0.5)
+		Dim cy As Double = Math.Cos(euler.y * 0.5)
+		Dim sy As Double = Math.Sin(euler.y * 0.5)
+		Dim cz As Double = Math.Cos(euler.z * 0.5)
+		Dim sz As Double = Math.Sin(euler.z * 0.5)
+
+		Dim q As New SourceQuaternion()
+		q.x = sx * cy * cz - cx * sy * sz
+		q.y = cx * sy * cz + sx * cy * sz
+		q.z = cx * cy * sz - sx * sy * cz
+		q.w = cx * cy * cz + sx * sy * sz
+		Return q
+	End Function
+
+	Private Function QuaternionMultiply(ByVal p As SourceQuaternion, ByVal q As SourceQuaternion) As SourceQuaternion
+		Dim r As New SourceQuaternion()
+		r.x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y
+		r.y = p.w * q.y - p.x * q.z + p.y * q.w + p.z * q.x
+		r.z = p.w * q.z + p.x * q.y - p.y * q.x + p.z * q.w
+		r.w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z
+
+		Dim mag As Double = Math.Sqrt(r.x * r.x + r.y * r.y + r.z * r.z + r.w * r.w)
+		If mag > 0.000000000001 Then
+			r.x /= mag
+			r.y /= mag
+			r.z /= mag
+			r.w /= mag
+		End If
+		Return r
+	End Function
+
+	Private Function QuaternionToRadianEuler(ByVal q As SourceQuaternion) As SourceVector
+		Dim e As New SourceVector()
+		Dim r20 As Double = 2.0 * (q.x * q.z - q.w * q.y)
+		Dim sinY As Double = -r20
+		If sinY > 1.0 Then
+			sinY = 1.0
+		ElseIf sinY < -1.0 Then
+			sinY = -1.0
+		End If
+		e.y = Math.Asin(sinY)
+
+		If Math.Abs(sinY) > 0.999999 Then
+			Dim r01 As Double = 2.0 * (q.x * q.y - q.w * q.z)
+			Dim r11 As Double = 1.0 - 2.0 * (q.x * q.x + q.z * q.z)
+			If sinY > 0 Then
+				e.x = Math.Atan2(r01, r11)
+			Else
+				e.x = Math.Atan2(-r01, r11)
+			End If
+			e.z = 0.0
+		Else
+			Dim r21 As Double = 2.0 * (q.y * q.z + q.w * q.x)
+			Dim r22 As Double = 1.0 - 2.0 * (q.x * q.x + q.y * q.y)
+			Dim r10 As Double = 2.0 * (q.x * q.y + q.w * q.z)
+			Dim r00 As Double = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+			e.x = Math.Atan2(r21, r22)
+			e.z = Math.Atan2(r10, r00)
+		End If
+
+		Return e
+	End Function
 
 	Private Sub AdjustPositionAndRotation(ByVal boneIndex As Integer, ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByVal thisIsForFirstSequence As Boolean, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
 		Dim aBone As SourceMdlBone
